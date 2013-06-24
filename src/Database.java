@@ -5,18 +5,18 @@ import java.util.Stack;
 public class Database {
 
 	private HashMap<String, ArrayList<Predicate>> database;
-	private HashMap<String, Stack<DPostDeclaration>> initiaters;
-	private HashMap<String, Stack<DPostDeclaration>> terminaters;
+	private HashMap<String, Stack<Initiater>> initiaters;
+	private HashMap<String, Stack<Terminater>> terminaters;
 	private static volatile Database instance = null;
 	
 	private Database() {
 		super();
 		this.database = new HashMap<String,ArrayList<Predicate>>();
-		this.initiaters = new HashMap<String,Stack<DPostDeclaration>>();
-		this.terminaters = new HashMap<String,Stack<DPostDeclaration>>();
+		this.initiaters = new HashMap<String,Stack<Initiater>>();
+		this.terminaters = new HashMap<String,Stack<Terminater>>();
 	}
 	
-	private Database(HashMap<String, ArrayList<Predicate>> initialDB, HashMap<String, Stack<DPostDeclaration>> iinit, HashMap<String, Stack<DPostDeclaration>> iterm) {
+	private Database(HashMap<String, ArrayList<Predicate>> initialDB, HashMap<String, Stack<Initiater>> iinit, HashMap<String, Stack<Terminater>> iterm) {
 		super();
 		this.database = initialDB;
 		this.initiaters = iinit;
@@ -35,7 +35,7 @@ public class Database {
 		 return Database.instance;
 	}
 	
-	public final static Database getInstance(HashMap<String, ArrayList<Predicate>> initialDB, HashMap<String, Stack<DPostDeclaration>> iinit, HashMap<String, Stack<DPostDeclaration>> iterm) {
+	public final static Database getInstance(HashMap<String, ArrayList<Predicate>> initialDB, HashMap<String, Stack<Initiater>> iinit, HashMap<String, Stack<Terminater>> iterm) {
 		 if (Database.instance == null) {
 			 synchronized(Database.class) {
 				 if (Database.instance == null) {
@@ -49,13 +49,13 @@ public class Database {
 	
 	public final void printOut() {
 		HashMap<String, ArrayList<Predicate>> db = this.database;
-		HashMap<String, Stack<DPostDeclaration>> init = this.initiaters;
-		HashMap<String, Stack<DPostDeclaration>> term = this.terminaters;
+		HashMap<String, Stack<Initiater>> init = this.initiaters;
+		HashMap<String, Stack<Terminater>> term = this.terminaters;
 		System.out.println("DB:");
 		System.out.println(db.toString());
-		System.out.println("Init:");
+		System.out.println("Initiaters:");
 		System.out.println(init.toString());
-		System.out.println("Term:");
+		System.out.println("Terminaters:");
 		System.out.println(term.toString());
 	}
 
@@ -64,8 +64,8 @@ public class Database {
 		while (!copyEvents.empty()) {
 			/* determines the actions to be performed */
 			Predicate currentEvent = copyEvents.pop();
-			Stack<DPostDeclaration> fluentsToInitiate = (Stack<DPostDeclaration>) ((this.initiaters.get(currentEvent.getName()) != null) ? this.initiaters.get(currentEvent.getName()).clone() : new Stack<>());
-			Stack<DPostDeclaration> fluentsToTerminate = (Stack<DPostDeclaration>) (this.terminaters.get(currentEvent.getName()) != null ? this.terminaters.get(currentEvent.getName()).clone() : new Stack<>());
+			Stack<Initiater> fluentsToInitiate = (Stack<Initiater>) ((this.initiaters.get(currentEvent.getName()) != null) ? this.initiaters.get(currentEvent.getName()).clone() : new Stack<>());
+			Stack<Terminater> fluentsToTerminate = (Stack<Terminater>) (this.terminaters.get(currentEvent.getName()) != null ? this.terminaters.get(currentEvent.getName()).clone() : new Stack<>());
 			
 			/* does the update */
 			while (!fluentsToTerminate.empty()) {

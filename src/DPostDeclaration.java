@@ -1,9 +1,9 @@
 
-public class DPostDeclaration {
+public abstract class DPostDeclaration {
 	
-	private Predicate event;
-	private Predicate fluent;
-	private Integer[] linkedVariables;
+	protected Predicate event;
+	protected Predicate fluent;
+	protected Integer[] linkedVariables;
 	
 	public DPostDeclaration(Predicate event, Predicate fluent, Integer[] linkedVariables) {
 		this.event = event;

@@ -29,15 +29,15 @@ public class main {
 		db.put(p2.getName(), temp2);
 		db.put(p3.getName(), temp3);
 		
-		HashMap<String, Stack<DPostDeclaration>> initiaters = new HashMap<>(1);
-		Stack<DPostDeclaration> stack1 = new Stack<>();
-		DPostDeclaration dp1 = new DPostDeclaration(e1, p1, new Integer[0]);
+		HashMap<String, Stack<Initiater>> initiaters = new HashMap<>(1);
+		Stack<Initiater> stack1 = new Stack<>();
+		Initiater dp1 = new Initiater(e1, p1, new Integer[0]);
 		stack1.push(dp1);
 		initiaters.put(e1.getName(), stack1);
 		
-		HashMap<String, Stack<DPostDeclaration>> terminaters = new HashMap<>(1);
-		Stack<DPostDeclaration> stack2 = new Stack<>();
-		DPostDeclaration dp2 = new DPostDeclaration(e1, p2, new Integer[0]);
+		HashMap<String, Stack<Terminater>> terminaters = new HashMap<>(1);
+		Stack<Terminater> stack2 = new Stack<>();
+		Terminater dp2 = new Terminater(e1, p2, new Integer[0]);
 		stack2.push(dp2);
 		terminaters.put(e1.getName(), stack2);
 		

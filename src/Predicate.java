@@ -25,4 +25,15 @@ public class Predicate {
 		this.variables[index] = variable;
 	}
 	
+	public String toString() {
+		String string;
+		if (this.variables != null) {
+			string = this.name + "(" + this.variables.toString() + ")";
+		} else {
+			string = this.name + "(" + ")";
+		}
+		
+		return string;
+	}
+	
 }
