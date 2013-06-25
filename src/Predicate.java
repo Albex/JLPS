@@ -36,7 +36,7 @@ public class Predicate {
 		return res;
 	}
 	
-	public Stack<Integer> freeVariables() {
+	public Stack<Integer> getFreeVariables() {
 		Stack<Integer> freeVariables = new Stack<Integer>();
 		for (int i = 0; i < this.variables.length; i++) {
 			if (this.variables[i] == null) {
