@@ -6,7 +6,7 @@
 .project
 .metadata
 bin/
-LPS.wiki/
+doc/
 tmp/
 *.tmp
 *.bak
