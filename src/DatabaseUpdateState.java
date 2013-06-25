@@ -1,6 +1,10 @@
 import java.util.Stack;
 
 class DatabaseUpdateState implements CycleState {
+	
+	public DatabaseUpdateState() {
+		
+	}
 
 	@Override
     public void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME) {

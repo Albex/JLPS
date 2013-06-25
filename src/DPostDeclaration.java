@@ -5,7 +5,7 @@ public abstract class DPostDeclaration {
 	protected Predicate fluent;
 	protected Integer[] linkedVariables;
 	
-	public DPostDeclaration(Predicate event, Predicate fluent, Integer[] linkedVariables) {
+	protected DPostDeclaration(Predicate event, Predicate fluent, Integer[] linkedVariables) {
 		this.event = event;
 		this.fluent = fluent;
 		this.linkedVariables = linkedVariables;
@@ -28,5 +28,8 @@ public abstract class DPostDeclaration {
 		
 		return groundFluent;
 	}
+	
+	@Override
+	public abstract String toString();
 
 }

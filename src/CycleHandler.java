@@ -1,5 +1,11 @@
 import java.util.Stack;
 
+/**
+ * Singleton class that handle the cycles of an LPS framework.
+ * Only called by the static method <tt>getInstance()</tt>.
+ * @see 	#getInstance()
+ * @author 	Albex
+ */
 public final class CycleHandler {
 
 	private static volatile CycleHandler instance = null;
@@ -11,6 +17,10 @@ public final class CycleHandler {
         setState(new DatabaseUpdateState());
     }
 	
+	/**
+	 * This is the method to get an instance of the class.
+	 * @return	the only instance of the class <tt>CycleHandler</tt>.
+	 */
 	public final static CycleHandler getInstance() {
 		 if (CycleHandler.instance == null) {
 			 synchronized(CycleHandler.class) {
@@ -26,24 +36,32 @@ public final class CycleHandler {
 	/**
 	 * Setter method for the state.
 	 * Normally only called by classes implementing the State interface.
-	 * @param NEW_STATE
+	 * @param NEW_STATE the next step of the cycle.
 	 */
 	public void setState(final CycleState NEW_STATE) {
 		myState = NEW_STATE;
 	}
 	
 	/**
-	 * Writer method
-	 * @param NAME
+	 * Handler method called at each step of a cycle.
+	 * @param NAME the name of the step.
 	 */
 	public void handlerMethod(final String NAME) {
 		myState.handlerMethod(this, NAME);
 	}
-
+	
+	/**
+	 * Getter method of the events attribute.
+	 * @return the list of events triggered during the last cycle.
+	 */
 	public Stack<Predicate> getEvents() {
 		return events;
 	}
-
+	
+	/**
+	 * Setter method of the events attribute.
+	 * @param events the events triggered during the last cycle.
+	 */
 	public void setEvents(Stack<Predicate> events) {
 		this.events = events;
 	}

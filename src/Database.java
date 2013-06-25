@@ -57,8 +57,10 @@ public class Database {
 		System.out.println(init.toString());
 		System.out.println("Terminaters:");
 		System.out.println(term.toString());
+		System.out.println("");
 	}
 
+	@SuppressWarnings("unchecked")
 	public void updates(Stack<Predicate> events) {
 		Stack<Predicate> copyEvents = events;
 		while (!copyEvents.empty()) {
@@ -70,14 +72,13 @@ public class Database {
 			/* does the update */
 			while (!fluentsToTerminate.empty()) {
 				Predicate currentFluent = fluentsToTerminate.pop().getGroundFluent(currentEvent);
-				this.database.get(currentFluent.getName()).remove(currentFluent);
+				while (this.database.get(currentFluent.getName()).remove(currentFluent)) {};
 				if (this.database.get(currentFluent.getName()).isEmpty()) {
 					this.database.remove(currentFluent.getName());
 				}
 			}
 			while (!fluentsToInitiate.empty()) {
 				Predicate currentFluent = fluentsToInitiate.pop().getGroundFluent(currentEvent);
-				System.out.println(currentFluent.getName());
 				if (!this.database.containsKey(currentFluent.getName())) {
 					ArrayList<Predicate> fluentList = new ArrayList<>();
 					fluentList.add(currentFluent);

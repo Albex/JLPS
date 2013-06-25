@@ -5,6 +5,7 @@ public class Terminater extends DPostDeclaration {
 		super(event, fluent, linkedVariables);
 	}
 	
+	@Override
 	public String toString() {
 		String string;
 		string = "terminates(" + this.event.toString() + ", " + this.fluent.toString() + ")";

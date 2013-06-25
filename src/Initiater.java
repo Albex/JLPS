@@ -5,6 +5,7 @@ public class Initiater extends DPostDeclaration {
 		super(event, fluent, linkedVariables);
 	}
 	
+	@Override
 	public String toString() {
 		String string;
 		string = "initiates(" + this.event.toString() + ", " + this.fluent.toString() +")";
