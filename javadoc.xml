@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="javadoc">
-    <target name="javadoc">
-        <javadoc access="private" author="true" classpath="." destdir="doc" doctitle="LPS" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" source="1.7" sourcefiles="src/Database.java,src/DPostDeclaration.java,src/Initiater.java,src/Predicate.java,src/FiringRulesState.java,src/main.java,src/Terminater.java,src/SolvingGoalState.java,src/CycleHandler.java,src/CycleState.java,src/DatabaseUpdateState.java" sourcepath="src" splitindex="true" use="true" version="true">
-            <link href="http://download.oracle.com/javase/7/docs/api/"/>
-        </javadoc>
-    </target>
-</project>
