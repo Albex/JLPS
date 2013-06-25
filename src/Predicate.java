@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 
 public class Predicate {
 
@@ -23,6 +25,41 @@ public class Predicate {
 
 	public void setVariable(String variable, int index) {
 		this.variables[index] = variable;
+	}
+	
+	public boolean hasFreeVariables() {
+		boolean res = false;
+		for (int i = 0; i < this.variables.length; i++) {
+			res = (this.variables[i] == null) ? true : false; 
+		}
+		
+		return res;
+	}
+	
+	public Stack<Integer> freeVariables() {
+		Stack<Integer> freeVariables = new Stack<Integer>();
+		for (int i = 0; i < this.variables.length; i++) {
+			if (this.variables[i] == null) {
+				freeVariables.push(i); 
+			}
+		}
+		
+		return freeVariables;
+	}
+	
+	public boolean equals(Predicate otherPredicate) {
+		boolean res = true;
+		if (this.name == otherPredicate.getName()) {
+			for (int i = 0; i < this.variables.length; i++) {
+				if (this.variables[i] != otherPredicate.getVariables()[i] && this.variables[i] != null && otherPredicate.getVariables()[i] != null) {
+					res = false;
+				}
+			}
+		} else {
+			res = false;
+		}
+		
+		return res;
 	}
 	
 	public String toString() {
