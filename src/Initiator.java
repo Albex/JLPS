@@ -1,7 +1,7 @@
 
-public class Initiater extends DPostDeclaration {
+public class Initiator extends DPostDeclaration {
 
-	public Initiater(Predicate event, Predicate fluent, Integer[] linkedVariables) {
+	public Initiator(Predicate event, Predicate fluent, Integer[] linkedVariables) {
 		super(event, fluent, linkedVariables);
 	}
 	

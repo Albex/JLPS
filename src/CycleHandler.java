@@ -12,6 +12,12 @@ public final class CycleHandler {
 	private CycleState myState;
 	private Stack<Predicate> events;
 	
+	/**
+	 * This the constructor of the class.
+	 * It is private as it must not be called.
+	 * Use the method <tt>getInstance()</tt> instead.
+	 * @see #getInstance()
+	 */
 	private CycleHandler() {
         super();
         setState(new DatabaseUpdateState());

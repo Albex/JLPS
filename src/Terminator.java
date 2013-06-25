@@ -1,7 +1,7 @@
 
-public class Terminater extends DPostDeclaration {
+public class Terminator extends DPostDeclaration {
 
-	public Terminater(Predicate event, Predicate fluent, Integer[] linkedVariables) {
+	public Terminator(Predicate event, Predicate fluent, Integer[] linkedVariables) {
 		super(event, fluent, linkedVariables);
 	}
 	

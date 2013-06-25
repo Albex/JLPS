@@ -35,20 +35,20 @@ public class main {
 		db.put(p2.getName(), temp2);
 		db.put(p3.getName(), temp3);
 		
-		HashMap<String, Stack<Initiater>> initiaters = new HashMap<>(1);
-		Stack<Initiater> stack1 = new Stack<>();
+		HashMap<String, Stack<Initiator>> initiators = new HashMap<>(1);
+		Stack<Initiator> stack1 = new Stack<>();
 		Integer[] lkVar = { 0 };
-		Initiater dp1 = new Initiater(e1, p1, lkVar);
+		Initiator dp1 = new Initiator(e1, p1, lkVar);
 		stack1.push(dp1);
-		initiaters.put(e1.getName(), stack1);
+		initiators.put(e1.getName(), stack1);
 		
-		HashMap<String, Stack<Terminater>> terminaters = new HashMap<>(1);
-		Stack<Terminater> stack2 = new Stack<>();
-		Terminater dp2 = new Terminater(e1, p2, new Integer[0]);
+		HashMap<String, Stack<Terminator>> terminators = new HashMap<>(1);
+		Stack<Terminator> stack2 = new Stack<>();
+		Terminator dp2 = new Terminator(e1, p2, new Integer[0]);
 		stack2.push(dp2);
-		terminaters.put(e1.getName(), stack2);
+		terminators.put(e1.getName(), stack2);
 		
-		Database.getInstance(db, initiaters, terminaters);
+		Database.getInstance(db, initiators, terminators);
 		Database.getInstance().printOut();
 		
 		Stack<Predicate> events = new Stack<>();

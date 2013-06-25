@@ -1,4 +1,8 @@
-
+/**
+ * This is an abstract class to represent the DPost declarations.
+ * @author Albex
+ *
+ */
 public abstract class DPostDeclaration {
 	
 	protected Predicate event;
