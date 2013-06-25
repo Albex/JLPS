@@ -6,7 +6,7 @@
 .project
 .metadata
 bin/
-doc/
+LPS.wiki/
 tmp/
 *.tmp
 *.bak
@@ -16,6 +16,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+javadoc.xml
 
 # External tool builders
 .externalToolBuilders/
