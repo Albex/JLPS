@@ -108,6 +108,9 @@ public class Predicate {
 		return res;
 	}
 	
+	/**
+	 * This method writes the predicate in the Prolog-like way.
+	 */
 	@Override
 	public String toString() {
 		String string;

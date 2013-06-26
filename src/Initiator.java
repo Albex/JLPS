@@ -1,10 +1,14 @@
 
 public class Initiator extends DPostDeclaration {
 
-	public Initiator(Predicate event, Predicate fluent, Integer[] linkedVariables) {
-		super(event, fluent, linkedVariables);
+	public Initiator(Predicate event, Predicate fluent, Integer[] linkedVariables, Predicate condition) {
+		super(event, fluent, linkedVariables, condition);
 	}
 	
+	/**
+	 * This method writes the initiator in the Prolog-like way.
+	 * initiates(event, fluent).
+	 */
 	@Override
 	public String toString() {
 		String string;
