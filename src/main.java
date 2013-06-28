@@ -1,3 +1,4 @@
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
@@ -56,10 +57,17 @@ public class main {
 		events.push(e1b);
 		events.push(e2);
 		CycleHandler.getInstance().setEvents(events);
+		System.out.println(CycleHandler.getInstance().getEvents().toString());
 		CycleHandler.getInstance().handlerMethod("name");
 		
 		Database.getInstance().printOut();
 		System.out.println(p2.equals(p2b));
+        try{
+            Interpretor.prologToPredicate("test(aa,Xa)");
+        }
+        catch(RemoteException err) {
+            System.out.println(err.getMessage());
+        }
 	}
 
 }

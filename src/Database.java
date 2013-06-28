@@ -135,23 +135,25 @@ public class Database {
 			while (!fluentsToTerminate.empty()) {
 				Terminator currentTerminator = fluentsToTerminate.pop();
 				
-				if (this.database.get(currentTerminator.getCondition().getName()) != null
-						&& this.database.get(currentTerminator.getCondition().getName())
-								.contains(currentTerminator.getCondition())) {
+				//if (currentTerminator.getCondition() == null 
+					//	&& this.database.get(currentTerminator.getCondition().getName()) != null
+						//&& this.database.get(currentTerminator.getCondition().getName())
+							//	.contains(currentTerminator.getCondition())) {
 					Predicate currentFluent = currentTerminator.getGroundFluent(currentEvent);
 					while (this.database.get(currentFluent.getName()).remove(currentFluent)) {}
 					
 					if (this.database.get(currentFluent.getName()).isEmpty()) {
 						this.database.remove(currentFluent.getName());
 					}
-				}
+				//}
 			}
 			while (!fluentsToInitiate.empty()) {
 				Initiator currentInitiator = fluentsToInitiate.pop();
 				
-				if (this.database.get(currentInitiator.getCondition().getName()) != null
-						&& this.database.get(currentInitiator.getCondition().getName())
-								.contains(currentInitiator.getCondition())) {
+				//if (currentInitiator.getCondition() == null
+					//	&& this.database.get(currentInitiator.getCondition().getName()) != null
+						//&& this.database.get(currentInitiator.getCondition().getName())
+							//	.contains(currentInitiator.getCondition())) {
 					Predicate currentFluent = currentInitiator.getGroundFluent(currentEvent);
 				
 					if (!this.database.containsKey(currentFluent.getName())) {
@@ -161,7 +163,7 @@ public class Database {
 					} else if (!this.database.get(currentFluent.getName()).contains(currentFluent)) {
 						this.database.get(currentFluent.getName()).add(currentFluent);
 					}
-				}
+				//}
 			}
 
 		}
