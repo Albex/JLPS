@@ -4,8 +4,12 @@ import java.util.Stack;
 
 /**
  * This is a singleton class that represents the database of the framework. It
- * contains a method to update itself.
+ * contains the method to update itself.
  * 
+ * The constructor is private as you must not use it.
+ * Instead use the getInstance method to get the only object of the class (or to create it).
+ * 
+ * It has three private attributes.
  * @author Albex
  * @see #updates(Stack)
  */
@@ -30,7 +34,7 @@ public class Database {
 	}
 
 	/**
-	 * This the second constructor of the class that allows to initiate the
+	 * This is the second constructor of the class that allows to initiate the
 	 * database. It is private as it must not be called. Use the method
 	 * <tt>getInstance(initialDB, initialInitiators, initialTerminators)</tt> instead.
 	 * 
@@ -53,6 +57,7 @@ public class Database {
 
 	/**
 	 * This is the method to get an instance of the class.
+	 * Use it as shown: <tt>Database.getInstance()</tt>
 	 * 
 	 * @return the only instance of the class <tt>Database</tt>.
 	 */
@@ -119,6 +124,7 @@ public class Database {
 	 *            the events that have been triggered during the previous cycle.
 	 * @see DatabaseUpdateState
 	 */
+	@SuppressWarnings("unchecked")
 	public void updates(Stack<Predicate> events) {
 		Stack<Predicate> copyEvents = (Stack<Predicate>) events.clone();
 		while (!copyEvents.empty()) {
