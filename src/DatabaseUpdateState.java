@@ -16,7 +16,7 @@ class DatabaseUpdateState implements CycleState {
 	}
 
 	/**
-	 * This is the implementation of the <tt>handlerMethod</tt>.
+	 * This is the implementation of the <code>handlerMethod</code>.
 	 * Here it performs the update of the database.
 	 * @see CycleHandler
 	 */
@@ -27,7 +27,7 @@ class DatabaseUpdateState implements CycleState {
 
 	/**
 	 * This is the private action of the state.
-	 * It cannot be used except in the context of the <tt>handlerMethod</tt>.
+	 * It cannot be used except in the context of the <code>handlerMethod</code>.
 	 * Here this is the update of the database.
 	 * @param events contains the events triggered during the previous cycle.
 	 * @see Database#updates(Stack)

@@ -63,8 +63,8 @@ public class main {
 		Database.getInstance().printOut();
 		System.out.println(p2.equals(p2b));
         try{
-            Interpreter.getInstance().prologToPredicate("test()");
-            Interpreter.getInstance().prologToDPost("initiates(a(),v(fa))");
+            System.out.println(Interpreter.getInstance().prologToPredicate("test()").toString());
+            System.out.println(Interpreter.getInstance().prologToDPost("initiates(a(X,Y),v(Y,X))").toString());
         }
         catch(RemoteException err) {
             System.out.println(err.getMessage());

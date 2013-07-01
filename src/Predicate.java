@@ -21,7 +21,7 @@ public class Predicate {
 	}
 	
 	/**
-	 * Getter of the <tt>name</tt> attribute.
+	 * Getter of the <code>name</code> attribute.
 	 * @return the name of the predicate.
 	 */
 	public String getName() {
@@ -29,23 +29,23 @@ public class Predicate {
 	}
 	
 	/**
-	 * Getter of the <tt>variables</tt> attribute.
-	 * @return an arrays containing the values (or <tt>null</tt> if no value) of the variables.
+	 * Getter of the <code>variables</code> attribute.
+	 * @return an arrays containing the values (or <code>null</code> if no value) of the variables.
 	 */
 	public String[] getVariables() {
 		return variables;
 	}
 	
 	/**
-	 * Setter of the <tt>variables</tt> attribute.
-	 * @param variables the values (or <tt>null</tt> if no value) of the variables of the clause.
+	 * Setter of the <code>variables</code> attribute.
+	 * @param variables the values (or <code>null</code> if no value) of the variables of the clause.
 	 */
 	public void setVariables(String[] variables) {
 		this.variables = variables;
 	}
 	/**
 	 * Setter of one of the predicate's variables.
-	 * @param variable the value (or <tt>null</tt> otherwise) of the variable.
+	 * @param variable the value (or <code>null</code> otherwise) of the variable.
 	 * @param index position of the variable.
 	 */
 	public void setVariable(String variable, int index) {
@@ -66,8 +66,8 @@ public class Predicate {
 	}
 	
 	/**
-	 * Gets the free variables (<tt>null</tt>) of the predicates.
-	 * @return all the free variables of the predicates in a <tt>Stack</tt>.
+	 * Gets the free variables (<code>null</code>) of the predicates.
+	 * @return all the free variables of the predicates in a <code>Stack</code>.
 	 * @see Stack
 	 */
 	public Stack<Integer> getFreeVariables() {
@@ -85,7 +85,7 @@ public class Predicate {
 	 * Checks if two predicates are equal.
 	 * Two predicates are equal if they have the same name and their variables are equal.
 	 * Two variables are equal if they have the same value or if one or both of them are not ground
-	 * (<tt>null</tt>).
+	 * (<code>null</code>).
 	 */
 	@Override
 	public boolean equals(Object other) {

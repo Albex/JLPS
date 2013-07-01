@@ -9,7 +9,7 @@ interface CycleState {
 	/**
      * Handler method for the state name.
      * Override it to allow the step to act.
-     * @param STATE_CONTEXT is the <tt>CycleHandler</tt> that owns the state.
+     * @param STATE_CONTEXT is the <code>CycleHandler</code> that owns the state.
      * @param NAME
      */
     void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME);

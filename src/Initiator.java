@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 
 public class Initiator extends DPostDeclaration {
 
@@ -13,6 +15,7 @@ public class Initiator extends DPostDeclaration {
 	public String toString() {
 		String string;
 		string = "initiates(" + this.event.toString() + ", " + this.fluent.toString() +")";
+		string += "\n" + Arrays.toString(this.linkedVariables);
 		
 		return string;
 	}

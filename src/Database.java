@@ -22,7 +22,7 @@ public class Database {
 
 	/**
 	 * This the constructor of the class. It is private as it must not be
-	 * called. Use the method <tt>getInstance()</tt> instead.
+	 * called. Use the method <code>getInstance()</code> instead.
 	 * 
 	 * @see #getInstance()
 	 */
@@ -36,7 +36,7 @@ public class Database {
 	/**
 	 * This is the second constructor of the class that allows to initiate the
 	 * database. It is private as it must not be called. Use the method
-	 * <tt>getInstance(initialDB, initialInitiators, initialTerminators)</tt> instead.
+	 * <code>getInstance(initialDB, initialInitiators, initialTerminators)</code> instead.
 	 * 
 	 * @see #getInstance(HashMap, HashMap, HashMap)
 	 * @param initialDB
@@ -57,9 +57,9 @@ public class Database {
 
 	/**
 	 * This is the method to get an instance of the class.
-	 * Use it as shown: <tt>Database.getInstance()</tt>
+	 * Use it as shown: <code>Database.getInstance()</code>
 	 * 
-	 * @return the only instance of the class <tt>Database</tt>.
+	 * @return the only instance of the class <code>Database</code>.
 	 */
 	public final static Database getInstance() {
 		if (Database.instance == null) {
@@ -77,7 +77,7 @@ public class Database {
 	 * This is the second method to get an instance of the class. It allows one
 	 * to initiate all the attributes of the class.
 	 * 
-	 * @return the only instance of the class <tt>Database</tt>.
+	 * @return the only instance of the class <code>Database</code>.
 	 * @param initialDB
 	 *            is the initial database.
 	 * @param initialInitiators
@@ -118,7 +118,7 @@ public class Database {
 
 	/**
 	 * This is the method that updates the database when the step cycle asks so.
-	 * This should be only used by a <tt>CycleState</tt> implementation.
+	 * This should be only used by a <code>CycleState</code> implementation.
 	 * 
 	 * @param events
 	 *            the events that have been triggered during the previous cycle.

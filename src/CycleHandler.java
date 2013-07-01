@@ -2,7 +2,7 @@ import java.util.Stack;
 
 /**
  * Singleton class that handle the cycles of an LPS framework.
- * Only called by the static method <tt>getInstance()</tt>.
+ * Only called by the static method <code>getInstance()</code>.
  * @see 	#getInstance()
  * @author 	Albex
  */
@@ -15,7 +15,7 @@ public final class CycleHandler {
 	/**
 	 * This the constructor of the class.
 	 * It is private as it must not be called.
-	 * Use the method <tt>getInstance()</tt> instead.
+	 * Use the method <code>getInstance()</code> instead.
 	 * @see #getInstance()
 	 */
 	private CycleHandler() {
@@ -25,7 +25,7 @@ public final class CycleHandler {
 	
 	/**
 	 * This is the method to get an instance of the class.
-	 * @return	the only instance of the class <tt>CycleHandler</tt>.
+	 * @return	the only instance of the class <code>CycleHandler</code>.
 	 */
 	public final static CycleHandler getInstance() {
 		 if (CycleHandler.instance == null) {
