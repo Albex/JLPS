@@ -1,3 +1,4 @@
+package model;
 
 class SolvingGoalState implements CycleState {
 

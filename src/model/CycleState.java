@@ -1,3 +1,4 @@
+package model;
 /**
  * This is the interface to implement in order to add steps to the cycle.
  * Currently there are three steps.

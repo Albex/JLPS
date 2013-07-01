@@ -1,3 +1,4 @@
+package model;
 
 class FiringRulesState implements CycleState {
 	

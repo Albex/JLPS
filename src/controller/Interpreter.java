@@ -1,7 +1,12 @@
+package controller;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Stack;
+
+import model.DPostDeclaration;
+import model.Initiator;
+import model.Predicate;
+import model.Terminator;
 
 /**
  * This is the controller class.

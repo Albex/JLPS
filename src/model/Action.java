@@ -1,3 +1,4 @@
+package model;
 /**
  * Created with IntelliJ IDEA.
  * User: Albex

@@ -1,3 +1,4 @@
+package model;
 /**
  * This is an abstract class to represent the DPost declarations.
  * @author Albex
