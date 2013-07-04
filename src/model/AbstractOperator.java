@@ -19,7 +19,9 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	 */
 	public AbstractOperator(Goal... operands) {
 		Goal[] operandArray = operands;
+		
 		this.operands = new ArrayList<Goal>();
+		
 		for (int i = 0; i < operandArray.length; i++) {
 			this.operands.add(operandArray[i]);
 		}
