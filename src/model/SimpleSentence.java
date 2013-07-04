@@ -30,6 +30,7 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 	 * (non-Javadoc)
 	 * 
 	 * @see model.Goal#getSolver(model.RuleSet, model.SubstitutionSet)
+	 * 
 	 */
 	@Override
 	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) {
@@ -53,6 +54,7 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 	 * (non-Javadoc)
 	 * 
 	 * @see model.PCExpression#replaceVariables(model.SubstitutionSet)
+	 * 
 	 */
 	@Override
 	public PCExpression replaceVariables(SubstitutionSet s) throws CloneNotSupportedException {
@@ -96,7 +98,7 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 		if (expr instanceof SimpleSentence) {
 			SimpleSentence s2 = (SimpleSentence) expr;
 
-			// If they aren't of the same length they can't be unified
+			// If they don't have the same length they can't be unified
 			if (this.length() != s2.length()) {
 
 				return null;
@@ -116,7 +118,7 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 				return sNew;
 			}
 
-		// Case of a variable
+		// Case of a variable: apply recursively the method
 		} else if (expr instanceof Variable) {
 
 			return expr.unify(this, s);

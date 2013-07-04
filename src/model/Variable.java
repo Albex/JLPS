@@ -32,18 +32,25 @@ public class Variable implements Unifiable {
 		this.printName = v.printName;
 	}
 
-	/* (non-Javadoc)
+	/* 
+	 * (non-Javadoc)
+	 * 
 	 * @see model.Unifiable#unfiy()
+	 * 
 	 */
 	@Override
 	public SubstitutionSet unify(Unifiable expr, SubstitutionSet s) {
-		// Unification with self always succeeds
+		// Equal variables are unified
 		if (this == expr) {
+			
 			return s;
-		// Find existing binding and unify with it, if one exists
+			
+		// If the variable has a binding, try to unify the binding with expr
 		} else if (s.isBound(this)) {
+			
 			return s.getBinding(this).unify(expr, s);
-		// Otherwise make a new binding to expr and succeed
+			
+		// Otherwise bind the variable to expr and succeed
 		} else {
 			SubstitutionSet sNew = new SubstitutionSet(s);
 			sNew.add(this, expr);
@@ -52,28 +59,40 @@ public class Variable implements Unifiable {
 		}
 	}
 	
-	/* (non-Javadoc)
+	/* 
+	 * (non-Javadoc)
+	 * 
 	 * @see model.PCExpression#replaceVariables(model.SubstitutionSet)
+	 * 
 	 */
 	@Override
 	public PCExpression replaceVariables(SubstitutionSet s) throws CloneNotSupportedException {
+		// If the variable is bound replace the variable by its binding.
 		if (s.isBound(this)) {
+			
 			return s.getBinding(this).replaceVariables(s);
+			
+		// Otherwise don't replace it since it can't be
 		} else {
+			
 			return this;
 		}
 	}
 
-	/* (non-Javadoc)
+	/* 
+	 * (non-Javadoc)
+	 * 
 	 * @see model.PCExpression#standardizeVariablesApart(java.util.Hashtable)
+	 * 
 	 */
 	@Override
 	public PCExpression standardizeVariablesApart(Hashtable<Variable, Variable> newVars) throws CloneNotSupportedException {
+		// Get the standardize version of the variable
 		Variable newVar = newVars.get(this);
 		
-		//Try to see if the current expression already has a substitute variable.
+		// If the variable hasn't already be standardized, standardize it
 		if (newVar == null) {
-			// if not create one.
+			// To standardize it, just create a new one (different id) with same other parameters
 			newVar = new Variable(this);
 			newVars.put(this, newVar);
 		}
