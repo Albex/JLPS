@@ -82,10 +82,15 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	 */
 	@Override
 	public PCExpression replaceVariables(SubstitutionSet s) throws CloneNotSupportedException {
+		// Create the operands of the new bound operator
 		ArrayList<Goal> newOperands = new ArrayList<Goal>();
+		
+		// Bind each operand recursively
 		for (int i = 0; i < this.operandCount(); i++) {
 			newOperands.add((Goal) this.getOperand(i).replaceVariables(s));
 		}
+		
+		// Create the bound operator
 		AbstractOperator copy = (AbstractOperator) this.clone();
 		copy.setOperands(newOperands);
 		
@@ -97,10 +102,15 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	 */
 	@Override
 	public PCExpression standardizeVariablesApart(Hashtable<Variable, Variable> newVars) throws CloneNotSupportedException {
+		// Create the operands of the new standardized operator
 		ArrayList<Goal> newOperands = new ArrayList<Goal>();
+		
+		// Standardize each operand recursively
 		for(int i = 0; i < this.operandCount(); i++) {
 			newOperands.add((Goal) this.getOperand(i).standardizeVariablesApart(newVars));
 		}
+		
+		// Create the new standardized operator
 		AbstractOperator copy = (AbstractOperator) this.clone();
 		copy.setOperands(newOperands);
 		
