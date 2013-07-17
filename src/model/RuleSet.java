@@ -3,6 +3,7 @@
  */
 package model;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
@@ -11,27 +12,46 @@ import java.util.Hashtable;
  */
 public class RuleSet {
 
-	private Rule[] rules;
+	private ArrayList<Rule> rules;
 	
 	/**
 	 * 
 	 */
 	public RuleSet(Rule... rules) {
-		this.rules = rules;
+		Rule[] rulesArray = rules;
+		
+		this.rules = new ArrayList<Rule>();
+		
+		for (int i = 0; i < rulesArray.length; i++) {
+			this.rules.add(rulesArray[i]);
+		}
+		
 	}
 	
 	public Rule getRuleStandardizedApart(int index) throws CloneNotSupportedException {
-		Rule rule = (Rule) rules[index].standardizeVariablesApart(new Hashtable<Variable, Variable>());
+		Rule rule = (Rule) rules.get(index).standardizeVariablesApart(new Hashtable<Variable, Variable>());
 		
 		return rule;
 	}
 	
 	public Rule getRule(int index) {
-		return this.rules[index];
+		return this.rules.get(index);
 	}
 	
 	public int getRuleCount() {
-		return this.rules.length;
+		return this.rules.size();
+	}
+	
+	public void removeRule(Rule rule) {
+		this.rules.remove(rule);
+	}
+	
+	public void removeRule(int index) {
+		this.rules.remove(index);
+	}
+	
+	public void addRule(Rule rule) {
+		this.rules.add(rule);
 	}
 
 	/*

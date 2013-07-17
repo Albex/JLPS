@@ -12,7 +12,8 @@ interface CycleState {
      * Override it to allow the step to act.
      * @param STATE_CONTEXT is the <code>CycleHandler</code> that owns the state.
      * @param NAME
+	 * @throws CloneNotSupportedException 
      */
-    void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME);
+    void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME) throws CloneNotSupportedException;
 	
 }

@@ -1,5 +1,4 @@
 package model;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -16,7 +15,7 @@ import java.util.Stack;
  */
 public class Database {
 
-	private HashMap<String, ArrayList<Predicate>> database;
+	private RuleSet database;
 	private HashMap<String, Stack<Initiator>> initiators;
 	private HashMap<String, Stack<Terminator>> terminators;
 	private static volatile Database instance = null;
@@ -28,8 +27,7 @@ public class Database {
 	 * @see #getInstance()
 	 */
 	private Database() {
-		super();
-		this.database = new HashMap<String, ArrayList<Predicate>>();
+		this.database = new RuleSet();
 		this.initiators = new HashMap<String, Stack<Initiator>>();
 		this.terminators = new HashMap<String, Stack<Terminator>>();
 	}
@@ -47,10 +45,9 @@ public class Database {
 	 * @param initialTerminators
 	 *            contains all the terminators of the actions or events.
 	 */
-	private Database(HashMap<String, ArrayList<Predicate>> initialDB,
+	private Database(RuleSet initialDB,
 			HashMap<String, Stack<Initiator>> initialInitiators,
 			HashMap<String, Stack<Terminator>> initialTerminators) {
-		super();
 		this.database = initialDB;
 		this.initiators = initialInitiators;
 		this.terminators = initialTerminators;
@@ -87,7 +84,7 @@ public class Database {
 	 *            contains all the terminators of the actions or events.
 	 */
 	public final static Database getInstance(
-			HashMap<String, ArrayList<Predicate>> initialDB,
+			RuleSet initialDB,
 			HashMap<String, Stack<Initiator>> initialInitiators,
 			HashMap<String, Stack<Terminator>> initialTerminators) {
 		if (Database.instance == null) {
@@ -105,7 +102,7 @@ public class Database {
 	 * This method display the state of the database in the console.
 	 */
 	public final void printOut() {
-		HashMap<String, ArrayList<Predicate>> db = this.database;
+		RuleSet db = this.database;
 		HashMap<String, Stack<Initiator>> init = this.initiators;
 		HashMap<String, Stack<Terminator>> term = this.terminators;
 		System.out.println("DB:");
@@ -126,17 +123,17 @@ public class Database {
 	 * @see DatabaseUpdateState
 	 */
 	@SuppressWarnings("unchecked")
-	public void updates(Stack<Predicate> events) {
-		Stack<Predicate> copyEvents = (Stack<Predicate>) events.clone();
+	public void updates(Stack<SimpleSentence> events) throws CloneNotSupportedException {
+		Stack<SimpleSentence> copyEvents = (Stack<SimpleSentence>) events.clone();
 		while (!copyEvents.empty()) {
 			/* determines the actions to be performed */
-			Predicate currentEvent = copyEvents.pop();
+			SimpleSentence currentEvent = copyEvents.pop();
 			Stack<Initiator> fluentsToInitiate = 
-					(Stack<Initiator>) ((this.initiators.get(currentEvent.getName()) != null) ?
-							this.initiators.get(currentEvent.getName()).clone() : new Stack<Initiator>());
+					(Stack<Initiator>) ((this.initiators.get(currentEvent.getTerm(0)) != null) ?
+							this.initiators.get(currentEvent.getTerm(0)).clone() : new Stack<Initiator>());
 			Stack<Terminator> fluentsToTerminate = 
-					(Stack<Terminator>) (this.terminators.get(currentEvent.getName()) != null ?
-							this.terminators.get(currentEvent.getName()).clone() : new Stack<Terminator>());
+					(Stack<Terminator>) (this.terminators.get(currentEvent.getTerm(0)) != null ?
+							this.terminators.get(currentEvent.getTerm(0)).clone() : new Stack<Terminator>());
 
 			/* does the update */
 			while (!fluentsToTerminate.empty()) {
@@ -146,11 +143,16 @@ public class Database {
 					//	&& this.database.get(currentTerminator.getCondition().getName()) != null
 						//&& this.database.get(currentTerminator.getCondition().getName())
 							//	.contains(currentTerminator.getCondition())) {
-					Predicate currentFluent = currentTerminator.getGroundFluent(currentEvent);
-					while (this.database.get(currentFluent.getName()).remove(currentFluent)) {}
+					SimpleSentence currentFluent = currentTerminator.getGroundFluent(currentEvent);
+					// TODO need to be standardized apart and ground fluent
 					
-					if (this.database.get(currentFluent.getName()).isEmpty()) {
-						this.database.remove(currentFluent.getName());
+					for(int i = 0; i < this.database.getRuleCount(); i++) {
+						Rule currentRule = this.database.getRule(i);
+						if (currentRule.getBody() == null) {
+							if (currentFluent.unify(currentRule.getHead(), new SubstitutionSet()) != null) {
+								this.database.removeRule(i);
+							};
+						}
 					}
 				//}
 			}
@@ -161,14 +163,24 @@ public class Database {
 					//	&& this.database.get(currentInitiator.getCondition().getName()) != null
 						//&& this.database.get(currentInitiator.getCondition().getName())
 							//	.contains(currentInitiator.getCondition())) {
-					Predicate currentFluent = currentInitiator.getGroundFluent(currentEvent);
-				
-					if (!this.database.containsKey(currentFluent.getName())) {
-						ArrayList<Predicate> fluentList = new ArrayList<Predicate>();
-						fluentList.add(currentFluent);
-						this.database.put(currentFluent.getName(), fluentList);
-					} else if (!this.database.get(currentFluent.getName()).contains(currentFluent)) {
-						this.database.get(currentFluent.getName()).add(currentFluent);
+					SimpleSentence currentFluent = currentInitiator.getGroundFluent(currentEvent);
+					// TODO need to be standardized apart and ground fluent
+					
+					// Check whether the currentFluent is already in the database or not
+					boolean exists = false;
+					for (int i = 0; i < this.database.getRuleCount(); i++) {
+						Rule currentRule = this.database.getRule(i);
+						
+						if(currentRule.getBody() == null) {
+							if (currentFluent.unify(currentRule.getHead(), new SubstitutionSet()) != null) {
+								exists = true;
+							}
+						}
+					}
+					
+					// If it is not in the database, add it 
+					if (exists == false) {
+						this.database.addRule(new Rule(currentFluent));
 					}
 				//}
 			}

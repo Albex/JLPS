@@ -19,11 +19,12 @@ class DatabaseUpdateState implements CycleState {
 	/**
 	 * This is the implementation of the <code>handlerMethod</code>.
 	 * Here it performs the update of the database.
+	 * @throws CloneNotSupportedException 
 	 * @see CycleHandler
 	 */
 	@Override
-    public void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME) {
-		updates(STATE_CONTEXT.getEvents());
+    public void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME) throws CloneNotSupportedException {
+		this.updates(STATE_CONTEXT.getEvents());
     }
 
 	/**
@@ -31,9 +32,10 @@ class DatabaseUpdateState implements CycleState {
 	 * It cannot be used except in the context of the <code>handlerMethod</code>.
 	 * Here this is the update of the database.
 	 * @param events contains the events triggered during the previous cycle.
+	 * @throws CloneNotSupportedException 
 	 * @see Database#updates(Stack)
 	 */
-	private void updates(Stack<Predicate> events) {
+	private void updates(Stack<SimpleSentence> events) throws CloneNotSupportedException {
 		Database.getInstance().updates(events);
 	}
 }

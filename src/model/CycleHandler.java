@@ -11,7 +11,7 @@ public final class CycleHandler {
 
 	private static volatile CycleHandler instance = null;
 	private CycleState myState;
-	private Stack<Predicate> events;
+	private Stack<SimpleSentence> events;
 	
 	/**
 	 * This the constructor of the class.
@@ -52,8 +52,9 @@ public final class CycleHandler {
 	/**
 	 * Handler method called at each step of a cycle.
 	 * @param NAME the name of the step.
+	 * @throws CloneNotSupportedException 
 	 */
-	public void handlerMethod(final String NAME) {
+	public void handlerMethod(final String NAME) throws CloneNotSupportedException {
 		myState.handlerMethod(this, NAME);
 	}
 	
@@ -61,7 +62,7 @@ public final class CycleHandler {
 	 * Getter method of the events attribute.
 	 * @return the list of events triggered during the last cycle.
 	 */
-	public Stack<Predicate> getEvents() {
+	public Stack<SimpleSentence> getEvents() {
 		return events;
 	}
 	
@@ -69,7 +70,7 @@ public final class CycleHandler {
 	 * Setter method of the events attribute.
 	 * @param events the events triggered during the last cycle.
 	 */
-	public void setEvents(Stack<Predicate> events) {
+	public void setEvents(Stack<SimpleSentence> events) {
 		this.events = events;
 	}
 

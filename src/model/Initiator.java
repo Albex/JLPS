@@ -1,11 +1,10 @@
 package model;
-import java.util.Arrays;
 
 
 public class Initiator extends DPostDeclaration {
 
-	public Initiator(Predicate event, Predicate fluent, Integer[] linkedVariables, Predicate condition) {
-		super(event, fluent, linkedVariables, condition);
+	public Initiator(SimpleSentence event, SimpleSentence fluent, AbstractOperator condition) {
+		super(event, fluent, condition);
 	}
 	
 	/**
@@ -16,7 +15,6 @@ public class Initiator extends DPostDeclaration {
 	public String toString() {
 		String string;
 		string = "initiates(" + this.event.toString() + ", " + this.fluent.toString() +")";
-		string += "\n" + Arrays.toString(this.linkedVariables);
 		
 		return string;
 	}

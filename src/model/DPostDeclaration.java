@@ -6,10 +6,9 @@ package model;
  */
 public abstract class DPostDeclaration {
 	
-	protected Predicate event;
-	protected Predicate fluent;
-	protected Integer[] linkedVariables;
-	protected Predicate condition;
+	protected SimpleSentence event;
+	protected SimpleSentence fluent;
+	protected AbstractOperator condition;
 	
 	/**
 	 * Constructor of the object.
@@ -19,10 +18,9 @@ public abstract class DPostDeclaration {
 	 * pass their values.
 	 * @param condition is the condition to be satisfied before performing the effect of the event.
 	 */
-	protected DPostDeclaration(Predicate event, Predicate fluent, Integer[] linkedVariables, Predicate condition) {
+	protected DPostDeclaration(SimpleSentence event, SimpleSentence fluent, AbstractOperator condition) {
 		this.event = event;
 		this.fluent = fluent;
-		this.linkedVariables = linkedVariables;
 		this.condition = condition;
 	}
 
@@ -30,7 +28,7 @@ public abstract class DPostDeclaration {
 	 * Getter method for the event attribute.
 	 * @return the event contained in the declaration.
 	 */
-	public Predicate getEvent() {
+	public SimpleSentence getEvent() {
 		return this.event;
 	}
 
@@ -38,7 +36,7 @@ public abstract class DPostDeclaration {
 	 * Getter method for the fluent attribute.
 	 * @return the fluent contained in the declaration.
 	 */
-	public Predicate getFluent() {
+	public SimpleSentence getFluent() {
 		return this.fluent;
 	}
 	
@@ -46,7 +44,7 @@ public abstract class DPostDeclaration {
 	 * Getter method for the condition attribute.
 	 * @return the condition to be satisfied before performing the effect of the event.
 	 */
-	public Predicate getCondition() {	
+	public AbstractOperator getCondition() {	
 		return this.condition;
 	}
 	
@@ -56,12 +54,9 @@ public abstract class DPostDeclaration {
 	 * @param event is an external event defined by this declaration.
 	 * @return a fluent with all the values needed according to the linked variables.
 	 */
-	public Predicate getGroundFluent(Predicate event) {
-		Predicate groundFluent = fluent;
-		for (int i=0; i < linkedVariables.length; i++) {
-			int j = linkedVariables[i];
-			groundFluent.getVariables()[j] = event.getVariables()[i];
-		}
+	public SimpleSentence getGroundFluent(SimpleSentence event) throws CloneNotSupportedException {
+		SubstitutionSet variablesBinding = event.unify(this.event, new SubstitutionSet());
+		SimpleSentence groundFluent = (SimpleSentence) fluent.replaceVariables(variablesBinding);
 		
 		return groundFluent;
 	}
