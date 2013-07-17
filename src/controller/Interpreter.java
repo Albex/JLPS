@@ -3,10 +3,14 @@ import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import model.Constant;
 import model.DPostDeclaration;
 import model.Initiator;
 import model.Predicate;
+import model.SimpleSentence;
 import model.Terminator;
+import model.Unifiable;
+import model.Variable;
 
 /**
  * This is the controller class.
@@ -122,49 +126,54 @@ public class Interpreter {
     		
     		// Getting the first argument of the declaration (the event) and then storing names of variables to create linkedVariables.
     		String[] event = string.split("\\)")[0].split("\\(|,");
-    		HashMap<String, Integer> variablesOfEvent = new HashMap<String, Integer>();
-    		Predicate e;
+    		Unifiable[] parametersOfEvent = new Unifiable[event.length - 1];
+    		HashMap<String, Variable> variablesOfEvent = new HashMap<String, Variable>();
+    		SimpleSentence e;
+    		Constant eventName = new Constant(event[0]);
     		if (event.length > 1) {
-    			// Handling the variables which are represented as null.
-    			// And saving the names of each.
+    			// Create each variable.
     			for (int i = 1; i < event.length; i++) {
     				if (event[i].matches("[A-Z].*")) {
-    					variablesOfEvent.put(event[i], i - 1);
-    					event[i] = null;
+    					Variable v = new Variable(event[i]);
+    					parametersOfEvent[i] = v;
+    					variablesOfEvent.put(event[i], v);
+    				} else {
+    					parametersOfEvent[i] = new Constant(event[i]);
     				}
 	            }
-    			e = new Predicate(event[0], Arrays.copyOfRange(event, 1, event.length));
+    			e = new SimpleSentence(eventName, parametersOfEvent);
     		} else {
-    			e = new Predicate(event[0], null);
+    			e = new SimpleSentence(eventName);
     		}
     		
     		// Getting the second argument, the fluent. And creating linkedVariables.
     		String[] predicate = string.split("\\)")[1].split("\\(|,");
-    		Integer[] linkedVariables = null;
-    		Predicate p;
+    		Unifiable[] parametersOfPredicate = new Unifiable[predicate.length - 2];
+    		SimpleSentence p;
+    		Constant predicateName = new Constant(predicate[1]);
     		if (predicate.length > 2) {
     			for (int i = 1; i < predicate.length; i++) {
     				// Seeking if the variable is in the event ones and then adding an entry in the linkedVariables.
     				if (predicate[i].matches("[A-Z].*")) {
     					if (variablesOfEvent.containsKey(predicate[i])) {
-    						linkedVariables = (linkedVariables == null) ? new Integer[event.length -1] : linkedVariables;
-    						linkedVariables[variablesOfEvent.get(predicate[i])] = i - 2;
+    						parametersOfPredicate[i] = variablesOfEvent.get(predicate[i]);
+    					} else {
+    						parametersOfPredicate[i] = new Constant(predicate[i]);
     					}
-    					predicate[i] = null;
     				}
 	            }
-    			p = new Predicate(predicate[1], Arrays.copyOfRange(predicate, 2, predicate.length));
+    			p = new SimpleSentence(predicateName, parametersOfPredicate);
     		} else {
-    			p = new Predicate(predicate[1], null);
+    			p = new SimpleSentence(predicateName);
     		}
     		
     		// Creating the DPostDeclaration object
     		switch (name) {
 			case "initiates":
-				res = new Initiator(e, p, linkedVariables, null);
+				res = new Initiator(e, p, null);
 				break;
 			case "terminates":
-				res = new Terminator(e, p, linkedVariables, null);
+				res = new Terminator(e, p, null);
 				break;
 			default:
 				throw new RemoteException("It is not a DPost declaration, it should start with 'initiates' or 'terminates'");
