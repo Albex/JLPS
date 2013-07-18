@@ -8,6 +8,10 @@ import model.CycleHandler;
 import model.Database;
 import model.Initiator;
 import model.Predicate;
+import model.Rule;
+import model.RuleSet;
+import model.SimpleSentence;
+import model.SubstitutionSet;
 import model.Terminator;
 import controller.Interpreter;
 
@@ -22,61 +26,54 @@ public class main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Predicate e1 = new Predicate("e1", new String[1]);
-		Predicate e1b = new Predicate("e1", new String[1]);
-		Predicate e2 = new Predicate("e2", null);
-		Predicate p1 = new Predicate("p1", new String[1]);
-		Predicate p2 = new Predicate("p2", new String[1]);
-		Predicate p2b = new Predicate("p2", new String[1]);
-		p2b.setVariable("1", 0);
-		Predicate p2t = new Predicate("p2", new String[1]);
-		p2t.setVariable("2", 0);
-		Predicate p3 = new Predicate("p3", null);
-		/*ArrayList<Predicate> temp1 = new ArrayList<Predicate>(1);*/
-		ArrayList<Predicate> temp2 = new ArrayList<Predicate>(1);
-		ArrayList<Predicate> temp3 = new ArrayList<Predicate>(1);
-		HashMap<String, ArrayList<Predicate>> db = new HashMap<String, ArrayList<Predicate>>();
-		/*temp1.add(p1);*/
-		temp2.add(p2b);
-		temp2.add(p2t);
-		temp3.add(p3);
-		/*db.put(p1.getName(), temp1);*/
-		db.put(p2.getName(), temp2);
-		db.put(p3.getName(), temp3);
-		
-		HashMap<String, Stack<Initiator>> initiators = new HashMap<String, Stack<Initiator>>(1);
-		Stack<Initiator> stack1 = new Stack<Initiator>();
-		Integer[] lkVar = { 0 };
-		Initiator dp1 = new Initiator(e1, p1, lkVar, null);
-		stack1.push(dp1);
-		initiators.put(e1.getName(), stack1);
-		
-		HashMap<String, Stack<Terminator>> terminators = new HashMap<String, Stack<Terminator>>(1);
-		Stack<Terminator> stack2 = new Stack<Terminator>();
-		Terminator dp2 = new Terminator(e1, p2, new Integer[0], null);
-		stack2.push(dp2);
-		terminators.put(e1.getName(), stack2);
-		
-		Database.getInstance(db, initiators, terminators);
-		Database.getInstance().printOut();
-		
-		Stack<Predicate> events = new Stack<Predicate>();
-		e1b.setVariable("2", 0);
-		events.push(e1b);
-		events.push(e2);
-		CycleHandler.getInstance().setEvents(events);
-		System.out.println(CycleHandler.getInstance().getEvents().toString());
-		CycleHandler.getInstance().handlerMethod("name");
-		
-		Database.getInstance().printOut();
-		System.out.println(p2.equals(p2b));
         try{
-            System.out.println(Interpreter.getInstance().prologToPredicate("test()").toString());
-            System.out.println(Interpreter.getInstance().prologToDPost("initiates(a(X,Y),v(Y,X))").toString());
+            System.out.println(Interpreter.getInstance().stringToSimpleSentence("test()").toString());
+            System.out.println(Interpreter.getInstance().stringToDPost("initiates(a(X,Y), v(Y,X))").toString());
+            System.out.println(Interpreter.getInstance().isVariable("A1d_f"));
+            System.out.println(Interpreter.getInstance().isConstant("a1d_f"));
+            System.out.println(Interpreter.getInstance().stringToSimpleSentence("p(X)").unify(Interpreter.getInstance().stringToSimpleSentence("p(a)"), new SubstitutionSet()));
         }
         catch(RemoteException err) {
             System.out.println(err.getMessage());
         }
+        
+        try {
+			Rule r1 = new Rule(Interpreter.getInstance().stringToSimpleSentence("p2(1)"));
+			Rule r2 = new Rule(Interpreter.getInstance().stringToSimpleSentence("p2(2)"));
+			Rule r3 = new Rule(Interpreter.getInstance().stringToSimpleSentence("p3()"));
+			RuleSet db = new RuleSet(r1, r2, r3);
+			
+			Initiator i1 = (Initiator) Interpreter.getInstance().stringToDPost("initiates(e1(X), p1(X))");
+			HashMap<String, Stack<Initiator>> initiators = new HashMap<String, Stack<Initiator>>();
+			Stack<Initiator> tempi = new Stack<Initiator>();
+			tempi.push(i1);
+			initiators.put("e1", tempi);
+			Terminator t1 = (Terminator) Interpreter.getInstance().stringToDPost("terminates(e1(X), p2(Y))");
+			HashMap<String, Stack<Terminator>> terminators = new HashMap<String, Stack<Terminator>>();
+			Stack<Terminator> tempt = new Stack<Terminator>();
+			tempt.push(t1);
+			terminators.put("e1", tempt);
+			
+			Database.getInstance(db, initiators, terminators);
+			Database.getInstance().printOut();
+			
+			Stack<SimpleSentence> events = new Stack<SimpleSentence>();
+			events.push(Interpreter.getInstance().stringToSimpleSentence("e1(2)"));
+			events.push(Interpreter.getInstance().stringToSimpleSentence("e2()"));
+			
+			CycleHandler.getInstance().setEvents(events);
+			
+			try {
+				CycleHandler.getInstance().handlerMethod("name");
+			} catch (CloneNotSupportedException e) {
+				System.out.println(e.getMessage());
+			}
+			
+			Database.getInstance().printOut();
+			
+		} catch (RemoteException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 }
