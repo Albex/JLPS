@@ -25,17 +25,6 @@ public class main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-        try{
-            System.out.println(Interpreter.getInstance().stringToSimpleSentence("test()").toString());
-            System.out.println(Interpreter.getInstance().stringToDPost("initiates(a(X,Y), v(Y,X))").toString());
-            System.out.println(Interpreter.getInstance().isVariable("A1d_f"));
-            System.out.println(Interpreter.getInstance().isConstant("a1d_f"));
-            System.out.println(Interpreter.getInstance().stringToSimpleSentence("p(X)").unify(Interpreter.getInstance().stringToSimpleSentence("p(a)"), new SubstitutionSet()));
-        }
-        catch(RemoteException err) {
-            System.out.println(err.getMessage());
-        }
-        
         try {
 			Rule r1 = new Rule(Interpreter.getInstance().stringToSimpleSentence("p2(1)"));
 			Rule r2 = new Rule(Interpreter.getInstance().stringToSimpleSentence("p2(2)"));

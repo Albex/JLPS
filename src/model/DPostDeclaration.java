@@ -1,4 +1,7 @@
 package model;
+
+import java.util.Hashtable;
+
 /**
  * This is an abstract class to represent the DPost declarations.
  * @author Albex
@@ -14,8 +17,6 @@ public abstract class DPostDeclaration {
 	 * Constructor of the object.
 	 * @param event is the general form of event (with often free variables).
 	 * @param fluent is also the general form fluent. It is the terminated or created by the event.
-	 * @param linkedVariables mapped the fluent variables to the event ones to link variables and
-	 * pass their values.
 	 * @param condition is the condition to be satisfied before performing the effect of the event.
 	 */
 	protected DPostDeclaration(SimpleSentence event, SimpleSentence fluent, AbstractOperator condition) {
@@ -56,7 +57,8 @@ public abstract class DPostDeclaration {
 	 */
 	public SimpleSentence getGroundFluent(SimpleSentence event) throws CloneNotSupportedException {
 		SubstitutionSet variablesBinding = this.event.unify(event, new SubstitutionSet());
-		SimpleSentence groundFluent = (SimpleSentence) this.fluent.replaceVariables(variablesBinding);
+		SimpleSentence groundFluent = (SimpleSentence) this.fluent.standardizeVariablesApart(new Hashtable<Variable, Variable>());
+		groundFluent = (SimpleSentence) groundFluent.replaceVariables(variablesBinding);
 
 		return groundFluent;
 	}

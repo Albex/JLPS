@@ -36,7 +36,7 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	}
 	
 	/**
-	 * @return
+	 * @return the number of operands of the operator
 	 */
 	public int operandCount() {
 		return this.operands.size();
@@ -44,21 +44,21 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	
 	/**
 	 * @param index
-	 * @return
+	 * @return return the operand number {@code index}.
 	 */
 	public Goal getOperand(int index) {
 		return this.operands.get(index);
 	}
 	
 	/**
-	 * @return
+	 * @return the first operand.
 	 */
 	public Goal getFirstOperand() {
 		return this.operands.get(0);
 	}
 	
 	/**
-	 * @return
+	 * @return the tail of the operator which is the operator without its first operand.
 	 * @throws CloneNotSupportedException
 	 */
 	public AbstractOperator getOperatorTail() throws CloneNotSupportedException {
@@ -71,7 +71,7 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	}
 	
 	/**
-	 * @return
+	 * @return true if the operator is empty.
 	 */
 	public boolean isEmpty() {
 		return this.operands.isEmpty();

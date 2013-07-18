@@ -38,7 +38,7 @@ public class Database {
 	 * database. It is private as it must not be called. Use the method
 	 * <code>getInstance(initialDB, initialInitiators, initialTerminators)</code> instead.
 	 * 
-	 * @see #getInstance(HashMap, HashMap, HashMap)
+	 * @see #getInstance(RuleSet, HashMap, HashMap)
 	 * @param initialDB
 	 *            is the initial database.
 	 * @param initialInitiators
@@ -166,7 +166,6 @@ public class Database {
 						//&& this.database.get(currentInitiator.getCondition().getName())
 							//	.contains(currentInitiator.getCondition())) {
 					SimpleSentence currentFluent = currentInitiator.getGroundFluent(currentEvent);
-					// TODO need to be standardized apart and ground fluent
 					
 					// Check whether the currentFluent is already in the database or not
 					boolean exists = false;

@@ -28,7 +28,7 @@ public class Rule implements PCExpression, Cloneable {
 	}
 	
 	/**
-	 * @return
+	 * @return a {@code SimpleSentence} object which is the head of the rule.
 	 */
 	public SimpleSentence getHead() {
 		return this.head;
