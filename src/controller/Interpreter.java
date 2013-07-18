@@ -62,7 +62,7 @@ public class Interpreter {
 	 * This method is used to throw exceptions in {@link #stringToConstant(String)}.
 	 * 
 	 * @param string
-	 *            that is the constant
+	 *            that is the constant.
 	 * @return true if the string correspond to the constant pattern.
 	 */
 	public boolean isConstant(String string) {
@@ -73,23 +73,23 @@ public class Interpreter {
 	}
     
 	/**
-	 * Converts the input string into a <code>Constant<code> object.
-	 * The input string should be a constant.
+	 * Converts the input string into a {@code Constant} object. The input
+	 * string should be a constant.
 	 * 
 	 * @param string
-	 *            to be convert into the <code>Constant<code> object
-	 * @return the <code>Constant<code> object representing the constant string
+	 *            to be convert into the {@code Constant} object.
+	 * @return the {@code Constant} object representing the constant string
 	 *         input.
 	 * @throws RemoteException
 	 *             if the input does not correspond to a constant according to
-	 *             the method <code>isConstant<code>
+	 *             the method {@code isConstant()}.
 	 * @see Constant
 	 * @see #isConstant(String)
 	 */
 	public Constant stringToConstant(String string) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
-		
+
 		// Create the Constant to be returned
 		Constant res;
 
@@ -122,23 +122,23 @@ public class Interpreter {
 	}
     
 	/**
-	 * Converts the input string into a <code>Variable<code> object.
-	 * The input string should be a variable.
+	 * Converts the input string into a {@code Variable} object. The input
+	 * string should be a variable.
 	 * 
 	 * @param string
-	 *            to be convert into the <code>Variable<code> object
-	 * @return the <code>Variable<code> object representing the variable string
+	 *            to be convert into the {@code Variable} object.
+	 * @return the {@code Variable} object representing the variable string
 	 *         input.
 	 * @throws RemoteException
 	 *             if the input does not correspond to a constant according to
-	 *             the method <code>isVariable<code>
+	 *             the method {@code isVariable()}.
 	 * @see Variable
 	 * @see #isVariable(String)
 	 */
 	public Variable stringToVariable(String string) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
-		
+
 		// Create the Variable to be returned
 		Variable res;
 
