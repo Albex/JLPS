@@ -1,18 +1,17 @@
 package main;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
 import model.CycleHandler;
 import model.Database;
 import model.Initiator;
-import model.Predicate;
 import model.Rule;
 import model.RuleSet;
 import model.SimpleSentence;
 import model.SubstitutionSet;
 import model.Terminator;
+
 import controller.Interpreter;
 
 
