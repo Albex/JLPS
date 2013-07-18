@@ -55,9 +55,9 @@ public abstract class DPostDeclaration {
 	 * @return a fluent with all the values needed according to the linked variables.
 	 */
 	public SimpleSentence getGroundFluent(SimpleSentence event) throws CloneNotSupportedException {
-		SubstitutionSet variablesBinding = event.unify(this.event, new SubstitutionSet());
-		SimpleSentence groundFluent = (SimpleSentence) fluent.replaceVariables(variablesBinding);
-		
+		SubstitutionSet variablesBinding = this.event.unify(event, new SubstitutionSet());
+		SimpleSentence groundFluent = (SimpleSentence) this.fluent.replaceVariables(variablesBinding);
+
 		return groundFluent;
 	}
 	

@@ -49,6 +49,10 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 	private void setTerms(Unifiable... terms) {
 		this.terms = terms;
 	}
+	
+	public String getName() {
+		return this.terms[0].toString();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -108,9 +112,10 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 				// Checking each argument if they can be unified
 				for (int i = 0; i < this.length(); i++) {
 					sNew = this.getTerm(i).unify(s2.getTerm(i), sNew);
-					// If they a pair of argument can't be unified the whole can't be unified
+					
+					// If a pair of argument can't be unified the whole can't be unified
 					if (sNew == null) {
-
+						
 						return null;
 					}
 				}
@@ -135,11 +140,15 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 		String s = null;
 
 		s = this.terms[0].toString() + "(";
-		for (int i = 1; i < this.terms.length - 1; i++) {
-			s += this.terms[i].toString() + ",";
+		for (int i = 1; i < this.terms.length; i++) {
+			if (i == this.terms.length - 1) {
+				s += this.terms[i].toString();
+			} else {
+				s += this.terms[i].toString() + ",";
+			}
 		}
 
-		s += this.terms[this.terms.length - 1].toString() + ")";
+		s += ")";
 
 		return s;
 	}

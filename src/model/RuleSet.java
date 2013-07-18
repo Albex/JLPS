@@ -38,6 +38,10 @@ public class RuleSet {
 		return this.rules.get(index);
 	}
 	
+	public ArrayList<Rule> getRules() {
+		return this.rules;
+	}
+	
 	public int getRuleCount() {
 		return this.rules.size();
 	}

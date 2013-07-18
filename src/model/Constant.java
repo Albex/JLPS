@@ -26,7 +26,11 @@ public class Constant implements Unifiable {
 		this();
 		this.printName = printName;
 	}
-
+	
+	public String getName() {
+		return this.printName;
+	}
+	
 	/* 
 	 * (non-Javadoc)
 	 * 
@@ -36,9 +40,16 @@ public class Constant implements Unifiable {
 	@Override
 	public SubstitutionSet unify(Unifiable expr, SubstitutionSet s) {
 		// Equal constants can be unified
-		if (this == expr) {
-			
-			return new SubstitutionSet(s);
+		if (expr instanceof Constant) {
+			if (this == expr) {
+				
+				return new SubstitutionSet(s);
+			}
+
+			if (this.printName.equals(((Constant) expr).getName())) {
+				
+				return new SubstitutionSet(s);
+			}
 			
 		// If this is a variable, use the unify method of Variable
 		} else if (expr instanceof Variable) {
@@ -46,10 +57,9 @@ public class Constant implements Unifiable {
 			return expr.unify(this, s);
 			
 		// Otherwise it can't be unified to a sentence or a different constant
-		} else {
-			
-			return null;
 		}
+		
+		return null;
 	}
 
 	/* 

@@ -1,5 +1,6 @@
 package model;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Stack;
 
 /**
@@ -125,16 +126,18 @@ public class Database {
 	@SuppressWarnings("unchecked")
 	public void updates(Stack<SimpleSentence> events) throws CloneNotSupportedException {
 		Stack<SimpleSentence> copyEvents = (Stack<SimpleSentence>) events.clone();
+		
 		while (!copyEvents.empty()) {
 			/* determines the actions to be performed */
 			SimpleSentence currentEvent = copyEvents.pop();
+			
 			Stack<Initiator> fluentsToInitiate = 
-					(Stack<Initiator>) ((this.initiators.get(currentEvent.getTerm(0)) != null) ?
-							this.initiators.get(currentEvent.getTerm(0)).clone() : new Stack<Initiator>());
+					(Stack<Initiator>) ((this.initiators.get(currentEvent.getName()) != null) ?
+							this.initiators.get(currentEvent.getName()).clone() : new Stack<Initiator>());
 			Stack<Terminator> fluentsToTerminate = 
-					(Stack<Terminator>) (this.terminators.get(currentEvent.getTerm(0)) != null ?
-							this.terminators.get(currentEvent.getTerm(0)).clone() : new Stack<Terminator>());
-
+					(Stack<Terminator>) (this.terminators.get(currentEvent.getName()) != null ?
+							this.terminators.get(currentEvent.getName()).clone() : new Stack<Terminator>());
+			
 			/* does the update */
 			while (!fluentsToTerminate.empty()) {
 				Terminator currentTerminator = fluentsToTerminate.pop();
@@ -144,14 +147,13 @@ public class Database {
 						//&& this.database.get(currentTerminator.getCondition().getName())
 							//	.contains(currentTerminator.getCondition())) {
 					SimpleSentence currentFluent = currentTerminator.getGroundFluent(currentEvent);
-					// TODO need to be standardized apart and ground fluent
 					
-					for(int i = 0; i < this.database.getRuleCount(); i++) {
-						Rule currentRule = this.database.getRule(i);
+					for(Iterator<Rule> rule = this.database.getRules().iterator(); rule.hasNext(); ) {
+						Rule currentRule = rule.next();
 						if (currentRule.getBody() == null) {
 							if (currentFluent.unify(currentRule.getHead(), new SubstitutionSet()) != null) {
-								this.database.removeRule(i);
-							};
+								rule.remove();
+							}
 						}
 					}
 				//}
