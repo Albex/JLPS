@@ -16,19 +16,21 @@ import java.util.Stack;
  */
 public class Database {
 
-	private RuleSet database;
+	private RuleSet factsDatabase;
+	private RuleSet rulesDatabase;
 	private HashMap<String, Stack<Initiator>> initiators;
 	private HashMap<String, Stack<Terminator>> terminators;
 	private static volatile Database instance = null;
 
 	/**
 	 * This the constructor of the class. It is private as it must not be
-	 * called. Use the method <code>getInstance()</code> instead.
+	 * called. Use the method {@code getInstance()} instead.
 	 * 
 	 * @see #getInstance()
 	 */
 	private Database() {
-		this.database = new RuleSet();
+		this.factsDatabase = new RuleSet();
+		this.rulesDatabase = new RuleSet();
 		this.initiators = new HashMap<String, Stack<Initiator>>();
 		this.terminators = new HashMap<String, Stack<Terminator>>();
 	}
@@ -46,10 +48,11 @@ public class Database {
 	 * @param initialTerminators
 	 *            contains all the terminators of the actions or events.
 	 */
-	private Database(RuleSet initialDB,
+	private Database(RuleSet initialFacts, RuleSet initialRules,
 			HashMap<String, Stack<Initiator>> initialInitiators,
 			HashMap<String, Stack<Terminator>> initialTerminators) {
-		this.database = initialDB;
+		this.factsDatabase = initialFacts;
+		this.rulesDatabase = initialRules;
 		this.initiators = initialInitiators;
 		this.terminators = initialTerminators;
 	}
@@ -85,13 +88,13 @@ public class Database {
 	 *            contains all the terminators of the actions or events.
 	 */
 	public final static Database getInstance(
-			RuleSet initialDB,
+			RuleSet initialFacts, RuleSet initialRules,
 			HashMap<String, Stack<Initiator>> initialInitiators,
 			HashMap<String, Stack<Terminator>> initialTerminators) {
 		if (Database.instance == null) {
 			synchronized (Database.class) {
 				if (Database.instance == null) {
-					Database.instance = new Database(initialDB, initialInitiators, initialTerminators);
+					Database.instance = new Database(initialFacts, initialRules, initialInitiators, initialTerminators);
 				}
 			}
 		}
@@ -103,11 +106,15 @@ public class Database {
 	 * This method display the state of the database in the console.
 	 */
 	public final void printOut() {
-		RuleSet db = this.database;
+		RuleSet facts = this.factsDatabase;
+		RuleSet rules = this.rulesDatabase;
 		HashMap<String, Stack<Initiator>> init = this.initiators;
 		HashMap<String, Stack<Terminator>> term = this.terminators;
 		System.out.println("DB:");
-		System.out.println(db.toString());
+		System.out.println("Facts:");
+		System.out.println(facts.toString());
+		System.out.println("Rules:");
+		System.out.println(rules.toString());
 		System.out.println("Initiators:");
 		System.out.println(init.toString());
 		System.out.println("Terminators:");
@@ -148,7 +155,7 @@ public class Database {
 							//	.contains(currentTerminator.getCondition())) {
 					SimpleSentence currentFluent = currentTerminator.getGroundFluent(currentEvent);
 					
-					for(Iterator<Rule> rule = this.database.getRules().iterator(); rule.hasNext(); ) {
+					for(Iterator<Rule> rule = this.factsDatabase.getRules().iterator(); rule.hasNext(); ) {
 						Rule currentRule = rule.next();
 						if (currentRule.getBody() == null) {
 							if (currentFluent.unify(currentRule.getHead(), new SubstitutionSet()) != null) {
@@ -169,8 +176,8 @@ public class Database {
 					
 					// Check whether the currentFluent is already in the database or not
 					boolean exists = false;
-					for (int i = 0; i < this.database.getRuleCount(); i++) {
-						Rule currentRule = this.database.getRule(i);
+					for (int i = 0; i < this.factsDatabase.getRuleCount(); i++) {
+						Rule currentRule = this.factsDatabase.getRule(i);
 						
 						if(currentRule.getBody() == null) {
 							if (currentFluent.unify(currentRule.getHead(), new SubstitutionSet()) != null) {
@@ -181,7 +188,7 @@ public class Database {
 					
 					// If it is not in the database, add it 
 					if (exists == false) {
-						this.database.addRule(new Rule(currentFluent));
+						this.factsDatabase.addRule(new Rule(currentFluent));
 					}
 				//}
 			}

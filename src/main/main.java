@@ -42,7 +42,7 @@ public class main {
 			tempt.push(t1);
 			terminators.put("e1", tempt);
 			
-			Database.getInstance(db, initiators, terminators);
+			Database.getInstance(db, new RuleSet(), initiators, terminators);
 			Database.getInstance().printOut();
 			
 			Stack<SimpleSentence> events = new Stack<SimpleSentence>();
