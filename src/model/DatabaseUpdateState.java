@@ -25,6 +25,7 @@ class DatabaseUpdateState implements CycleState {
 	@Override
     public void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME) throws CloneNotSupportedException {
 		this.updates(STATE_CONTEXT.getEvents());
+		STATE_CONTEXT.setState(new FiringRulesState());
     }
 
 	/**
