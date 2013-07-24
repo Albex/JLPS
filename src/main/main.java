@@ -58,7 +58,7 @@ public class main {
 			
 			System.out.println(events);
 			
-			Goal conditions = Interpreter.getInstance().stringToGoal("p1(X) & p3()");
+			Goal conditions = Interpreter.getInstance().stringToGoal("p1(X) & !p2()");
 			ReactiveRule rule = new ReactiveRule(conditions, (Unifiable) Interpreter.getInstance().stringToSimpleSentence("g1(X)"));
 			ReactiveRuleSet.getInstance(rule);
 			System.out.println("Reactive rules :" + ReactiveRuleSet.getInstance().toString() + "\n");
