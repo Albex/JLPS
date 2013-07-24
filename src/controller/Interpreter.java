@@ -344,7 +344,7 @@ public class Interpreter {
 	 * @throws RemoteException
 	 *             if the input does not correspond to a constant according to
 	 *             the method {@code isDPostDeclaration}
-	 * @throws CloneNotSupportedException 
+	 * @throws RemoteException
 	 * @see SimpleSentence
 	 * @see #isSimpleSentence(String)
 	 */
@@ -455,14 +455,9 @@ public class Interpreter {
 		
 		// Check the last operand
 		searchString = string.substring(searchIndexStart);
+		
 		// If it is actually an operand, succeed, if not fail
-		if (isSimpleSentence(searchString) || isNegation(searchString)) {
-			
-			return true;
-		} else {
-			
-			return false;
-		}
+		return isSimpleSentence(searchString) || isNegation(searchString);
 	}
 	
 	/**
