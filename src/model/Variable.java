@@ -109,4 +109,9 @@ public class Variable implements Unifiable {
 		return "V" + this.id;
 	}
 
+	@Override
+	public String getName() {
+		return this.printName;
+	}
+
 }
