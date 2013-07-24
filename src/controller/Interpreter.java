@@ -441,7 +441,6 @@ public class Interpreter {
 		// When there is no & anymore, it is the final operand
 		while(searchIndexEnd != -1) {
 			searchString = string.substring(searchIndexStart, searchIndexEnd);
-			System.out.println(searchString);
 			// If the search string is a valid operand, then go to the next comma and start searching from it
 			if (isSimpleSentence(searchString) || isNegation(searchString)) {
 				searchIndexStart = searchIndexEnd + 1;
