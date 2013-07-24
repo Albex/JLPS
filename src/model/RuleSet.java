@@ -25,7 +25,10 @@ public class RuleSet {
 		for (int i = 0; i < rulesArray.length; i++) {
 			this.rules.add(rulesArray[i]);
 		}
-		
+	}
+	
+	public RuleSet(ArrayList<Rule> rules) {
+		this.rules = rules;
 	}
 	
 	public Rule getRuleStandardizedApart(int index) throws CloneNotSupportedException {
@@ -54,8 +57,10 @@ public class RuleSet {
 		this.rules.remove(index);
 	}
 	
-	public void addRule(Rule rule) {
-		this.rules.add(rule);
+	public void addRules(ArrayList<Rule> rules) {
+		for(Rule rule : rules) {
+			this.rules.add(rule);
+		}
 	}
 
 	/*
