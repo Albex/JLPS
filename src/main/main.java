@@ -1,17 +1,24 @@
 package main;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 
+import model.AbstractOperator;
 import model.CycleHandler;
 import model.Database;
+import model.FactSet;
+import model.Goal;
 import model.Initiator;
+import model.ReactiveRule;
+import model.ReactiveRuleSet;
 import model.Rule;
 import model.RuleSet;
 import model.SimpleSentence;
 import model.SubstitutionSet;
 import model.Terminator;
-
+import model.Unifiable;
 import controller.Interpreter;
 
 
@@ -25,11 +32,11 @@ public class main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-        try {
-			Rule r1 = new Rule(Interpreter.getInstance().stringToSimpleSentence("p2(1)"));
-			Rule r2 = new Rule(Interpreter.getInstance().stringToSimpleSentence("p2(2)"));
-			Rule r3 = new Rule(Interpreter.getInstance().stringToSimpleSentence("p3()"));
-			RuleSet db = new RuleSet(r1, r2, r3);
+		try {
+			SimpleSentence r1 = Interpreter.getInstance().stringToSimpleSentence("p2(1)");
+			SimpleSentence r2 = Interpreter.getInstance().stringToSimpleSentence("p2(2)");
+			SimpleSentence r3 = Interpreter.getInstance().stringToSimpleSentence("p3()");
+			FactSet db = new FactSet(r1, r2, r3);
 			
 			Initiator i1 = (Initiator) Interpreter.getInstance().stringToDPost("initiates(e1(X), p1(X))");
 			HashMap<String, Stack<Initiator>> initiators = new HashMap<String, Stack<Initiator>>();
@@ -49,6 +56,13 @@ public class main {
 			events.push(Interpreter.getInstance().stringToSimpleSentence("e1(2)"));
 			events.push(Interpreter.getInstance().stringToSimpleSentence("e2()"));
 			
+			System.out.println(events);
+			
+			Goal conditions = Interpreter.getInstance().stringToGoal("p1(X) & p3()");
+			ReactiveRule rule = new ReactiveRule(conditions, (Unifiable) Interpreter.getInstance().stringToSimpleSentence("g1(X)"));
+			ReactiveRuleSet.getInstance(rule);
+			System.out.println("Reactive rules :" + ReactiveRuleSet.getInstance().toString() + "\n");
+			
 			CycleHandler.getInstance().setEvents(events);
 			
 			try {
@@ -58,6 +72,12 @@ public class main {
 			}
 			
 			Database.getInstance().printOut();
+			
+			try {
+				CycleHandler.getInstance().handlerMethod("name");
+			} catch (CloneNotSupportedException e) {
+				System.out.println(e.getMessage());
+			}
 			
 		} catch (RemoteException e) {
 			System.out.println(e.getMessage());
