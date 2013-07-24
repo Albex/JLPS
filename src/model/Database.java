@@ -1,6 +1,5 @@
 package model;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Stack;
 
 /**
@@ -16,7 +15,7 @@ import java.util.Stack;
  */
 public class Database {
 
-	private RuleSet factsDatabase;
+	private FactSet factsDatabase;
 	private RuleSet rulesDatabase;
 	private HashMap<String, Stack<Initiator>> initiators;
 	private HashMap<String, Stack<Terminator>> terminators;
@@ -29,7 +28,7 @@ public class Database {
 	 * @see #getInstance()
 	 */
 	private Database() {
-		this.factsDatabase = new RuleSet();
+		this.factsDatabase = new FactSet();
 		this.rulesDatabase = new RuleSet();
 		this.initiators = new HashMap<String, Stack<Initiator>>();
 		this.terminators = new HashMap<String, Stack<Terminator>>();
@@ -48,7 +47,7 @@ public class Database {
 	 * @param initialTerminators
 	 *            contains all the terminators of the actions or events.
 	 */
-	private Database(RuleSet initialFacts, RuleSet initialRules,
+	private Database(FactSet initialFacts, RuleSet initialRules,
 			HashMap<String, Stack<Initiator>> initialInitiators,
 			HashMap<String, Stack<Terminator>> initialTerminators) {
 		this.factsDatabase = initialFacts;
@@ -88,7 +87,7 @@ public class Database {
 	 *            contains all the terminators of the actions or events.
 	 */
 	public final static Database getInstance(
-			RuleSet initialFacts, RuleSet initialRules,
+			FactSet initialFacts, RuleSet initialRules,
 			HashMap<String, Stack<Initiator>> initialInitiators,
 			HashMap<String, Stack<Terminator>> initialTerminators) {
 		if (Database.instance == null) {
@@ -106,22 +105,28 @@ public class Database {
 	 * This method display the state of the database in the console.
 	 */
 	public final void printOut() {
-		RuleSet facts = this.factsDatabase;
+		FactSet facts = this.factsDatabase;
 		RuleSet rules = this.rulesDatabase;
 		HashMap<String, Stack<Initiator>> init = this.initiators;
 		HashMap<String, Stack<Terminator>> term = this.terminators;
 		System.out.println("DB:");
-		System.out.println("Facts:");
 		System.out.println(facts.toString());
-		System.out.println("Rules:");
+		System.out.print("Rules: ");
 		System.out.println(rules.toString());
-		System.out.println("Initiators:");
+		System.out.print("Initiators: ");
 		System.out.println(init.toString());
-		System.out.println("Terminators:");
+		System.out.print("Terminators: ");
 		System.out.println(term.toString());
 		System.out.println("");
 	}
 
+	public RuleSet getRuleSet() {
+		RuleSet ruleSet = this.factsDatabase.toRuleSet();
+		ruleSet.addRules(this.rulesDatabase.getRules());
+		
+		return ruleSet;
+	}
+	
 	/**
 	 * This is the method that updates the database when the step cycle asks so.
 	 * This should be only used by a <code>CycleState</code> implementation.
@@ -155,14 +160,8 @@ public class Database {
 							//	.contains(currentTerminator.getCondition())) {
 					SimpleSentence currentFluent = currentTerminator.getGroundFluent(currentEvent);
 					
-					for(Iterator<Rule> rule = this.factsDatabase.getRules().iterator(); rule.hasNext(); ) {
-						Rule currentRule = rule.next();
-						if (currentRule.getBody() == null) {
-							if (currentFluent.unify(currentRule.getHead(), new SubstitutionSet()) != null) {
-								rule.remove();
-							}
-						}
-					}
+					// Delete all the corresponding facts in the database
+					this.factsDatabase.removeFacts(currentFluent);
 				//}
 			}
 			while (!fluentsToInitiate.empty()) {
@@ -174,22 +173,7 @@ public class Database {
 							//	.contains(currentInitiator.getCondition())) {
 					SimpleSentence currentFluent = currentInitiator.getGroundFluent(currentEvent);
 					
-					// Check whether the currentFluent is already in the database or not
-					boolean exists = false;
-					for (int i = 0; i < this.factsDatabase.getRuleCount(); i++) {
-						Rule currentRule = this.factsDatabase.getRule(i);
-						
-						if(currentRule.getBody() == null) {
-							if (currentFluent.unify(currentRule.getHead(), new SubstitutionSet()) != null) {
-								exists = true;
-							}
-						}
-					}
-					
-					// If it is not in the database, add it 
-					if (exists == false) {
-						this.factsDatabase.addRule(new Rule(currentFluent));
-					}
+					this.factsDatabase.addFact(currentFluent);
 				//}
 			}
 
