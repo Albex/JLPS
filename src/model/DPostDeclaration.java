@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Hashtable;
-
 /**
  * This is an abstract class to represent the DPost declarations.
  * @author Albex
@@ -57,9 +55,8 @@ public abstract class DPostDeclaration {
 	 */
 	public SimpleSentence getGroundFluent(SimpleSentence event) throws CloneNotSupportedException {
 		SubstitutionSet variablesBinding = this.event.unify(event, new SubstitutionSet());
-		SimpleSentence groundFluent = (SimpleSentence) this.fluent.standardizeVariablesApart(new Hashtable<Variable, Variable>());
-		groundFluent = (SimpleSentence) groundFluent.replaceVariables(variablesBinding);
-
+		SimpleSentence groundFluent = (SimpleSentence) this.fluent.replaceVariables(variablesBinding);
+		
 		return groundFluent;
 	}
 	
