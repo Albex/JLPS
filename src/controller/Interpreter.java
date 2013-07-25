@@ -8,6 +8,7 @@ import model.DPostDeclaration;
 import model.Goal;
 import model.Initiator;
 import model.Not;
+import model.ReactiveRule;
 import model.SimpleSentence;
 import model.Terminator;
 import model.Unifiable;
@@ -489,6 +490,9 @@ public class Interpreter {
 	 * @throws RemoteException
 	 */
 	public And stringToAnd(String string) throws RemoteException {
+		// Delete any spaces before converting
+		string = string.replaceAll(" ", "");
+		
 		// Split the string to get the name and the parameters of the sentence
 		String[] stringOperands = string.split("&");
 		Goal[] operands = new Goal[stringOperands.length];
@@ -556,6 +560,50 @@ public class Interpreter {
 			return this.stringToNegation(string);
 		} else {
 			throw new RemoteException("It is not a clause.");
+		}
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 */
+	public boolean isReactiveRule(String string) {
+		// Delete all the spaces before checking any matching
+		string = string.replaceAll(" ", "");
+		
+		String[] conditionsAndGoal = string.split("->");
+		
+		if (conditionsAndGoal.length != 2) {
+			
+			return false;
+		}
+		
+		if (conditionsAndGoal[0].charAt(0) == '(') {
+			conditionsAndGoal[0] = conditionsAndGoal[0].substring(1, conditionsAndGoal[0].length() - 1);
+		}
+		
+		boolean conditions = isSimpleSentence(conditionsAndGoal[0]) || isNegation(conditionsAndGoal[0]) || isAnd(conditionsAndGoal[0]);
+		
+		return conditions && isSimpleSentence(conditionsAndGoal[1]);
+	}
+	
+	public ReactiveRule stringToReactiveRule(String string) throws RemoteException {
+		// Delete any spaces before converting
+		string = string.replaceAll(" ", "");
+		
+		if (this.isReactiveRule(string)) {
+			String[] conditionsAndGoal = string.split("->");
+			
+			if (conditionsAndGoal[0].charAt(0) == '(') {
+				conditionsAndGoal[0] = conditionsAndGoal[0].substring(1, conditionsAndGoal[0].length() - 1);
+			}
+			
+			Goal conditions = this.stringToGoal(conditionsAndGoal[0]);
+			SimpleSentence goal = this.stringToSimpleSentence(conditionsAndGoal[1]);
+			
+			return new ReactiveRule(conditions, goal);
+		} else {
+			throw new RemoteException("It is not a reactive rule.");
 		}
 	}
 }
