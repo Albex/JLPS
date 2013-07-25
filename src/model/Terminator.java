@@ -2,8 +2,8 @@ package model;
 
 public class Terminator extends DPostDeclaration {
 
-	public Terminator(SimpleSentence event, SimpleSentence fluent, AbstractOperator condition) {
-		super(event, fluent, condition);
+	public Terminator(SimpleSentence event, SimpleSentence fluent) {
+		super(event, fluent);
 	}
 	
 	/**

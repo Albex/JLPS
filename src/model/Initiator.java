@@ -3,8 +3,8 @@ package model;
 
 public class Initiator extends DPostDeclaration {
 
-	public Initiator(SimpleSentence event, SimpleSentence fluent, AbstractOperator condition) {
-		super(event, fluent, condition);
+	public Initiator(SimpleSentence event, SimpleSentence fluent) {
+		super(event, fluent);
 	}
 	
 	/**
