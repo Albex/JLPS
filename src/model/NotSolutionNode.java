@@ -31,16 +31,15 @@ public class NotSolutionNode extends AbstractSolutionNode {
 		if (this.solutionFlag) {
 			
 			return null;
+		} else {
+			this.solutionFlag = true;
 		}
-		
-		this.solutionFlag = true;
 		
 		if (this.tailSolutionNode.nextSolution() != null) {
 			
 			return null;
 		} else {
 
-			System.out.println("true");
 			return new SubstitutionSet();
 		}
 	}
