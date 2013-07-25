@@ -20,7 +20,7 @@ public class Action {
 	 * @param action
 	 * @param initiators
 	 * @param terminators
-	 * @param condtions
+	 * @param conditions
 	 */
 	public Action(SimpleSentence action, ArrayList<Initiator> initiators, ArrayList<Terminator> terminators, Goal conditions) {
 		this.action = action;

@@ -1,5 +1,4 @@
 package model;
-import java.util.Stack;
 
 /**
  * This class implements the CycleState interface.
@@ -34,7 +33,7 @@ class DatabaseUpdateState implements CycleState {
 	 * Here this is the update of the database.
 	 * @param events contains the events triggered during the previous cycle.
 	 * @throws CloneNotSupportedException 
-	 * @see Database#updates(Stack)
+	 * @see Database#updates(RuleSet)
 	 */
 	private void updates(RuleSet events) throws CloneNotSupportedException {
 		Database.getInstance().updates(events);

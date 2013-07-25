@@ -1,6 +1,5 @@
 package model;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * This is a singleton class that represents the database of the framework. It
@@ -11,7 +10,7 @@ import java.util.HashMap;
  * 
  * It has three private attributes.
  * @author Albex
- * @see #updates(ArrayList)
+ * @see #updates(RuleSet)
  */
 public class Database {
 
@@ -35,15 +34,15 @@ public class Database {
 	/**
 	 * This is the second constructor of the class that allows to initiate the
 	 * database. It is private as it must not be called. Use the method
-	 * <code>getInstance(initialDB, initialInitiators, initialTerminators)</code> instead.
+	 * {@code getInstance(FactSet, RuleSet, DSet)} instead.
 	 * 
-	 * @see #getInstance(RuleSet, HashMap, HashMap)
-	 * @param initialDB
-	 *            is the initial database.
-	 * @param initialInitiators
-	 *            contains all the initiators of the actions or events.
-	 * @param initialTerminators
-	 *            contains all the terminators of the actions or events.
+	 * @see #getInstance(FactSet, RuleSet, DSet)
+	 * @param initialFacts
+	 *            contains the initial facts.
+	 * @param initialRules
+	 *            contains the initial rules.
+	 * @param dSet
+	 *            contains all the actions definitions.
 	 */
 	private Database(FactSet initialFacts, RuleSet initialRules, DSet dSet) {
 		this.factsDatabase = initialFacts;
@@ -53,7 +52,7 @@ public class Database {
 
 	/**
 	 * This is the method to get an instance of the class.
-	 * Use it as shown: <code>Database.getInstance()</code>
+	 * Use it as shown: {@code Database.getInstance()}
 	 * 
 	 * @return the only instance of the class <code>Database</code>.
 	 */
@@ -74,15 +73,14 @@ public class Database {
 	 * to initiate all the attributes of the class.
 	 * 
 	 * @return the only instance of the class <code>Database</code>.
-	 * @param initialDB
-	 *            is the initial database.
-	 * @param initialInitiators
-	 *            contains all the initiators of the actions or events.
-	 * @param initialTerminators
-	 *            contains all the terminators of the actions or events.
+	 * @param initialFacts
+	 *            contains the initial facts.
+	 * @param initialRules
+	 *            contains the initial rules.
+	 * @param dSet
+	 *            contains all the actions definitions.
 	 */
-	public final static Database getInstance(
-			FactSet initialFacts, RuleSet initialRules, DSet dSet) {
+	public final static Database getInstance(FactSet initialFacts, RuleSet initialRules, DSet dSet) {
 		if (Database.instance == null) {
 			synchronized (Database.class) {
 				if (Database.instance == null) {

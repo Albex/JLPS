@@ -14,7 +14,6 @@ public abstract class DPostDeclaration {
 	 * Constructor of the object.
 	 * @param event is the general form of event (with often free variables).
 	 * @param fluent is also the general form fluent. It is the terminated or created by the event.
-	 * @param condition is the condition to be satisfied before performing the effect of the event.
 	 */
 	protected DPostDeclaration(SimpleSentence event, SimpleSentence fluent) {
 		this.event = event;

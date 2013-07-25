@@ -111,7 +111,8 @@ public class Interpreter {
 	 * must start a capital letter. It is a alpha-numeric word and can have the
 	 * symbol _.
 	 * 
-	 * This method is used to throw exceptions in {@link #stringToVariable(String)}.
+	 * This method is used to throw exceptions in
+	 * {@link #stringToVariable(String, HashMap)}.
 	 * 
 	 * @param string
 	 *            that is the variable.
@@ -178,8 +179,8 @@ public class Interpreter {
 	 * own methods: {@link #isConstant(String)} and {@link #isVariable(String)}.
 	 * 
 	 * See a Prolog documentation for more information about Prolog predicate.
-	 * This method is used to throw exceptions in {@link #stringToSimpleSentence(String)}
-	 * .
+	 * This method is used to throw exceptions in
+	 * {@link #stringToSimpleSentence(String, HashMap)}.
 	 * 
 	 * @param string
 	 *            to be checked whether it is a simple sentence or not.
@@ -245,8 +246,10 @@ public class Interpreter {
 	/**
 	 * Converts the input string into a {@code SimpleSentence} object. The input
 	 * string should be a simple sentence. It uses the methods
-	 * {@link #stringToAnd()}, {@link #stringToNegation()} and
-	 * {@link #stringToSimpleSentence()} recursively to create the whole clause.
+	 * {@link #stringToAnd(String, HashMap)},
+	 * {@link #stringToNegation(String, HashMap)} and
+	 * {@link #stringToSimpleSentence(String, HashMap)} recursively to create
+	 * the whole clause.
 	 * 
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
@@ -351,7 +354,8 @@ public class Interpreter {
 	 * 'terminates'. It has two parameters: an event which is a simple sentence
 	 * and a fluent which is also a simple sentence.
 	 * 
-	 * This method is used to throw exceptions in {@link #stringToDPost(String)}.
+	 * This method is used to throw exceptions in
+	 * {@link #stringToDPost(String, HashMap)}.
 	 * 
 	 * See a LPS documentation for more details on DPost declaration.
 	 * 
@@ -539,9 +543,11 @@ public class Interpreter {
 	
 	/**
 	 * Converts the input string into a {@code And} object. The input string
-	 * should be an and-clause. It uses the methods {@link #stringToAnd()},
-	 * {@link #stringToNegation()} and {@link #stringToSimpleSentence()}
-	 * recursively to create the whole clause.
+	 * should be an and-clause. It uses the methods
+	 * {@link #stringToAnd(String, HashMap)},
+	 * {@link #stringToNegation(String, HashMap)} and
+	 * {@link #stringToSimpleSentence(String, HashMap)} recursively to create
+	 * the whole clause.
 	 * 
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
@@ -588,9 +594,11 @@ public class Interpreter {
 	
 	/**
 	 * Converts the input string into a {@code Not} object. The input string
-	 * should be a negative clause. It uses the methods {@link #stringToAnd()},
-	 * {@link #stringToNegation()} and {@link #stringToSimpleSentence()}
-	 * recursively to create the whole clause.
+	 * should be a negative clause. It uses the methods
+	 * {@link #stringToAnd(String, HashMap)},
+	 * {@link #stringToNegation(String, HashMap)} and
+	 * {@link #stringToSimpleSentence(String, HashMap)} recursively to create
+	 * the whole clause.
 	 * 
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
@@ -607,7 +615,7 @@ public class Interpreter {
 	 *             if the input does not correspond to a negative clause
 	 *             according to the method {@code isNot()}.
 	 * @see Not
-	 * @see #isNot(String)
+	 * @see #isNegation(String)
 	 */
 	public Not stringToNegation(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
@@ -638,9 +646,11 @@ public class Interpreter {
 	
 	/**
 	 * Converts the input string into a {@code Goal} object. The input string
-	 * should be a clause. It uses the methods {@link #stringToAnd()},
-	 * {@link #stringToNegation()} and {@link #stringToSimpleSentence()}
-	 * recursively to create the whole clause.
+	 * should be a clause. It uses the methods
+	 * {@link #stringToAnd(String, HashMap)},
+	 * {@link #stringToNegation(String, HashMap)} and
+	 * {@link #stringToSimpleSentence(String, HashMap)} recursively to create
+	 * the whole clause.
 	 * 
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
@@ -657,7 +667,7 @@ public class Interpreter {
 	 *             method {@code isNot()}, {@code isAnd()} or
 	 *             {@code isSimpleSentence()}.
 	 * @see Goal
-	 * @see #isNot(String)
+	 * @see #isNegation(String)
 	 * @see #isAnd(String)
 	 * @see #isSimpleSentence(String)
 	 */
@@ -715,8 +725,9 @@ public class Interpreter {
 	/**
 	 * Converts the input string into a {@code ReactiveRule} object. The input
 	 * string should be a reactive rule. It uses the methods
-	 * {@link #stringToGoal()} and {@link #stringToSimpleSentence()} recursively
-	 * to create the reactive rule.
+	 * {@link #stringToGoal(String, HashMap)} and
+	 * {@link #stringToSimpleSentence(String, HashMap)} recursively to create
+	 * the reactive rule.
 	 * 
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
