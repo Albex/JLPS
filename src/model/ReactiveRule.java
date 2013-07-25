@@ -12,12 +12,12 @@ import java.util.ArrayList;
 public class ReactiveRule {
 
 	private Goal conditions;
-	private Unifiable goal;
+	private SimpleSentence goal;
 	
 	/**
 	 * 
 	 */
-	public ReactiveRule(Goal conditions, Unifiable goal) {
+	public ReactiveRule(Goal conditions, SimpleSentence goal) {
 		this.conditions = conditions;
 		this.goal = goal;
 	}
