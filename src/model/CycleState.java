@@ -1,4 +1,5 @@
 package model;
+
 /**
  * This is the interface to implement in order to add steps to the cycle.
  * Currently there are three steps.
@@ -14,6 +15,6 @@ interface CycleState {
      * @param NAME
 	 * @throws CloneNotSupportedException 
      */
-    void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME) throws CloneNotSupportedException;
+    void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME, RuleSet events) throws CloneNotSupportedException;
 	
 }

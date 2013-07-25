@@ -1,4 +1,5 @@
 package model;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -11,7 +12,7 @@ import java.util.Stack;
  * 
  * It has three private attributes.
  * @author Albex
- * @see #updates(Stack)
+ * @see #updates(ArrayList)
  */
 public class Database {
 
@@ -136,19 +137,16 @@ public class Database {
 	 * @see DatabaseUpdateState
 	 */
 	@SuppressWarnings("unchecked")
-	public void updates(Stack<SimpleSentence> events) throws CloneNotSupportedException {
-		Stack<SimpleSentence> copyEvents = (Stack<SimpleSentence>) events.clone();
-		
-		while (!copyEvents.empty()) {
+	public void updates(RuleSet events) throws CloneNotSupportedException {
+
+		for(Rule currentEvent : events.getRules()) {
 			/* determines the actions to be performed */
-			SimpleSentence currentEvent = copyEvents.pop();
-			
 			Stack<Initiator> fluentsToInitiate = 
-					(Stack<Initiator>) ((this.initiators.get(currentEvent.getName()) != null) ?
-							this.initiators.get(currentEvent.getName()).clone() : new Stack<Initiator>());
+					(Stack<Initiator>) ((this.initiators.get(currentEvent.getHead().getName()) != null) ?
+							this.initiators.get(currentEvent.getHead().getName()).clone() : new Stack<Initiator>());
 			Stack<Terminator> fluentsToTerminate = 
-					(Stack<Terminator>) (this.terminators.get(currentEvent.getName()) != null ?
-							this.terminators.get(currentEvent.getName()).clone() : new Stack<Terminator>());
+					(Stack<Terminator>) (this.terminators.get(currentEvent.getHead().getName()) != null ?
+							this.terminators.get(currentEvent.getHead().getName()).clone() : new Stack<Terminator>());
 			
 			/* does the update */
 			while (!fluentsToTerminate.empty()) {
@@ -158,7 +156,7 @@ public class Database {
 					//	&& this.database.get(currentTerminator.getCondition().getName()) != null
 						//&& this.database.get(currentTerminator.getCondition().getName())
 							//	.contains(currentTerminator.getCondition())) {
-					SimpleSentence currentFluent = currentTerminator.getGroundFluent(currentEvent);
+					SimpleSentence currentFluent = currentTerminator.getGroundFluent(currentEvent.getHead());
 					
 					// Delete all the corresponding facts in the database
 					this.factsDatabase.removeFacts(currentFluent);
@@ -171,7 +169,7 @@ public class Database {
 					//	&& this.database.get(currentInitiator.getCondition().getName()) != null
 						//&& this.database.get(currentInitiator.getCondition().getName())
 							//	.contains(currentInitiator.getCondition())) {
-					SimpleSentence currentFluent = currentInitiator.getGroundFluent(currentEvent);
+					SimpleSentence currentFluent = currentInitiator.getGroundFluent(currentEvent.getHead());
 					
 					this.factsDatabase.addFact(currentFluent);
 				//}

@@ -1,5 +1,4 @@
 package model;
-import java.util.Stack;
 
 /**
  * Singleton class that handle the cycles of an LPS framework.
@@ -11,7 +10,7 @@ public final class CycleHandler {
 
 	private static volatile CycleHandler instance = null;
 	private CycleState myState;
-	private Stack<SimpleSentence> events;
+	private RuleSet events;
 	
 	/**
 	 * This the constructor of the class.
@@ -55,14 +54,14 @@ public final class CycleHandler {
 	 * @throws CloneNotSupportedException 
 	 */
 	public void handlerMethod(final String NAME) throws CloneNotSupportedException {
-		myState.handlerMethod(this, NAME);
+		myState.handlerMethod(this, NAME, events);
 	}
 	
 	/**
 	 * Getter method of the events attribute.
 	 * @return the list of events triggered during the last cycle.
 	 */
-	public Stack<SimpleSentence> getEvents() {
+	public RuleSet getEvents() {
 		return events;
 	}
 	
@@ -70,7 +69,7 @@ public final class CycleHandler {
 	 * Setter method of the events attribute.
 	 * @param events the events triggered during the last cycle.
 	 */
-	public void setEvents(Stack<SimpleSentence> events) {
+	public void setEvents(RuleSet events) {
 		this.events = events;
 	}
 

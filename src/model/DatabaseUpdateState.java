@@ -23,8 +23,8 @@ class DatabaseUpdateState implements CycleState {
 	 * @see CycleHandler
 	 */
 	@Override
-    public void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME) throws CloneNotSupportedException {
-		this.updates(STATE_CONTEXT.getEvents());
+    public void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME, RuleSet events) throws CloneNotSupportedException {
+		this.updates(events);
 		STATE_CONTEXT.setState(new FiringRulesState());
     }
 
@@ -36,7 +36,7 @@ class DatabaseUpdateState implements CycleState {
 	 * @throws CloneNotSupportedException 
 	 * @see Database#updates(Stack)
 	 */
-	private void updates(Stack<SimpleSentence> events) throws CloneNotSupportedException {
+	private void updates(RuleSet events) throws CloneNotSupportedException {
 		Database.getInstance().updates(events);
 	}
 }
