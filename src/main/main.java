@@ -1,10 +1,11 @@
 package main;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Stack;
 
+import model.Action;
+import model.And;
 import model.CycleHandler;
+import model.DSet;
 import model.Database;
 import model.FactSet;
 import model.Goal;
@@ -36,17 +37,14 @@ public class main {
 			FactSet db = new FactSet(r1, r2, r3);
 			
 			Initiator i1 = (Initiator) Interpreter.getInstance().stringToDPost("initiates(e1(X), p1(X))");
-			HashMap<String, Stack<Initiator>> initiators = new HashMap<String, Stack<Initiator>>();
-			Stack<Initiator> tempi = new Stack<Initiator>();
-			tempi.push(i1);
-			initiators.put("e1", tempi);
+			ArrayList<Initiator> initiators = new ArrayList<Initiator>();
+			initiators.add(i1);
 			Terminator t1 = (Terminator) Interpreter.getInstance().stringToDPost("terminates(e1(X), p2(Y))");
-			HashMap<String, Stack<Terminator>> terminators = new HashMap<String, Stack<Terminator>>();
-			Stack<Terminator> tempt = new Stack<Terminator>();
-			tempt.push(t1);
-			terminators.put("e1", tempt);
+			ArrayList<Terminator> terminators = new ArrayList<Terminator>();
+			terminators.add(t1);
+			Action e1 = new Action(Interpreter.getInstance().stringToSimpleSentence("e1(X)"), initiators, terminators, null);
 			
-			Database.getInstance(db, new RuleSet(), initiators, terminators);
+			Database.getInstance(db, new RuleSet(), new DSet(e1));
 			Database.getInstance().printOut();
 			
 			ArrayList<Rule> events = new ArrayList<Rule>();

@@ -1,7 +1,6 @@
 package model;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Stack;
 
 /**
  * This is a singleton class that represents the database of the framework. It
@@ -18,8 +17,7 @@ public class Database {
 
 	private FactSet factsDatabase;
 	private RuleSet rulesDatabase;
-	private HashMap<String, Stack<Initiator>> initiators;
-	private HashMap<String, Stack<Terminator>> terminators;
+	private DSet dSet;
 	private static volatile Database instance = null;
 
 	/**
@@ -31,8 +29,7 @@ public class Database {
 	private Database() {
 		this.factsDatabase = new FactSet();
 		this.rulesDatabase = new RuleSet();
-		this.initiators = new HashMap<String, Stack<Initiator>>();
-		this.terminators = new HashMap<String, Stack<Terminator>>();
+		this.dSet = new DSet();
 	}
 
 	/**
@@ -48,13 +45,10 @@ public class Database {
 	 * @param initialTerminators
 	 *            contains all the terminators of the actions or events.
 	 */
-	private Database(FactSet initialFacts, RuleSet initialRules,
-			HashMap<String, Stack<Initiator>> initialInitiators,
-			HashMap<String, Stack<Terminator>> initialTerminators) {
+	private Database(FactSet initialFacts, RuleSet initialRules, DSet dSet) {
 		this.factsDatabase = initialFacts;
 		this.rulesDatabase = initialRules;
-		this.initiators = initialInitiators;
-		this.terminators = initialTerminators;
+		this.dSet = dSet;
 	}
 
 	/**
@@ -88,13 +82,11 @@ public class Database {
 	 *            contains all the terminators of the actions or events.
 	 */
 	public final static Database getInstance(
-			FactSet initialFacts, RuleSet initialRules,
-			HashMap<String, Stack<Initiator>> initialInitiators,
-			HashMap<String, Stack<Terminator>> initialTerminators) {
+			FactSet initialFacts, RuleSet initialRules, DSet dSet) {
 		if (Database.instance == null) {
 			synchronized (Database.class) {
 				if (Database.instance == null) {
-					Database.instance = new Database(initialFacts, initialRules, initialInitiators, initialTerminators);
+					Database.instance = new Database(initialFacts, initialRules, dSet);
 				}
 			}
 		}
@@ -108,16 +100,12 @@ public class Database {
 	public final void printOut() {
 		FactSet facts = this.factsDatabase;
 		RuleSet rules = this.rulesDatabase;
-		HashMap<String, Stack<Initiator>> init = this.initiators;
-		HashMap<String, Stack<Terminator>> term = this.terminators;
+		DSet dSet = this.dSet;
 		System.out.println("DB:");
 		System.out.println(facts.toString());
 		System.out.print("Rules: ");
 		System.out.println(rules.toString());
-		System.out.print("Initiators: ");
-		System.out.println(init.toString());
-		System.out.print("Terminators: ");
-		System.out.println(term.toString());
+		System.out.println(dSet.toString());
 		System.out.println("");
 	}
 
@@ -136,45 +124,28 @@ public class Database {
 	 *            the events that have been triggered during the previous cycle.
 	 * @see DatabaseUpdateState
 	 */
-	@SuppressWarnings("unchecked")
 	public void updates(RuleSet events) throws CloneNotSupportedException {
 
 		for(Rule currentEvent : events.getRules()) {
-			/* determines the actions to be performed */
-			Stack<Initiator> fluentsToInitiate = 
-					(Stack<Initiator>) ((this.initiators.get(currentEvent.getHead().getName()) != null) ?
-							this.initiators.get(currentEvent.getHead().getName()).clone() : new Stack<Initiator>());
-			Stack<Terminator> fluentsToTerminate = 
-					(Stack<Terminator>) (this.terminators.get(currentEvent.getHead().getName()) != null ?
-							this.terminators.get(currentEvent.getHead().getName()).clone() : new Stack<Terminator>());
+			// Get the action to perform
+			Action action = this.dSet.getAction(currentEvent.getHead().getName());
 			
-			/* does the update */
-			while (!fluentsToTerminate.empty()) {
-				Terminator currentTerminator = fluentsToTerminate.pop();
+			if(action != null) {
+				// Get the update to perform
+				ArrayList<SimpleSentence> fluentsToInitiate = action.fluentsToInitiate(currentEvent.getHead());
+				ArrayList<SimpleSentence> fluentsToTerminate = action.fluentsToTerminate(currentEvent.getHead());
 				
-				//if (currentTerminator.getCondition() == null 
-					//	&& this.database.get(currentTerminator.getCondition().getName()) != null
-						//&& this.database.get(currentTerminator.getCondition().getName())
-							//	.contains(currentTerminator.getCondition())) {
-					SimpleSentence currentFluent = currentTerminator.getGroundFluent(currentEvent.getHead());
-					
-					// Delete all the corresponding facts in the database
+				// Do the update
+				// First the terminations
+				for (SimpleSentence currentFluent : fluentsToTerminate) {
 					this.factsDatabase.removeFacts(currentFluent);
-				//}
-			}
-			while (!fluentsToInitiate.empty()) {
-				Initiator currentInitiator = fluentsToInitiate.pop();
+				}
 				
-				//if (currentInitiator.getCondition() == null
-					//	&& this.database.get(currentInitiator.getCondition().getName()) != null
-						//&& this.database.get(currentInitiator.getCondition().getName())
-							//	.contains(currentInitiator.getCondition())) {
-					SimpleSentence currentFluent = currentInitiator.getGroundFluent(currentEvent.getHead());
-					
+				// Then the initiations
+				for (SimpleSentence currentFluent : fluentsToInitiate) {
 					this.factsDatabase.addFact(currentFluent);
-				//}
+				}
 			}
-
 		}
 	}
 
