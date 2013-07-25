@@ -1,4 +1,5 @@
 package controller;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,16 +17,13 @@ import model.Unifiable;
 import model.Variable;
 
 /**
- * This is the controller class.
- * It is a singleton. Do not use the constructor.
- * Use the getInstance() method instead which gives you the instance of the class.
- * It translates Prolog-like declaration into objects for the program.
+ * This is the controller class. It is a singleton. Do not use the constructor.
+ * Use the {@link #getInstance()} method instead which gives you the instance of
+ * the class. It translates Prolog-like declaration into objects for the
+ * program.
+ * 
  * @author Albex
- *
- */
-/**
- * @author Albex
- *
+ * 
  */
 public class Interpreter {
 
@@ -82,7 +80,7 @@ public class Interpreter {
 	 * string should be a constant.
 	 * 
 	 * @param string
-	 *            to be convert into the {@code Constant} object.
+	 *            to be converted into the {@code Constant} object.
 	 * @return the {@code Constant} object representing the constant string
 	 *         input.
 	 * @throws RemoteException
@@ -116,7 +114,7 @@ public class Interpreter {
 	 * This method is used to throw exceptions in {@link #stringToVariable(String)}.
 	 * 
 	 * @param string
-	 *            that is the variable
+	 *            that is the variable.
 	 * @return true if the string correspond to the variable pattern.
 	 */
 	public boolean isVariable(String string) {
@@ -130,12 +128,19 @@ public class Interpreter {
 	 * Converts the input string into a {@code Variable} object. The input
 	 * string should be a variable.
 	 * 
+	 * The variable {@code variables} is used to pass the variables created to
+	 * the whole clause to avoid to create two different variables for the same
+	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
+	 * 
 	 * @param string
-	 *            to be convert into the {@code Variable} object.
+	 *            to be converted into the {@code Variable} object.
+	 * @param variables
+	 *            the variables already created to be reused if necessary and it
+	 *            will be updated with the new created variables.
 	 * @return the {@code Variable} object representing the variable string
 	 *         input.
 	 * @throws RemoteException
-	 *             if the input does not correspond to a constant according to
+	 *             if the input does not correspond to a variable according to
 	 *             the method {@code isVariable()}.
 	 * @see Variable
 	 * @see #isVariable(String)
@@ -146,7 +151,7 @@ public class Interpreter {
 
 		// Create the Variable to be returned
 		Variable res;
-		
+
 		if (variables == null) {
 			variables = new HashMap<String, Variable>();
 		}
@@ -239,15 +244,24 @@ public class Interpreter {
 
 	/**
 	 * Converts the input string into a {@code SimpleSentence} object. The input
-	 * string should be a simple sentence.
+	 * string should be a simple sentence. It uses the methods
+	 * {@link #stringToAnd()}, {@link #stringToNegation()} and
+	 * {@link #stringToSimpleSentence()} recursively to create the whole clause.
+	 * 
+	 * The variable {@code variables} is used to pass the variables created to
+	 * the whole clause to avoid to create two different variables for the same
+	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
 	 * 
 	 * @param string
-	 *            to be convert into the {@code SimpleSentence} object.
+	 *            to be converted into the {@code SimpleSentence} object.
+	 * @param variables
+	 *            the variables already created to be reused if necessary and it
+	 *            will be updated with the new created variables.
 	 * @return the {@code SimpleSentence} object representing the simple
 	 *         sentence string input.
 	 * @throws RemoteException
-	 *             if the input does not correspond to a constant according to
-	 *             the method {@code isSimpleSentence}
+	 *             if the input does not correspond to a simple sentence
+	 *             according to the method {@code isSimpleSentence}.
 	 * @see SimpleSentence
 	 * @see #isSimpleSentence(String)
 	 */
@@ -256,73 +270,74 @@ public class Interpreter {
 		string = string.replaceAll(" ", "");
 
 		if (isSimpleSentence(string)) {
-			
+
 			if (variables == null) {
 				variables = new HashMap<String, Variable>();
 			}
-			
+
 			// Initialize the search over the string
 			int searchIndexStart = 0;
 			int searchIndexEnd = string.indexOf('(');
-			
+
 			// Store the name is a constant
 			Constant name = new Constant(string.substring(searchIndexStart, searchIndexEnd));
-			
+
 			// Go to the next part of the string to check
 			searchIndexStart = searchIndexEnd + 1;
-			
+
 			// If there is no parameter.
 			if (string.length() - 1 == searchIndexStart) {
-				 
+
 				return new SimpleSentence(name);
 			}
-			
+
 			// If not search the parameters and so search for commas while you can find one
 			// If there is no comma anymore, then it is the final parameter
 			ArrayList<Unifiable> parameters = new ArrayList<Unifiable>();
 			searchIndexEnd = string.indexOf(',', searchIndexStart);
 			String searchString;
-			while(searchIndexEnd != -1) {
+			while (searchIndexEnd != -1) {
 				searchString = string.substring(searchIndexStart, searchIndexEnd);
-				
+
 				// If the search string is a constant
 				if (isConstant(searchString)) {
 					searchIndexStart = searchIndexEnd + 1;
 					searchIndexEnd = string.indexOf(',', searchIndexStart);
 					parameters.add(stringToConstant(searchString));
-				
-				// If the search string is a variable	
+
+					// If the search string is a variable
 				} else if (isVariable(searchString)) {
 					searchIndexStart = searchIndexEnd + 1;
 					searchIndexEnd = string.indexOf(',', searchIndexStart);
 					parameters.add(stringToVariable(searchString, variables));
-				
-				// If the search string is a simple sentence
+
+					// If the search string is a simple sentence
 				} else if (isSimpleSentence(searchString)) {
 					searchIndexStart = searchIndexEnd + 1;
 					searchIndexEnd = string.indexOf(',', searchIndexStart);
 					parameters.add(stringToSimpleSentence(searchString, variables));
-					
-				// If it is not a parameter, then go to the next comma and carry on
+
+					// If it is not a parameter, then go to the next comma and
+					// carry on
 				} else {
 					searchIndexEnd = string.indexOf(',', searchIndexEnd + 1);
 				}
 			}
-			
+
 			// Store the last parameter
 			searchString = string.substring(searchIndexStart, string.length() - 1);
 			if (isConstant(searchString)) {
 				parameters.add(stringToConstant(searchString));
-			
-			// If the search string is a variable	
+
+				// If the search string is a variable
 			} else if (isVariable(searchString)) {
 				parameters.add(stringToVariable(searchString, variables));
-			
-			// If the search string is a simple sentence
+
+				// If the search string is a simple sentence
 			} else if (isSimpleSentence(searchString)) {
 				parameters.add(stringToSimpleSentence(searchString, variables));
 			}
-			
+
 			return new SimpleSentence(name, parameters.toArray(new Unifiable[parameters.size()]));
 
 		} else {
@@ -408,35 +423,45 @@ public class Interpreter {
 	 * input string should be a DPost declaration. It creates an
 	 * {@code Initiator} or a {@code Terminator} object depending on the input.
 	 * 
+	 * The variable {@code variables} is used to pass the variables created to
+	 * the whole clause to avoid to create two different variables for the same
+	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
+	 * 
 	 * @param string
-	 *            to be convert into the {@code DPostDeclaration} object.
+	 *            to be converted into the {@code DPostDeclaration} object.
+	 * @param variables
+	 *            the variables already created to be reused if necessary and it
+	 *            will be updated with the new created variables.
 	 * @return the {@code DPostDeclaration} object representing the simple
 	 *         sentence string input. It will be either a {@code Initiator}
 	 *         object or an {@code Terminator} object.
 	 * @throws RemoteException
-	 *             if the input does not correspond to a constant according to
-	 *             the method {@code isDPostDeclaration}
-	 * @throws RemoteException
+	 *             if the input does not correspond to a DPostDeclaration
+	 *             according to the method {@code isDPostDeclaration()}.
 	 * @see SimpleSentence
 	 * @see #isSimpleSentence(String)
 	 */
 	public DPostDeclaration stringToDPost(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
-		
+
 		if (this.isDPostDeclaration(string)) {
 			if (variables == null) {
 				variables = new HashMap<String, Variable>();
 			}
-			
+
 			SimpleSentence simpleSentence = stringToSimpleSentence(string, variables);
-			
+
 			if (simpleSentence.getName().equals("initiates")) {
-				
-				return new Initiator((SimpleSentence) simpleSentence.getTerm(1), (SimpleSentence) simpleSentence.getTerm(2));
+
+				return new Initiator(
+						(SimpleSentence) simpleSentence.getTerm(1),
+						(SimpleSentence) simpleSentence.getTerm(2));
 			} else {
-				
-				return new Terminator((SimpleSentence) simpleSentence.getTerm(1), (SimpleSentence) simpleSentence.getTerm(2));
+
+				return new Terminator(
+						(SimpleSentence) simpleSentence.getTerm(1),
+						(SimpleSentence) simpleSentence.getTerm(2));
 			}
 		} else {
 			throw new RemoteException("It is not a DPost declaration.");
@@ -444,43 +469,54 @@ public class Interpreter {
 	}
 
 	/**
+	 * Checks whether the input string matches an and-clause. An and-clause is a
+	 * n-ary operator. Each operand is separated by a '&'. An operand can be a
+	 * simple sentence or a negative clause.
+	 * 
 	 * @param string
-	 * @return
+	 *            to be checked whether or not it is an and-clause.
+	 * @return true if the string is an and-clause, otherwise false.
 	 */
 	public boolean isAnd(String string) {
 		// Delete all the spaces before checking any matching
 		string = string.replaceAll(" ", "");
-		
+
 		int searchIndexStart = 0;
 		int searchIndexEnd = string.indexOf('&', searchIndexStart);
 		String searchString;
-		
+
 		// While it finds a & it search for an operand
 		// When there is no & anymore, it is the final operand
-		while(searchIndexEnd != -1) {
+		while (searchIndexEnd != -1) {
 			searchString = string.substring(searchIndexStart, searchIndexEnd);
-			// If the search string is a valid operand, then go to the next comma and start searching from it
+			// If the search string is a valid operand, then go to the next
+			// comma and start searching from it
 			if (isSimpleSentence(searchString) || isNegation(searchString)) {
 				searchIndexStart = searchIndexEnd + 1;
 				searchIndexEnd = string.indexOf('&', searchIndexStart);
-			
-			// If it is not a valid operand, then it is not a valid operator
+
+				// If it is not a valid operand, then it is not a valid operator
 			} else {
 
 				return false;
 			}
 		}
-		
+
 		// Check the last operand
 		searchString = string.substring(searchIndexStart);
-		
+
 		// If it is actually an operand, succeed, if not fail
 		return isSimpleSentence(searchString) || isNegation(searchString);
 	}
 	
 	/**
+	 * Checks whether the input string matches an negative clause. A
+	 * negative clause is a unary operator. Its only operand is a simple
+	 * sentence or an and-clause.
+	 * 
 	 * @param string
-	 * @return
+	 * 			  to be checked whether or not it is a negative clause.
+	 * @return true if the string is a negative clause, otherwise false.
 	 */
 	public boolean isNegation(String string) {
 		// Delete all the spaces before checking any matching
@@ -502,31 +538,48 @@ public class Interpreter {
 	}
 	
 	/**
+	 * Converts the input string into a {@code And} object. The input string
+	 * should be an and-clause. It uses the methods {@link #stringToAnd()},
+	 * {@link #stringToNegation()} and {@link #stringToSimpleSentence()}
+	 * recursively to create the whole clause.
+	 * 
+	 * The variable {@code variables} is used to pass the variables created to
+	 * the whole clause to avoid to create two different variables for the same
+	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
+	 * 
 	 * @param string
-	 * @return
+	 *            to be converted into the {@code And} object.
+	 * @param variables
+	 *            the variables already created to be reused if necessary and it
+	 *            will be updated with the new created variables.
+	 * @return the {@code And} object representing the and-clause string input.
 	 * @throws RemoteException
+	 *             if the input does not correspond to an and-clause according
+	 *             to the method {@code isAnd()}.
+	 * @see And
+	 * @see #isAnd(String)
 	 */
 	public And stringToAnd(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
-		
+
 		// Split the string to get the name and the parameters of the sentence
 		String[] stringOperands = string.split("&");
 		Goal[] operands = new Goal[stringOperands.length];
-		
+
 		if (variables == null) {
 			variables = new HashMap<String, Variable>();
 		}
-		
+
 		if (this.isAnd(string)) {
-			for(int i = 0; i < stringOperands.length; i++) {
+			for (int i = 0; i < stringOperands.length; i++) {
 				if (isSimpleSentence(stringOperands[i])) {
 					operands[i] = stringToSimpleSentence(stringOperands[i], variables);
 				} else if (isNegation(stringOperands[i])) {
 					operands[i] = stringToNegation(stringOperands[i], variables);
 				}
 			}
-			
+
 			return new And(operands);
 		} else {
 			throw new RemoteException("It is not a AND-clause.");
@@ -534,30 +587,48 @@ public class Interpreter {
 	}
 	
 	/**
+	 * Converts the input string into a {@code Not} object. The input string
+	 * should be a negative clause. It uses the methods {@link #stringToAnd()},
+	 * {@link #stringToNegation()} and {@link #stringToSimpleSentence()}
+	 * recursively to create the whole clause.
+	 * 
+	 * The variable {@code variables} is used to pass the variables created to
+	 * the whole clause to avoid to create two different variables for the same
+	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
+	 * 
 	 * @param string
-	 * @return
+	 *            to be converted into the {@code Not} object.
+	 * @param variables
+	 *            the variables already created to be reused if necessary and it
+	 *            will be updated with the new created variables.
+	 * @return the {@code Not} object representing the negative clause string
+	 *         input.
 	 * @throws RemoteException
+	 *             if the input does not correspond to a negative clause
+	 *             according to the method {@code isNot()}.
+	 * @see Not
+	 * @see #isNot(String)
 	 */
 	public Not stringToNegation(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
-		
+
 		if (variables == null) {
 			variables = new HashMap<String, Variable>();
 		}
-		
+
 		if (this.isNegation(string)) {
 			if (string.charAt(1) == '(') {
 				string = string.substring(2, string.length() - 1);
 			} else {
 				string = string.substring(1);
 			}
-			
+
 			if (this.isSimpleSentence(string)) {
-				
+
 				return new Not(this.stringToSimpleSentence(string, variables));
 			} else {
-				
+
 				return new Not(this.stringToAnd(string, variables));
 			}
 		} else {
@@ -566,9 +637,29 @@ public class Interpreter {
 	}
 	
 	/**
+	 * Converts the input string into a {@code Goal} object. The input string
+	 * should be a clause. It uses the methods {@link #stringToAnd()},
+	 * {@link #stringToNegation()} and {@link #stringToSimpleSentence()}
+	 * recursively to create the whole clause.
+	 * 
+	 * The variable {@code variables} is used to pass the variables created to
+	 * the whole clause to avoid to create two different variables for the same
+	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
+	 * 
 	 * @param string
-	 * @return
+	 *            to be converted into the {@code Goal} object.
+	 * @param variables
+	 *            the variables already created to be reused if necessary and it
+	 *            will be updated with the new created variables.
+	 * @return the {@code Goal} object representing the clause string input.
 	 * @throws RemoteException
+	 *             if the input does not correspond to a clause according to the
+	 *             method {@code isNot()}, {@code isAnd()} or
+	 *             {@code isSimpleSentence()}.
+	 * @see Goal
+	 * @see #isNot(String)
+	 * @see #isAnd(String)
+	 * @see #isSimpleSentence(String)
 	 */
 	public Goal stringToGoal(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
@@ -593,8 +684,13 @@ public class Interpreter {
 	}
 	
 	/**
+	 * Checks whether the input string matches a reactive rule. A reactive rule
+	 * is a binary imply. Its first operand is a clause. Its second operand is a
+	 * simple sentence.
+	 * 
 	 * @param string
-	 * @return
+	 *            to be checked whether or not it is a reactive rule.
+	 * @return true if the string is a reactive rule, otherwise false.
 	 */
 	public boolean isReactiveRule(String string) {
 		// Delete all the spaces before checking any matching
@@ -616,6 +712,29 @@ public class Interpreter {
 		return conditions && isSimpleSentence(conditionsAndGoal[1]);
 	}
 	
+	/**
+	 * Converts the input string into a {@code ReactiveRule} object. The input
+	 * string should be a reactive rule. It uses the methods
+	 * {@link #stringToGoal()} and {@link #stringToSimpleSentence()} recursively
+	 * to create the reactive rule.
+	 * 
+	 * The variable {@code variables} is used to pass the variables created to
+	 * the whole clause to avoid to create two different variables for the same
+	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
+	 * 
+	 * @param string
+	 *            to be converted into the {@code ReactiveRule} object.
+	 * @param variables
+	 *            the variables already created to be reused if necessary and it
+	 *            will be updated with the new created variables.
+	 * @return the {@code ReactiveRule} object representing the reactive rule
+	 *         string input.
+	 * @throws RemoteException
+	 *             if the input does not correspond to a reactive rule according
+	 *             to the method {@code isReactiveRule()}
+	 * @see ReactiveRule
+	 * @see #isReactiveRule(String)
+	 */
 	public ReactiveRule stringToReactiveRule(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
