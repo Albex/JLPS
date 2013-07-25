@@ -9,7 +9,6 @@ public abstract class DPostDeclaration {
 	
 	protected SimpleSentence event;
 	protected SimpleSentence fluent;
-	protected AbstractOperator condition;
 	
 	/**
 	 * Constructor of the object.
@@ -17,10 +16,9 @@ public abstract class DPostDeclaration {
 	 * @param fluent is also the general form fluent. It is the terminated or created by the event.
 	 * @param condition is the condition to be satisfied before performing the effect of the event.
 	 */
-	protected DPostDeclaration(SimpleSentence event, SimpleSentence fluent, AbstractOperator condition) {
+	protected DPostDeclaration(SimpleSentence event, SimpleSentence fluent) {
 		this.event = event;
 		this.fluent = fluent;
-		this.condition = condition;
 	}
 
 	/**
@@ -37,14 +35,6 @@ public abstract class DPostDeclaration {
 	 */
 	public SimpleSentence getFluent() {
 		return this.fluent;
-	}
-	
-	/**
-	 * Getter method for the condition attribute.
-	 * @return the condition to be satisfied before performing the effect of the event.
-	 */
-	public AbstractOperator getCondition() {	
-		return this.condition;
 	}
 	
 	/**

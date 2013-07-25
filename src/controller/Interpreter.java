@@ -1,5 +1,6 @@
 package controller;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import model.And;
@@ -139,15 +140,24 @@ public class Interpreter {
 	 * @see Variable
 	 * @see #isVariable(String)
 	 */
-	public Variable stringToVariable(String string) throws RemoteException {
+	public Variable stringToVariable(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 
 		// Create the Variable to be returned
 		Variable res;
+		
+		if (variables == null) {
+			variables = new HashMap<String, Variable>();
+		}
 
 		if (this.isVariable(string)) {
-			res = new Variable(string);
+			if (variables.containsKey(string)) {
+				res = variables.get(string);
+			} else {
+				res = new Variable(string);
+				variables.put(string, res);
+			}
 
 			return res;
 		} else {
@@ -223,13 +233,8 @@ public class Interpreter {
 		// Check the last parameter
 		searchString = string.substring(searchIndexStart, string.length() - 1);
 		// If it is actually a parameter, succeed, if not fail
-		if (isConstant(searchString) || isVariable(searchString) || isSimpleSentence(searchString)) {
-			
-			return true;
-		} else {
-			
-			return false;
-		}
+		
+		return isConstant(searchString) || isVariable(searchString) || isSimpleSentence(searchString);
 	}
 
 	/**
@@ -246,40 +251,80 @@ public class Interpreter {
 	 * @see SimpleSentence
 	 * @see #isSimpleSentence(String)
 	 */
-	public SimpleSentence stringToSimpleSentence(String string) throws RemoteException {
+	public SimpleSentence stringToSimpleSentence(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 
-		// Create the SimpleSentence to be returned
-		SimpleSentence res;
-
-		if (this.isSimpleSentence(string)) {
-			// Split the string to get the name and the parameters of the sentence
-			String[] nameAndVar = string.split("\\(|,|\\)");
-
-			// Get the name in first position
-			Constant predicateName = new Constant(nameAndVar[0]);
-
-			// If there is at least one parameter
-			if (nameAndVar.length > 1) {
-				// Create an array that will contain the parameters
-				Unifiable[] parameters = new Unifiable[nameAndVar.length - 1];
-
-				// Fill the new array
-				for (int i = 1; i < nameAndVar.length; i++) {
-					// Create a variable or a constant
-					parameters[i - 1] = (isVariable(nameAndVar[i])) ? new Variable(nameAndVar[i]) : new Constant(nameAndVar[i]);
-				}
-
-				// Initialize the result
-				res = new SimpleSentence(predicateName, parameters);
-
-			// If there is no parameter
-			} else {
-				res = new SimpleSentence(predicateName);
+		if (isSimpleSentence(string)) {
+			
+			if (variables == null) {
+				variables = new HashMap<String, Variable>();
 			}
+			
+			// Initialize the search over the string
+			int searchIndexStart = 0;
+			int searchIndexEnd = string.indexOf('(');
+			
+			// Store the name is a constant
+			Constant name = new Constant(string.substring(searchIndexStart, searchIndexEnd));
+			
+			// Go to the next part of the string to check
+			searchIndexStart = searchIndexEnd + 1;
+			
+			// If there is no parameter.
+			if (string.length() - 1 == searchIndexStart) {
+				 
+				return new SimpleSentence(name);
+			}
+			
+			// If not search the parameters and so search for commas while you can find one
+			// If there is no comma anymore, then it is the final parameter
+			ArrayList<Unifiable> parameters = new ArrayList<Unifiable>();
+			searchIndexEnd = string.indexOf(',', searchIndexStart);
+			String searchString;
+			while(searchIndexEnd != -1) {
+				searchString = string.substring(searchIndexStart, searchIndexEnd);
+				
+				// If the search string is a constant
+				if (isConstant(searchString)) {
+					searchIndexStart = searchIndexEnd + 1;
+					searchIndexEnd = string.indexOf(',', searchIndexStart);
+					parameters.add(stringToConstant(searchString));
+				
+				// If the search string is a variable	
+				} else if (isVariable(searchString)) {
+					searchIndexStart = searchIndexEnd + 1;
+					searchIndexEnd = string.indexOf(',', searchIndexStart);
+					parameters.add(stringToVariable(searchString, variables));
+				
+				// If the search string is a simple sentence
+				} else if (isSimpleSentence(searchString)) {
+					searchIndexStart = searchIndexEnd + 1;
+					searchIndexEnd = string.indexOf(',', searchIndexStart);
+					parameters.add(stringToSimpleSentence(searchString, variables));
+					
+				// If it is not a parameter, then go to the next comma and carry on
+				} else {
+					searchIndexEnd = string.indexOf(',', searchIndexEnd + 1);
+				}
+			}
+			
+			// Store the last parameter
+			searchString = string.substring(searchIndexStart, string.length() - 1);
+			if (isConstant(searchString)) {
+				parameters.add(stringToConstant(searchString));
+			
+			// If the search string is a variable	
+			} else if (isVariable(searchString)) {
+				parameters.add(stringToVariable(searchString, variables));
+			
+			// If the search string is a simple sentence
+			} else if (isSimpleSentence(searchString)) {
+				parameters.add(stringToSimpleSentence(searchString, variables));
+			}
+			
+			return new SimpleSentence(name, parameters.toArray(new Unifiable[parameters.size()]));
 
-			return res;
 		} else {
 			throw new RemoteException("It is not a Prolog-like predicate.");
 		}
@@ -304,32 +349,58 @@ public class Interpreter {
 		// Delete all the spaces before checking any matching
 		string = string.replaceAll(" ", "");
 		
-		// Split the string to get the name and the parameters of the declaration
-		String[] strings = string.split("\\(");
-
-		// Check if the name is initiates or terminates
-		boolean declarationName = strings[0].equals("initiates") || strings[0].equals("terminates");
+		// Initialize the search over the string
+		int searchIndexStart = 0;
+		int searchIndexEnd = string.indexOf('(');
 		
-		// Check if there is a comma between the two parameters
-		boolean comma = string.charAt(string.indexOf(')') + 1) == ',';
-
-		boolean event;
-		boolean predicate;
-		// Check if the first parameter is an event
-		// and the second a fluent. Both simple sentence
-		try {
-			event = isSimpleSentence(string.substring(string.indexOf('(') + 1,
-					string.indexOf(')') + 1));
-			predicate = isSimpleSentence(string.substring(
-					string.indexOf(')') + 2, string.lastIndexOf(')')));
-
-			return declarationName && event && predicate && comma;
-		
-		// This is the case where parenthesis and comma are bad placed
-		} catch (StringIndexOutOfBoundsException e) {
-
+		// Check if the name is 'initiates' or 'terminates'
+		if (searchIndexEnd == -1 || !string.substring(searchIndexStart, searchIndexEnd).matches("initiates|terminates")) {
+			
 			return false;
 		}
+		
+		// Go to the next part of the string to check
+		searchIndexStart = searchIndexEnd + 1;
+		
+		// If the last character is not a closing parenthesis it is not a DPost declaration.
+		if (string.charAt(string.length() - 1) != ')') {
+			
+			return false;
+		}
+		
+		// If the last character follows immediately the opening bracket it is not a DPost declaration.
+		if (string.length() - 1 == searchIndexStart) {
+			 
+			return false;
+		}
+		
+		// If not search the two simple sentences and so search for commas while you can find one
+		// If there is no comma anymore, then it is not a DPost declaration
+		searchIndexEnd = string.indexOf(',', searchIndexStart);
+		String searchString;
+		while(searchIndexEnd != -1) {
+			searchString = string.substring(searchIndexStart, searchIndexEnd);
+			
+			// If the search string is a simple sentence, then go to the next comma and start searching from it
+			if (isSimpleSentence(searchString)) {
+				searchIndexStart = searchIndexEnd + 1;
+				searchIndexEnd = string.indexOf(',', searchIndexStart);
+				
+				// Check the last parameter
+				searchString = string.substring(searchIndexStart, string.length() - 1);
+				// If it is actually a parameter, succeed, if not fail
+				
+				return isSimpleSentence(searchString);
+			
+			// If it is not a simple sentence, then go to the next comma and carry on
+			} else {
+				searchIndexEnd = string.indexOf(',', searchIndexEnd + 1);
+			}
+		}
+		
+		// If we found no simple sentence, it is not a DPost declaration
+		
+		return false;
 	}
     
 	/**
@@ -349,78 +420,24 @@ public class Interpreter {
 	 * @see SimpleSentence
 	 * @see #isSimpleSentence(String)
 	 */
-	public DPostDeclaration stringToDPost(String string) throws RemoteException {
+	public DPostDeclaration stringToDPost(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 		
-		DPostDeclaration res;
-
 		if (this.isDPostDeclaration(string)) {
-			// Get whether it is an initiator or a terminator.
-			String name = string.split("\\(")[0];
-			string = string.replaceFirst(name + "\\(", "");
-
-			// Get the first argument of the declaration (the event) and
-			// then storing names of variables to create linkedVariables.
-			String[] event = string.split("\\)")[0].split("\\(|,");
-			Unifiable[] parametersOfEvent = new Unifiable[event.length - 1];
-			HashMap<String, Variable> variablesOfEvent = new HashMap<String, Variable>();
-			SimpleSentence e;
-			Constant eventName = new Constant(event[0]);
-			if (event.length > 1) {
-				// Create each variable.
-				for (int i = 1; i < event.length; i++) {
-					if (event[i].matches("[A-Z].*")) {
-						Variable v = new Variable(event[i]);
-						parametersOfEvent[i - 1] = v;
-						variablesOfEvent.put(event[i], v);
-					} else {
-						parametersOfEvent[i - 1] = new Constant(event[i]);
-					}
-				}
-				e = new SimpleSentence(eventName, parametersOfEvent);
+			if (variables == null) {
+				variables = new HashMap<String, Variable>();
+			}
+			
+			SimpleSentence simpleSentence = stringToSimpleSentence(string, variables);
+			
+			if (simpleSentence.getName().equals("initiates")) {
+				
+				return new Initiator((SimpleSentence) simpleSentence.getTerm(1), (SimpleSentence) simpleSentence.getTerm(2));
 			} else {
-				e = new SimpleSentence(eventName);
+				
+				return new Terminator((SimpleSentence) simpleSentence.getTerm(1), (SimpleSentence) simpleSentence.getTerm(2));
 			}
-
-			// Get the second argument, the fluent.
-			String[] predicate = string.split("\\)")[1].split("\\(|,");
-			Unifiable[] parametersOfPredicate = new Unifiable[predicate.length - 2];
-			SimpleSentence p;
-			Constant predicateName = new Constant(predicate[1]);
-			if (predicate.length > 2) {
-				for (int i = 2; i < predicate.length; i++) {
-					// Seek if the variable is in the event ones and then
-					// add an entry in the linkedVariables.
-					if (predicate[i].matches("[A-Z].*")) {
-						if (variablesOfEvent.containsKey(predicate[i])) {
-							parametersOfPredicate[i - 2] = variablesOfEvent.get(predicate[i]);
-						} else {
-							parametersOfPredicate[i - 2] = new Variable(predicate[i]);
-						}
-					} else {
-						parametersOfPredicate[i - 2] = new Constant(predicate[i]);
-					}
-				}
-				p = new SimpleSentence(predicateName, parametersOfPredicate);
-			} else {
-				p = new SimpleSentence(predicateName);
-			}
-
-			// Creating the DPostDeclaration object
-			switch (name) {
-			case "initiates":
-				res = new Initiator(e, p, null);
-				break;
-			case "terminates":
-				res = new Terminator(e, p, null);
-				break;
-			default:
-				throw new RemoteException(
-						"It is not a DPost declaration, it should start with 'initiates' or 'terminates'");
-			}
-
-			return res;
 		} else {
 			throw new RemoteException("It is not a DPost declaration.");
 		}
@@ -489,7 +506,7 @@ public class Interpreter {
 	 * @return
 	 * @throws RemoteException
 	 */
-	public And stringToAnd(String string) throws RemoteException {
+	public And stringToAnd(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 		
@@ -497,12 +514,16 @@ public class Interpreter {
 		String[] stringOperands = string.split("&");
 		Goal[] operands = new Goal[stringOperands.length];
 		
+		if (variables == null) {
+			variables = new HashMap<String, Variable>();
+		}
+		
 		if (this.isAnd(string)) {
 			for(int i = 0; i < stringOperands.length; i++) {
 				if (isSimpleSentence(stringOperands[i])) {
-					operands[i] = stringToSimpleSentence(stringOperands[i]);
+					operands[i] = stringToSimpleSentence(stringOperands[i], variables);
 				} else if (isNegation(stringOperands[i])) {
-					operands[i] = stringToNegation(stringOperands[i]);
+					operands[i] = stringToNegation(stringOperands[i], variables);
 				}
 			}
 			
@@ -517,9 +538,13 @@ public class Interpreter {
 	 * @return
 	 * @throws RemoteException
 	 */
-	public Not stringToNegation(String string) throws RemoteException {
+	public Not stringToNegation(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
+		
+		if (variables == null) {
+			variables = new HashMap<String, Variable>();
+		}
 		
 		if (this.isNegation(string)) {
 			if (string.charAt(1) == '(') {
@@ -530,10 +555,10 @@ public class Interpreter {
 			
 			if (this.isSimpleSentence(string)) {
 				
-				return new Not(this.stringToSimpleSentence(string));
+				return new Not(this.stringToSimpleSentence(string, variables));
 			} else {
 				
-				return new Not(this.stringToAnd(string));
+				return new Not(this.stringToAnd(string, variables));
 			}
 		} else {
 			throw new RemoteException("It is not a negative clause.");
@@ -545,19 +570,23 @@ public class Interpreter {
 	 * @return
 	 * @throws RemoteException
 	 */
-	public Goal stringToGoal(String string) throws RemoteException {
+	public Goal stringToGoal(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 		
+		if (variables == null) {
+			variables = new HashMap<String, Variable>();
+		}
+		
 		if (this.isAnd(string)) {
 			
-			return this.stringToAnd(string);
+			return this.stringToAnd(string, variables);
 		} else if (this.isSimpleSentence(string)) {
 			
-			return this.stringToSimpleSentence(string);
+			return this.stringToSimpleSentence(string, variables);
 		} else if (this.isNegation(string)) {
 			
-			return this.stringToNegation(string);
+			return this.stringToNegation(string, variables);
 		} else {
 			throw new RemoteException("It is not a clause.");
 		}
@@ -587,9 +616,13 @@ public class Interpreter {
 		return conditions && isSimpleSentence(conditionsAndGoal[1]);
 	}
 	
-	public ReactiveRule stringToReactiveRule(String string) throws RemoteException {
+	public ReactiveRule stringToReactiveRule(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
+		
+		if (variables == null) {
+			variables = new HashMap<String, Variable>();
+		}
 		
 		if (this.isReactiveRule(string)) {
 			String[] conditionsAndGoal = string.split("->");
@@ -598,12 +631,13 @@ public class Interpreter {
 				conditionsAndGoal[0] = conditionsAndGoal[0].substring(1, conditionsAndGoal[0].length() - 1);
 			}
 			
-			Goal conditions = this.stringToGoal(conditionsAndGoal[0]);
-			SimpleSentence goal = this.stringToSimpleSentence(conditionsAndGoal[1]);
+			Goal conditions = this.stringToGoal(conditionsAndGoal[0], variables);
+			SimpleSentence goal = this.stringToSimpleSentence(conditionsAndGoal[1], variables);
 			
 			return new ReactiveRule(conditions, goal);
 		} else {
 			throw new RemoteException("It is not a reactive rule.");
 		}
+		
 	}
 }
