@@ -29,14 +29,7 @@ public class Not extends AbstractOperator {
 	 */
 	@Override
 	public String toString() {
-		String res = new String("NOT(");
-		for (int i = 0; i < this.operandCount(); i++) {
-			res += this.getOperand(i).toString() + ",";
-		}
-		res.substring(0, res.lastIndexOf(","));
-		res += ")";
-		
-		return res;
+		return "!(" + this.getFirstOperand().toString() + ")";
 	}
 	
 }

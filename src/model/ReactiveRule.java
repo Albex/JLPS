@@ -41,7 +41,7 @@ public class ReactiveRule {
 	}
 	
 	public String toString() {
-		return this.conditions.toString() + " -> " + this.goal.toString();
+		return "(" + this.conditions.toString() + ") -> " + this.goal.toString();
 	}
 
 }

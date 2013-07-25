@@ -38,11 +38,11 @@ public class And extends AbstractOperator {
 	 */
 	@Override
 	public String toString() {
-		String res = new String("AND(");
+		String res = new String();
 		for (int i = 0; i < this.operandCount() - 1; i++) {
-			res += this.getOperand(i).toString() + ",";
+			res += this.getOperand(i).toString() + " & ";
 		}
-		res += this.getOperand(this.operandCount() - 1) + ")";
+		res += this.getOperand(this.operandCount() - 1);
 		
 		return res;
 	}
