@@ -361,7 +361,7 @@ public class Interpreter {
 	 * <p>
 	 * This method is used to throw exceptions in
 	 * {@link #stringToDPost(String, HashMap) stringToDPost()}.
-	 * 
+	 * <p>
 	 * See a LPS documentation for more details on DPost declaration.
 	 * 
 	 * @param string

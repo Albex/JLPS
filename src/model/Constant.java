@@ -86,6 +86,9 @@ public class Constant implements Unifiable {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		if (this.printName != null) {
