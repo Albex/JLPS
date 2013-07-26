@@ -4,12 +4,14 @@ import java.util.ArrayList;
 /**
  * This is a singleton class that represents the database of the framework. It
  * contains the method to update itself.
- * 
- * The constructor is private as you must not use it.
- * Instead use the getInstance method to get the only object of the class (or to create it).
- * 
+ * <p>
+ * The constructor is private as you must not use it. Instead use the
+ * {@code #getInstance()} method to get the only object of the class (or to
+ * create it).
+ * <p>
  * It has three private attributes.
- * @author Albex
+ * 
+ * @author Alexandre Camus
  * @see #updates(RuleSet)
  */
 public class Database {
@@ -20,7 +22,7 @@ public class Database {
 	private static volatile Database instance = null;
 
 	/**
-	 * This the constructor of the class. It is private as it must not be
+	 * Constructor of the class. It is private as it must not be
 	 * called. Use the method {@code getInstance()} instead.
 	 * 
 	 * @see #getInstance()
@@ -54,7 +56,7 @@ public class Database {
 	 * This is the method to get an instance of the class.
 	 * Use it as shown: {@code Database.getInstance()}
 	 * 
-	 * @return the only instance of the class <code>Database</code>.
+	 * @return the only instance of the class {@code Database}.
 	 */
 	public final static Database getInstance() {
 		if (Database.instance == null) {
@@ -72,7 +74,7 @@ public class Database {
 	 * This is the second method to get an instance of the class. It allows one
 	 * to initiate all the attributes of the class.
 	 * 
-	 * @return the only instance of the class <code>Database</code>.
+	 * @return the only instance of the class {@code Database}.
 	 * @param initialFacts
 	 *            contains the initial facts.
 	 * @param initialRules
@@ -107,6 +109,13 @@ public class Database {
 		System.out.println("");
 	}
 
+	/**
+	 * Creates a {@code RuleSet} object that represents the state of the entire
+	 * database (intensional and extensional).
+	 * 
+	 * @return a {@code RuleSet} object containing all the rules of the
+	 *         database.
+	 */
 	public RuleSet getRuleSet() {
 		RuleSet ruleSet = this.factsDatabase.toRuleSet();
 		ruleSet.addRules(this.rulesDatabase.getRules());
@@ -116,7 +125,7 @@ public class Database {
 	
 	/**
 	 * This is the method that updates the database when the step cycle asks so.
-	 * This should be only used by a <code>CycleState</code> implementation.
+	 * This should be only used by a {@code CycleState} implementation.
 	 * 
 	 * @param events
 	 *            the events that have been triggered during the previous cycle.

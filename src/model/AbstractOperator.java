@@ -7,15 +7,21 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
- * @author Albex
- *
+ * This class is the abstract class that gathers all the operator classes.
+ * 
+ * @author Alexandre Camus
+ * 
  */
 public abstract class AbstractOperator implements Goal, Cloneable {
 
 	protected ArrayList<Goal> operands;
 	
 	/**
+	 * Constructor of the class.
 	 * 
+	 * @param operands
+	 *            the operands of the operator in an array or as independent
+	 *            variables.
 	 */
 	public AbstractOperator(Goal... operands) {
 		Goal[] operandArray = operands;
@@ -27,23 +33,40 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 		}
 	}
 	
+	/**
+	 * Constructor of the class.
+	 * 
+	 * @param operands
+	 *            the operands of the operator in an {@code ArrayList} object.
+	 */
 	public AbstractOperator(ArrayList<Goal> operands) {
 		this.operands = operands;
 	}
 	
+	/**
+	 * Sets all the operands to the specified operands.
+	 * 
+	 * @param operands
+	 *            the new operands in an {@code ArrayList} object.
+	 */
 	public void setOperands(ArrayList<Goal> operands) {
 		this.operands = operands;
 	}
 	
 	/**
-	 * @return the number of operands of the operator
+	 * Gets the size of the operator in terms of operands.
+	 * 
+	 * @return the number of operands of the operator.
 	 */
 	public int operandCount() {
 		return this.operands.size();
 	}
 	
 	/**
+	 * Gets the operand number {@code index}.
+	 * 
 	 * @param index
+	 *            of the operand to get.
 	 * @return return the operand number {@code index}.
 	 */
 	public Goal getOperand(int index) {
@@ -51,6 +74,8 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	}
 	
 	/**
+	 * Gets the first operand of the operator.
+	 * 
 	 * @return the first operand.
 	 */
 	public Goal getFirstOperand() {
@@ -58,7 +83,10 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	}
 	
 	/**
-	 * @return the tail of the operator which is the operator without its first operand.
+	 * Gets the tail of the operator. An operator is seen as its head (the first
+	 * operand) and its tail (all the other operands).
+	 * 
+	 * @return the tail of the operator as an object of the same class.
 	 * @throws CloneNotSupportedException
 	 */
 	public AbstractOperator getOperatorTail() throws CloneNotSupportedException {
@@ -71,13 +99,24 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	}
 	
 	/**
+	 * Checks if the operator has operands or not.
+	 * 
 	 * @return true if the operator is empty.
 	 */
 	public boolean isEmpty() {
 		return this.operands.isEmpty();
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Replaces all the variables in the clause according to the specified
+	 * binding.
+	 * <p>
+	 * This method is recursive over all {@link PCExpression} implementations.
+	 * 
+	 * @param s
+	 *            the {@code SubstitutionSet} that contains the bindings of the
+	 *            variables.
+	 * @return an object of the same class representing the bound clause.
 	 * @see model.PCExpression#replaceVariables(model.SubstitutionSet)
 	 */
 	@Override
@@ -97,7 +136,16 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 		return copy;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Standardizes the variables in order to be sure that there won't be any
+	 * variable clashes.
+	 * <p>
+	 * This method is recursive over all {@code PCExpression} implementations.
+	 * 
+	 * @param newVars
+	 *            is a parameter to save over the recursion all the variable
+	 *            replacements done so far.
+	 * @return an object of the same class representing the standardized clause.
 	 * @see model.PCExpression#standardizeVariablesApart(java.util.Hashtable)
 	 */
 	@Override

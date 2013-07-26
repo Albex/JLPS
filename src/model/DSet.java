@@ -6,15 +6,24 @@ package model;
 import java.util.ArrayList;
 
 /**
- * @author Albex
- *
+ * This class represents the D set of the database. This is where all the
+ * actions are defined.
+ * <p>
+ * The actions are stored as {@code Action} objects in a {@code ArrayList}.
+ * 
+ * @author Alexandre Camus
+ * 
  */
 public class DSet {
 
 	ArrayList<Action> actions;
 	
 	/**
+	 * Constructor of the class.
 	 * 
+	 * @param actions
+	 *            an array of the actions to be stored in the set or each action
+	 *            as a parameter.
 	 */
 	public DSet(Action... actions) {
 		Action[] actionsArray = actions;
@@ -26,6 +35,12 @@ public class DSet {
 		}
 	}
 	
+	/**
+	 * Gets the action corresponding to the specified name.
+	 * 
+	 * @param eventName the name of the action to get.
+	 * @return the action as an {@code Action} object.
+	 */
 	public Action getAction(String eventName) {
 		for(Action action : actions) {
 			if (action.getPredicate().getName().equals(eventName)) {
@@ -37,7 +52,14 @@ public class DSet {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Return the set in the form of:
+	 * "D set:
+	 *  {
+	 *  Action.toString()
+	 *  Action.toString()
+	 *  }
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
