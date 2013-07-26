@@ -18,11 +18,11 @@ import model.Variable;
 
 /**
  * This is the controller class. It is a singleton. Do not use the constructor.
- * Use the {@link #getInstance() getInstance()} method instead which gives you the instance of
- * the class. It translates Prolog-like declaration into objects for the
- * program.
+ * Use the {@link #getInstance() getInstance()} method instead which gives you
+ * the instance of the class. It translates Prolog-like declaration into objects
+ * for the program.
  * 
- * @author Albex
+ * @author Alexandre Camus
  * 
  */
 public class Interpreter {
