@@ -18,7 +18,7 @@ import model.Variable;
 
 /**
  * This is the controller class. It is a singleton. Do not use the constructor.
- * Use the {@link #getInstance()} method instead which gives you the instance of
+ * Use the {@link #getInstance() getInstance()} method instead which gives you the instance of
  * the class. It translates Prolog-like declaration into objects for the
  * program.
  * 
@@ -31,7 +31,7 @@ public class Interpreter {
 	
 	/**
 	 * Constructor of the class. To be not used by itself as the class is a
-	 * singleton. Use the specific method {@code getInstance} instead.
+	 * singleton. Use the specific method {@code getInstance()} instead.
 	 * 
 	 * @see #getInstance()
 	 */
@@ -61,8 +61,9 @@ public class Interpreter {
 	 * Checks whether the input string matches the constant pattern. A constant
 	 * must start with a number or a non-capital letter. It is a alpha-numeric
 	 * word and can have the symbol _.
-	 * 
-	 * This method is used to throw exceptions in {@link #stringToConstant(String)}.
+	 * <p>
+	 * This method is used to throw exceptions in {@link #stringToConstant(String)
+	 * stringToConstant()}.
 	 * 
 	 * @param string
 	 *            that is the constant.
@@ -110,9 +111,9 @@ public class Interpreter {
 	 * Checks whether the input string matches the variable pattern. A variable
 	 * must start a capital letter. It is a alpha-numeric word and can have the
 	 * symbol _.
-	 * 
+	 * <p>
 	 * This method is used to throw exceptions in
-	 * {@link #stringToVariable(String, HashMap)}.
+	 * {@link #stringToVariable(String, HashMap) stringToVariable()}.
 	 * 
 	 * @param string
 	 *            that is the variable.
@@ -128,7 +129,7 @@ public class Interpreter {
 	/**
 	 * Converts the input string into a {@code Variable} object. The input
 	 * string should be a variable.
-	 * 
+	 * <p>
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
 	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
@@ -176,11 +177,15 @@ public class Interpreter {
 	 * is a predicate or an event. This string has the form of:
 	 * 'constant(parameters)' where 'parameters' are variables or constants
 	 * separate by a comma. Constants and variables are checks thanks to their
-	 * own methods: {@link #isConstant(String)} and {@link #isVariable(String)}.
-	 * 
+	 * own methods: {@link #isConstant(String) isConstant()} and
+	 * {@link #isVariable(String) isVariable()}.
+	 * <p>
 	 * See a Prolog documentation for more information about Prolog predicate.
 	 * This method is used to throw exceptions in
-	 * {@link #stringToSimpleSentence(String, HashMap)}.
+	 * {@link #stringToSimpleSentence(String, HashMap) stringToSimpleSentence()}.
+	 * <p>
+	 * This method is used to throw exceptions in 
+	 * {@link #stringToSimpleSentence(String, HashMap) stringToSimpleSentence()}.
 	 * 
 	 * @param string
 	 *            to be checked whether it is a simple sentence or not.
@@ -246,11 +251,11 @@ public class Interpreter {
 	/**
 	 * Converts the input string into a {@code SimpleSentence} object. The input
 	 * string should be a simple sentence. It uses the methods
-	 * {@link #stringToAnd(String, HashMap)},
-	 * {@link #stringToNegation(String, HashMap)} and
-	 * {@link #stringToSimpleSentence(String, HashMap)} recursively to create
-	 * the whole clause.
-	 * 
+	 * {@link #stringToAnd(String, HashMap) stringToAnd()},
+	 * {@link #stringToNegation(String, HashMap) stringToNegation()} and
+	 * {@link #stringToSimpleSentence(String, HashMap) stringToSimpleSentence()}
+	 * recursively to create the whole clause.
+	 * <p>
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
 	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
@@ -353,9 +358,9 @@ public class Interpreter {
 	 * DPost declaration is a simple sentence which name is 'initiates' or
 	 * 'terminates'. It has two parameters: an event which is a simple sentence
 	 * and a fluent which is also a simple sentence.
-	 * 
+	 * <p>
 	 * This method is used to throw exceptions in
-	 * {@link #stringToDPost(String, HashMap)}.
+	 * {@link #stringToDPost(String, HashMap) stringToDPost()}.
 	 * 
 	 * See a LPS documentation for more details on DPost declaration.
 	 * 
@@ -426,7 +431,7 @@ public class Interpreter {
 	 * Converts the input string into a {@code DPostDeclaration} object. The
 	 * input string should be a DPost declaration. It creates an
 	 * {@code Initiator} or a {@code Terminator} object depending on the input.
-	 * 
+	 * <p>
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
 	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
@@ -476,6 +481,9 @@ public class Interpreter {
 	 * Checks whether the input string matches an and-clause. An and-clause is a
 	 * n-ary operator. Each operand is separated by a '&'. An operand can be a
 	 * simple sentence or a negative clause.
+	 * <p>
+	 * This method is used to throw exceptions in
+	 * {@link #stringToAnd(String, HashMap) stringToAnd()}.
 	 * 
 	 * @param string
 	 *            to be checked whether or not it is an and-clause.
@@ -517,6 +525,9 @@ public class Interpreter {
 	 * Checks whether the input string matches an negative clause. A
 	 * negative clause is a unary operator. Its only operand is a simple
 	 * sentence or an and-clause.
+	 * <p>
+	 * This method is used to throw exceptions in
+	 * {@link #stringToNegation(String, HashMap) stringToNegation()}.
 	 * 
 	 * @param string
 	 * 			  to be checked whether or not it is a negative clause.
@@ -544,11 +555,11 @@ public class Interpreter {
 	/**
 	 * Converts the input string into a {@code And} object. The input string
 	 * should be an and-clause. It uses the methods
-	 * {@link #stringToAnd(String, HashMap)},
-	 * {@link #stringToNegation(String, HashMap)} and
-	 * {@link #stringToSimpleSentence(String, HashMap)} recursively to create
-	 * the whole clause.
-	 * 
+	 * {@link #stringToAnd(String, HashMap) stringToAnd()},
+	 * {@link #stringToNegation(String, HashMap) stringToNegation()} and
+	 * {@link #stringToSimpleSentence(String, HashMap) stringToSimpleSentence()}
+	 * recursively to create the whole clause.
+	 * <p>
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
 	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
@@ -595,11 +606,11 @@ public class Interpreter {
 	/**
 	 * Converts the input string into a {@code Not} object. The input string
 	 * should be a negative clause. It uses the methods
-	 * {@link #stringToAnd(String, HashMap)},
-	 * {@link #stringToNegation(String, HashMap)} and
-	 * {@link #stringToSimpleSentence(String, HashMap)} recursively to create
-	 * the whole clause.
-	 * 
+	 * {@link #stringToAnd(String, HashMap) stringToAnd()},
+	 * {@link #stringToNegation(String, HashMap) stringToNegation()} and
+	 * {@link #stringToSimpleSentence(String, HashMap) stringToSimpleSentence()}
+	 * recursively to create the whole clause.
+	 * <p>
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
 	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
@@ -647,11 +658,11 @@ public class Interpreter {
 	/**
 	 * Converts the input string into a {@code Goal} object. The input string
 	 * should be a clause. It uses the methods
-	 * {@link #stringToAnd(String, HashMap)},
-	 * {@link #stringToNegation(String, HashMap)} and
-	 * {@link #stringToSimpleSentence(String, HashMap)} recursively to create
-	 * the whole clause.
-	 * 
+	 * {@link #stringToAnd(String, HashMap) stringToAnd()},
+	 * {@link #stringToNegation(String, HashMap) stringToNegation()} and
+	 * {@link #stringToSimpleSentence(String, HashMap) stringToSimpleSentence()}
+	 * recursively to create the whole clause.
+	 * <p>
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
 	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
@@ -697,6 +708,9 @@ public class Interpreter {
 	 * Checks whether the input string matches a reactive rule. A reactive rule
 	 * is a binary imply. Its first operand is a clause. Its second operand is a
 	 * simple sentence.
+	 * <p>
+	 * This method is used to throw exceptions in
+	 * {@link #stringToReactiveRule(String, HashMap) stringToConstant()}.
 	 * 
 	 * @param string
 	 *            to be checked whether or not it is a reactive rule.
@@ -725,10 +739,10 @@ public class Interpreter {
 	/**
 	 * Converts the input string into a {@code ReactiveRule} object. The input
 	 * string should be a reactive rule. It uses the methods
-	 * {@link #stringToGoal(String, HashMap)} and
-	 * {@link #stringToSimpleSentence(String, HashMap)} recursively to create
-	 * the reactive rule.
-	 * 
+	 * {@link #stringToGoal(String, HashMap) stringToGoal()} and
+	 * {@link #stringToSimpleSentence(String, HashMap) stringToSimpleSentence()}
+	 * recursively to create the reactive rule.
+	 * <p>
 	 * The variable {@code variables} is used to pass the variables created to
 	 * the whole clause to avoid to create two different variables for the same
 	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
