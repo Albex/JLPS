@@ -14,8 +14,7 @@ interface CycleState {
 	 * Sends the request to the current state to operate its behavior.
 	 * <p>
 	 * This method should be the only way to perform the action of a state. It
-	 * is called by the
-	 * {@link CycleHandler#handlerMethod(CycleHandler, String, RuleSet)
+	 * is called by the {@link CycleHandler#handlerMethod(String)
 	 * handlerMethod()} of the class {@code CycleHandler} which manages the
 	 * cycles.
 	 * 
