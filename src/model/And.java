@@ -13,6 +13,16 @@ import java.util.ArrayList;
  * 
  */
 public class And extends AbstractOperator {
+	
+	/**
+	 * Empty constructor of the class. This has no use except for the methods
+	 * {@link AbstractOperator#standardizeVariablesApart(java.util.Hashtable)
+	 * standardizeVariablesApart()} and
+	 * {@link AbstractOperator#replaceVariables(SubstitutionSet)
+	 * replaceVariables()}.
+	 */
+	public And() {
+	}
 
 	/**
 	 * Constructor of the class.

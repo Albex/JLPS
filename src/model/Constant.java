@@ -61,10 +61,9 @@ public class Constant implements Unifiable {
 	 *            variables so far.
 	 * @return a {@code Constant} object representing the constant.
 	 * @see model.PCExpression#replaceVariables(model.SubstitutionSet)
-	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public Constant replaceVariables(SubstitutionSet s) throws CloneNotSupportedException {
+	public Constant replaceVariables(SubstitutionSet s) {
 		// Constant doesn't need any replacement
 		return this;
 	}
@@ -84,7 +83,7 @@ public class Constant implements Unifiable {
 	 * @see model.PCExpression#standardizeVariablesApart(java.util.Hashtable)
 	 */
 	@Override
-	public Constant standardizeVariablesApart(Hashtable<Variable, Variable> newVars) throws CloneNotSupportedException {
+	public Constant standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
 		// Constant doesn't need any standardization
 		return this;
 	}

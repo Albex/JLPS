@@ -6,10 +6,8 @@ import java.util.ArrayList;
  * contains the method to update itself.
  * <p>
  * The constructor is private as you must not use it. Instead use the
- * {@code #getInstance()} method to get the only object of the class (or to
+ * {@code getInstance()} method to get the only object of the class (or to
  * create it).
- * <p>
- * It has three private attributes.
  * 
  * @author Alexandre Camus
  * @see #updates(RuleSet)
@@ -124,8 +122,8 @@ public class Database {
 	}
 	
 	/**
-	 * This is the method that updates the database when the step cycle asks so.
-	 * This should be only used by a {@code CycleState} implementation.
+	 * Updates the database when the step cycle asks so. This should be only
+	 * used by a {@code CycleState} implementation.
 	 * 
 	 * @param events
 	 *            the events that have been triggered during the previous cycle.

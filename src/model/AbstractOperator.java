@@ -119,10 +119,9 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	 *            variables so far.
 	 * @return an object of the same class representing the bound clause.
 	 * @see model.PCExpression#replaceVariables(model.SubstitutionSet)
-	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public AbstractOperator replaceVariables(SubstitutionSet s) throws CloneNotSupportedException {
+	public AbstractOperator replaceVariables(SubstitutionSet s) {
 		// Create the operands of the new bound operator
 		ArrayList<Goal> newOperands = new ArrayList<Goal>();
 		
@@ -132,8 +131,13 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 		}
 		
 		// Create the bound operator
-		AbstractOperator copy = (AbstractOperator) this.clone();
-		copy.setOperands(newOperands);
+		AbstractOperator copy = null;
+		try {
+			copy = this.getClass().newInstance();
+			copy.setOperands(newOperands);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return copy;
 	}
@@ -149,10 +153,9 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	 *            replacements done so far.
 	 * @return an object of the same class representing the standardized clause.
 	 * @see model.PCExpression#standardizeVariablesApart(java.util.Hashtable)
-	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public AbstractOperator standardizeVariablesApart(Hashtable<Variable, Variable> newVars) throws CloneNotSupportedException {
+	public AbstractOperator standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
 		// Create the operands of the new standardized operator
 		ArrayList<Goal> newOperands = new ArrayList<Goal>();
 		
@@ -162,8 +165,13 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 		}
 		
 		// Create the new standardized operator
-		AbstractOperator copy = (AbstractOperator) this.clone();
-		copy.setOperands(newOperands);
+		AbstractOperator copy = null;
+		try {
+			copy = this.getClass().newInstance();
+			copy.setOperands(newOperands);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return copy;
 	}

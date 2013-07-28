@@ -24,10 +24,9 @@ public interface PCExpression {
 	 *            variables so far.
 	 * @return a {@code PCExpression} object representing the bound predicate
 	 *         expression.
-	 * @throws CloneNotSupportedException
 	 * @see SubstitutionSet
 	 */
-	public PCExpression replaceVariables(SubstitutionSet s) throws CloneNotSupportedException;
+	public PCExpression replaceVariables(SubstitutionSet s);
 	
 	/**
 	 * Standardizes the variables in order to be sure that there won't be any
@@ -40,8 +39,7 @@ public interface PCExpression {
 	 *            replacements done so far.
 	 * @return a {@code PCExpression} object representing the standardized
 	 *         predicate expression.
-	 * @throws CloneNotSupportedException
 	 */
-	public PCExpression standardizeVariablesApart(Hashtable<Variable, Variable> newVars) throws CloneNotSupportedException;
+	public PCExpression standardizeVariablesApart(Hashtable<Variable, Variable> newVars);
 
 }

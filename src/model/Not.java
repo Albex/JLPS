@@ -11,6 +11,16 @@ package model;
  * 
  */
 public class Not extends AbstractOperator {
+	
+	/**
+	 * Empty constructor of the class. This has no use except for the methods
+	 * {@link AbstractOperator#standardizeVariablesApart(java.util.Hashtable)
+	 * standardizeVariablesApart()} and
+	 * {@link AbstractOperator#replaceVariables(SubstitutionSet)
+	 * replaceVariables()}.
+	 */
+	public Not() {
+	}
 
 	/**
 	 * Constructor of the class.

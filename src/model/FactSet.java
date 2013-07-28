@@ -123,16 +123,6 @@ public class FactSet {
 	}
 	
 	/**
-	 * Returns the set in the form of:
-	 * "Facts: {factName=[factsOfThisName], otherName=[othersFacts]}".
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return "Facts: " + this.facts.toString();
-	}
-	
-	/**
 	 * Creates a {@code RuleSet} object containing the facts as its rules.
 	 * 
 	 * @return the {@code RuleSet} containing the facts.
@@ -152,5 +142,15 @@ public class FactSet {
 		
 		return new RuleSet(rulesArray);
 	}
-
+	
+	/**
+	 * Returns the set in the form of:
+	 * "Facts: {factName=[factsOfThisName], otherName=[othersFacts]}".
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "Facts: " + this.facts.toString();
+	}
+	
 }

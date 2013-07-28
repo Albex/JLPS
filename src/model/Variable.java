@@ -72,10 +72,9 @@ public class Variable implements Unifiable {
 	 * @return a {@code PCExpression} object representing the clause to which
 	 *         the variable is bound.
 	 * @see model.PCExpression#replaceVariables(model.SubstitutionSet)
-	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public PCExpression replaceVariables(SubstitutionSet s) throws CloneNotSupportedException {
+	public PCExpression replaceVariables(SubstitutionSet s) {
 		// If the variable is bound replace the variable by its binding.
 		if (s.isBound(this)) {
 			
@@ -101,10 +100,9 @@ public class Variable implements Unifiable {
 	 *            replacements done so far.
 	 * @return a {@code Variable} object representing the standardized variable.
 	 * @see model.PCExpression#standardizeVariablesApart(java.util.Hashtable)
-	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public PCExpression standardizeVariablesApart(Hashtable<Variable, Variable> newVars) throws CloneNotSupportedException {
+	public PCExpression standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
 		// Get the standardize version of the variable
 		Variable newVar = newVars.get(this);
 		

@@ -122,10 +122,9 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 	 * @return a {@code SimpleSentence} object representing the bound simple
 	 *         sentence.
 	 * @see model.PCExpression#replaceVariables(model.SubstitutionSet)
-	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public SimpleSentence replaceVariables(SubstitutionSet s) throws CloneNotSupportedException {
+	public SimpleSentence replaceVariables(SubstitutionSet s) {
 		// Create an array for new terms.
 		Unifiable[] newTerms = new Unifiable[this.terms.length];
 		
@@ -149,10 +148,9 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 	 * @return a {@code SimpleSentence} object representing the standardized
 	 *         simple sentence.
 	 * @see model.PCExpression#standardizeVariablesApart(java.util.Hashtable)
-	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public SimpleSentence standardizeVariablesApart(Hashtable<Variable, Variable> newVars) throws CloneNotSupportedException {
+	public SimpleSentence standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
 		// Create an array for new terms.
 		Unifiable[] newTerms = new Unifiable[this.terms.length];
 
