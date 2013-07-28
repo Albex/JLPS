@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
- * This class is the abstract class that gathers all the operator classes.
+ * This class is the abstract class that gathers all the operator classes. It
+ * implements {@link Goal}.
  * 
  * @author Alexandre Camus
  * 
@@ -109,18 +110,19 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	
 	/**
 	 * Replaces all the variables in the clause according to the specified
-	 * binding.
+	 * bindings.
 	 * <p>
 	 * This method is recursive over all {@link PCExpression} implementations.
 	 * 
 	 * @param s
 	 *            the {@code SubstitutionSet} that contains the bindings of the
-	 *            variables.
+	 *            variables so far.
 	 * @return an object of the same class representing the bound clause.
 	 * @see model.PCExpression#replaceVariables(model.SubstitutionSet)
+	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public PCExpression replaceVariables(SubstitutionSet s) throws CloneNotSupportedException {
+	public AbstractOperator replaceVariables(SubstitutionSet s) throws CloneNotSupportedException {
 		// Create the operands of the new bound operator
 		ArrayList<Goal> newOperands = new ArrayList<Goal>();
 		
@@ -147,9 +149,10 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	 *            replacements done so far.
 	 * @return an object of the same class representing the standardized clause.
 	 * @see model.PCExpression#standardizeVariablesApart(java.util.Hashtable)
+	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public PCExpression standardizeVariablesApart(Hashtable<Variable, Variable> newVars) throws CloneNotSupportedException {
+	public AbstractOperator standardizeVariablesApart(Hashtable<Variable, Variable> newVars) throws CloneNotSupportedException {
 		// Create the operands of the new standardized operator
 		ArrayList<Goal> newOperands = new ArrayList<Goal>();
 		

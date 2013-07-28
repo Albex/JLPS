@@ -1,14 +1,31 @@
 package model;
 
+/**
+ * This is the class that represents the terminators among the DPost
+ * declarations. It extends {@link DPostDeclaration}.
+ * 
+ * @author Alexandre Camus
+ * 
+ */
 public class Terminator extends DPostDeclaration {
 
+	/**
+	 * Constructor of the class.
+	 * 
+	 * @param event
+	 *            that is defined by this terminator.
+	 * @param fluent
+	 *            that is terminates by this terminator.
+	 */
 	public Terminator(SimpleSentence event, SimpleSentence fluent) {
 		super(event, fluent);
 	}
 	
 	/**
-	 * This method writes the terminator in the Prolog-like way.
-	 * terminates(event, fluent).
+	 * Returns the terminator in the form of:
+	 * "terminates(event, fluent)".
+	 * 
+	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {

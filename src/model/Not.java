@@ -4,7 +4,8 @@
 package model;
 
 /**
- * This class represents negative clauses. It is a unary operator.
+ * This class represents negative clauses. It is a unary operator. It extends
+ * {@link AbstractOperator}.
  * 
  * @author Alexandre Camus
  * 
@@ -34,14 +35,15 @@ public class Not extends AbstractOperator {
 	 *            the solution known so far at the parent node.
 	 * @return the node of the tree of proof.
 	 * @see Goal#getSolver(RuleSet, SubstitutionSet)
+	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) throws CloneNotSupportedException {
+	public NotSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) throws CloneNotSupportedException {
 		return new NotSolutionNode(this, rules, parentSolution);
 	}
 
 	/**
-	 * Return the negative clause under the form of:
+	 * Returns the negative clause under the form of:
 	 * "!(operand)".
 	 * 
 	 * @see java.lang.Object#toString()

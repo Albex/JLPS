@@ -157,7 +157,7 @@ public class Action {
 	}
 
 	/**
-	 * Return the action under the form of:
+	 * Returns the action under the form of:
 	 * "if (conditions) actionName=[[initiators], [terminators]]"
 	 * 
 	 * @see java.lang.Object#toString()

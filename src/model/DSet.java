@@ -53,7 +53,7 @@ public class DSet {
 	}
 
 	/**
-	 * Return the set in the form of:
+	 * Returns the set in the form of:
 	 * "D set:
 	 *  {
 	 *  Action.toString()

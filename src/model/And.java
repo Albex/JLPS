@@ -6,7 +6,8 @@ package model;
 import java.util.ArrayList;
 
 /**
- * This class represents and-clauses. It is a n-ary operator.
+ * This class represents and-clauses. It is a n-ary operator. It extends
+ * {@link AbstractOperator}.
  * 
  * @author Alexandre Camus
  * 
@@ -48,14 +49,15 @@ public class And extends AbstractOperator {
 	 *            the solution known so far at the parent node.
 	 * @return the node of the tree of proof.
 	 * @see Goal#getSolver(RuleSet, SubstitutionSet)
+	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) throws CloneNotSupportedException {
+	public AndSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) throws CloneNotSupportedException {
 		return new AndSolutionNode(this, rules, parentSolution);
 	}
 
 	/**
-	 * Return the negative clause under the form of:
+	 * Returns the and-clause under the form of:
 	 * "operand1 & operand2 & ...".
 	 * 
 	 * @see java.lang.Object#toString()
