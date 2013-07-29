@@ -4,8 +4,11 @@
 package model;
 
 /**
- * @author Albex
- *
+ * This class represents a and node in the tree of proof.
+ * A solution node is a node in a tree of proof.
+ * 
+ * @author Alexandre Camus
+ * 
  */
 public class AndSolutionNode extends AbstractSolutionNode {
 
@@ -15,9 +18,14 @@ public class AndSolutionNode extends AbstractSolutionNode {
 	private AbstractOperator operatorTail = null;
 	
 	/**
+	 * Constructor of the class.
+	 * 
 	 * @param goal
+	 *            the and clause to be proved by this subtree.
 	 * @param rules
+	 *            the rules representing context of the proof.
 	 * @param parentSolution
+	 *            the solution of the parent node in the tree of proof.
 	 */
 	public AndSolutionNode(And goal, RuleSet rules, SubstitutionSet parentSolution) {
 		super(goal, rules, parentSolution);
@@ -25,15 +33,39 @@ public class AndSolutionNode extends AbstractSolutionNode {
 		this.operatorTail = goal.getOperatorTail();
 	}
 	
+	/**
+	 * Gets the solution node of the and clause's head.
+	 * <p>
+	 * This is based on the representation of an and clause. See {@link And}
+	 * class for more details.
+	 * 
+	 * @return a {@code AbstractSolutionNode} representing the solution node of
+	 *         the head.
+	 */
 	protected AbstractSolutionNode getHeadSolutionNode() {
 		return this.headSolutionNode;
 	}
 	
+	/**
+	 * Gets the solution node of the and clause's tail.
+	 * <p>
+	 * This is based on the representation of an and clause. See {@link And}
+	 * class for more details.
+	 * 
+	 * @return a {@code AbstractSolutionNode} representing the solution node of
+	 *         the tail.
+	 */
 	protected AbstractSolutionNode getTailSolutionNode() {
 		return this.tailSolutionNode;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Creates the next solution for the and clause of the node. If no solution
+	 * exists, it will create a solution. Otherwise it will get a different
+	 * solution or return {@code null} if there no other different solution.
+	 * 
+	 * @return a {@code SubstitutionSet} object representing the bindings of the
+	 *         next solution or {@code null} if there is no next solution.
 	 * @see model.AbstractSolutionNode#nextSolution()
 	 */
 	@Override

@@ -38,6 +38,6 @@ public interface Unifiable extends PCExpression {
 	 *         needed to unify the expression to the specified expression.
 	 * @see SubstitutionSet
 	 */
-	public SubstitutionSet unify(Unifiable exp, SubstitutionSet s);
+	public SubstitutionSet unify(Unifiable expr, SubstitutionSet s);
 	
 }

@@ -103,7 +103,7 @@ public class Constant implements Unifiable {
 	 *            so far and/or the constraints applied.
 	 * @return a {@code SubstitutionSet} object that contains all the bindings
 	 *         needed to unify the constant to the specified expression.
-	 * @see model.Unifiable#unfiy()
+	 * @see model.Unifiable#unify(Unifiable, SubstitutionSet)
 	 */
 	@Override
 	public SubstitutionSet unify(Unifiable expr, SubstitutionSet s) {
