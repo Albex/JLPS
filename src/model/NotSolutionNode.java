@@ -16,9 +16,8 @@ public class NotSolutionNode extends AbstractSolutionNode {
 	 * @param goal
 	 * @param rules
 	 * @param parentSolution
-	 * @throws CloneNotSupportedException 
 	 */
-	public NotSolutionNode(Not goal, RuleSet rules, SubstitutionSet parentSolution) throws CloneNotSupportedException {
+	public NotSolutionNode(Not goal, RuleSet rules, SubstitutionSet parentSolution) {
 		super(goal, rules, parentSolution);
 		this.tailSolutionNode = goal.getFirstOperand().getSolver(rules, parentSolution);
 	}
@@ -27,7 +26,7 @@ public class NotSolutionNode extends AbstractSolutionNode {
 	 * @see model.AbstractSolutionNode#nextSolution()
 	 */
 	@Override
-	public SubstitutionSet nextSolution() throws CloneNotSupportedException {
+	public SubstitutionSet nextSolution() {
 		if (this.solutionFlag) {
 			
 			return null;

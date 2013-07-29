@@ -29,7 +29,7 @@ public abstract class AbstractSolutionNode {
 		this.goal = goal;
 	}
 	
-	public abstract SubstitutionSet nextSolution() throws CloneNotSupportedException;
+	public abstract SubstitutionSet nextSolution();
 	
 	protected void reset(SubstitutionSet newParentSolution) {
 		this.parentSolution = newParentSolution;
@@ -40,7 +40,7 @@ public abstract class AbstractSolutionNode {
 		return this.ruleNumber < this.rules.getRuleCount();
 	}
 	
-	public Rule nextRule() throws CloneNotSupportedException {
+	public Rule nextRule() {
 		if (this.hasNextRule()) {
 			this.currentRule = this.rules.getRuleStandardizedApart(this.ruleNumber++);
 		} else {

@@ -129,7 +129,7 @@ public class Database {
 	 *            the events that have been triggered during the previous cycle.
 	 * @see DatabaseUpdateState
 	 */
-	public void updates(RuleSet events) throws CloneNotSupportedException {
+	public void updates(RuleSet events) {
 
 		for(Rule currentEvent : events.getRules()) {
 			// Get the action to perform

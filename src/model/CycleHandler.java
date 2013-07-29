@@ -67,9 +67,8 @@ public final class CycleHandler {
 	 * 
 	 * @param NAME
 	 *            the name of the step. It has no use except to debug.
-	 * @throws CloneNotSupportedException
 	 */
-	public void handlerMethod(final String NAME) throws CloneNotSupportedException {
+	public void handlerMethod(final String NAME) {
 		myState.handlerMethod(this, NAME, events);
 	}
 	

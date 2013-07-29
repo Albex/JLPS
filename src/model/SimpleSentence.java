@@ -55,7 +55,6 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 	 *            the solution known so far at the parent node.
 	 * @return the node of the tree of proof.
 	 * @see Goal#getSolver(RuleSet, SubstitutionSet)
-	 * @throws CloneNotSupportedException
 	 */
 	@Override
 	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) {

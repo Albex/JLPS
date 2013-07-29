@@ -53,7 +53,7 @@ public abstract class DPostDeclaration {
 	 *            that is bound and corresponds to this declaration.
 	 * @return the bound fluent according to the bindings.
 	 */
-	public SimpleSentence getGroundFluent(SimpleSentence event) throws CloneNotSupportedException {
+	public SimpleSentence getGroundFluent(SimpleSentence event) {
 		SubstitutionSet variablesBinding = this.event.unify(event, new SubstitutionSet());
 		SimpleSentence groundFluent = (SimpleSentence) this.fluent.replaceVariables(variablesBinding);
 		

@@ -3,12 +3,10 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import model.Action;
-import model.And;
 import model.CycleHandler;
 import model.DSet;
 import model.Database;
 import model.FactSet;
-import model.Goal;
 import model.Initiator;
 import model.ReactiveRule;
 import model.ReactiveRuleSet;
@@ -16,14 +14,12 @@ import model.Rule;
 import model.RuleSet;
 import model.SimpleSentence;
 import model.Terminator;
-import model.Unifiable;
 import controller.Interpreter;
 
 
 public class main {
 
 	public main() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -59,19 +55,11 @@ public class main {
 			
 			CycleHandler.getInstance().setEvents(new RuleSet(events));
 			
-			try {
-				CycleHandler.getInstance().handlerMethod("name");
-			} catch (CloneNotSupportedException e) {
-				System.out.println(e.getMessage());
-			}
+			CycleHandler.getInstance().handlerMethod("name");
 			
 			Database.getInstance().printOut();
 			
-			try {
-				CycleHandler.getInstance().handlerMethod("name");
-			} catch (CloneNotSupportedException e) {
-				System.out.println(e.getMessage());
-			}
+			CycleHandler.getInstance().handlerMethod("name");
 			
 		} catch (RemoteException e) {
 			System.out.println(e.getMessage());

@@ -13,7 +13,7 @@ import java.util.Hashtable;
  * @author Alexandre Camus
  * 
  */
-public abstract class AbstractOperator implements Goal, Cloneable {
+public abstract class AbstractOperator implements Goal {
 
 	protected ArrayList<Goal> operands;
 	
@@ -88,13 +88,11 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	 * operand) and its tail (all the other operands).
 	 * 
 	 * @return the tail of the operator as an object of the same class.
-	 * @throws CloneNotSupportedException
 	 */
-	public AbstractOperator getOperatorTail() throws CloneNotSupportedException {
+	public AbstractOperator getOperatorTail() {
 		ArrayList<Goal> tail = new ArrayList<Goal>(this.operands);
 		tail.remove(0);
-		AbstractOperator tailOperator = (AbstractOperator) this.clone();
-		tailOperator.setOperands(tail);
+		AbstractOperator tailOperator = this.create(tail);
 		
 		return tailOperator;
 	}
@@ -107,6 +105,15 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 	public boolean isEmpty() {
 		return this.operands.isEmpty();
 	}
+	
+	/**
+	 * Generic constructor of sub-objects. It allows the methods of the abstract
+	 * class to create correct sub-objects very easily.
+	 * 
+	 * @see model.And#create(java.util.ArrayList)
+	 * @see model.Not#create(java.util.ArrayList)
+	 */
+	protected abstract AbstractOperator create(ArrayList<Goal> operands);
 	
 	/**
 	 * Replaces all the variables in the clause according to the specified
@@ -131,13 +138,7 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 		}
 		
 		// Create the bound operator
-		AbstractOperator copy = null;
-		try {
-			copy = this.getClass().newInstance();
-			copy.setOperands(newOperands);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		AbstractOperator copy = this.create(newOperands);
 		
 		return copy;
 	}
@@ -165,13 +166,7 @@ public abstract class AbstractOperator implements Goal, Cloneable {
 		}
 		
 		// Create the new standardized operator
-		AbstractOperator copy = null;
-		try {
-			copy = this.getClass().newInstance();
-			copy.setOperands(newOperands);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		AbstractOperator copy = this.create(newOperands);
 		
 		return copy;
 	}

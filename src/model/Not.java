@@ -3,6 +3,8 @@
  */
 package model;
 
+import java.util.ArrayList;
+
 /**
  * This class represents negative clauses. It is a unary operator. It extends
  * {@link AbstractOperator}.
@@ -13,16 +15,6 @@ package model;
 public class Not extends AbstractOperator {
 	
 	/**
-	 * Empty constructor of the class. This has no use except for the methods
-	 * {@link AbstractOperator#standardizeVariablesApart(java.util.Hashtable)
-	 * standardizeVariablesApart()} and
-	 * {@link AbstractOperator#replaceVariables(SubstitutionSet)
-	 * replaceVariables()}.
-	 */
-	public Not() {
-	}
-
-	/**
 	 * Constructor of the class.
 	 * 
 	 * @param operands
@@ -30,6 +22,17 @@ public class Not extends AbstractOperator {
 	 */
 	public Not(Goal operands) {
 		super(operands);
+	}
+
+	/**
+	 * Generic constructor of the object. It allows the methods of the abstract
+	 * class {@code AbstractOperator} to create the correct object very easily.
+	 * 
+	 * @see model.AbstractOperator#create(java.util.ArrayList)
+	 */
+	@Override
+	protected AbstractOperator create(ArrayList<Goal> operands) {
+		return new Not(operands.get(0));
 	}
 
 	/**
@@ -45,10 +48,9 @@ public class Not extends AbstractOperator {
 	 *            the solution known so far at the parent node.
 	 * @return the node of the tree of proof.
 	 * @see Goal#getSolver(RuleSet, SubstitutionSet)
-	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public NotSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) throws CloneNotSupportedException {
+	public NotSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) {
 		return new NotSolutionNode(this, rules, parentSolution);
 	}
 

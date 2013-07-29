@@ -23,8 +23,7 @@ public interface Goal extends PCExpression {
 	 *            the solution known so far at the parent node.
 	 * @return the node of the tree of proof.
 	 * @see AbstractSolutionNode#nextSolution()
-	 * @throws CloneNotSupportedException
 	 */
-	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) throws CloneNotSupportedException;
+	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution);
 	
 }

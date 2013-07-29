@@ -42,22 +42,17 @@ public class ReactiveRule implements PCExpression {
 	 * @return an {@code ArrayList} object containing all the goals created.
 	 */
 	public ArrayList<Unifiable> fireRule(RuleSet database) {
-		try {
-			ArrayList<Unifiable> goals = new ArrayList<Unifiable>();
-			ReactiveRule standardizedRule = this.standardizeVariablesApart(new Hashtable<Variable, Variable>());
-			AbstractSolutionNode root = standardizedRule.conditions.getSolver(database, new SubstitutionSet());
-			SubstitutionSet solution;
-			
-			while((solution = root.nextSolution()) != null) {
-				goals.add((Unifiable) standardizedRule.goal.replaceVariables(solution));
-			}
-			
-			return goals;
-			
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+		ArrayList<Unifiable> goals = new ArrayList<Unifiable>();
+		ReactiveRule standardizedRule = this.standardizeVariablesApart(new Hashtable<Variable, Variable>());
+		AbstractSolutionNode root = standardizedRule.conditions.getSolver(database, new SubstitutionSet());
+		SubstitutionSet solution;
+		
+		while((solution = root.nextSolution()) != null) {
+			goals.add((Unifiable) standardizedRule.goal.replaceVariables(solution));
 		}
-		return null;
+		
+		return goals;
+			
 	}
 
 	/**

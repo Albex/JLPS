@@ -26,8 +26,7 @@ interface CycleState {
 	 * @param events
 	 *            an object {@code RuleSet} that contains the events/actions
 	 *            that will be or have been performed during the very cycle.
-	 * @throws CloneNotSupportedException
 	 */
-	void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME, RuleSet events) throws CloneNotSupportedException;
+	void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME, RuleSet events);
 
 }

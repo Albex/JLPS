@@ -18,9 +18,8 @@ public class AndSolutionNode extends AbstractSolutionNode {
 	 * @param goal
 	 * @param rules
 	 * @param parentSolution
-	 * @throws CloneNotSupportedException 
 	 */
-	public AndSolutionNode(And goal, RuleSet rules, SubstitutionSet parentSolution) throws CloneNotSupportedException {
+	public AndSolutionNode(And goal, RuleSet rules, SubstitutionSet parentSolution) {
 		super(goal, rules, parentSolution);
 		this.headSolutionNode = goal.getFirstOperand().getSolver(rules, parentSolution);
 		this.operatorTail = goal.getOperatorTail();
@@ -38,7 +37,7 @@ public class AndSolutionNode extends AbstractSolutionNode {
 	 * @see model.AbstractSolutionNode#nextSolution()
 	 */
 	@Override
-	public SubstitutionSet nextSolution() throws CloneNotSupportedException {
+	public SubstitutionSet nextSolution() {
 		SubstitutionSet solution;
 		
 		// First try to create a new solution with the same head solution but a different tail solution

@@ -95,9 +95,8 @@ public class Action {
 	 *            bindings.
 	 * @return the {@code ArrayList} that contains every version of the action.
 	 *         If there is no solution, it will be empty (but not null).
-	 * @throws CloneNotSupportedException
 	 */
-	public ArrayList<SimpleSentence> actionsAllowed(RuleSet rules) throws CloneNotSupportedException {
+	public ArrayList<SimpleSentence> actionsAllowed(RuleSet rules) {
 		ArrayList<SimpleSentence> actions = new ArrayList<SimpleSentence>();
 		
 		if (this.conditions != null) {
@@ -123,9 +122,8 @@ public class Action {
 	 *            the version of the action that is performed on the database.
 	 * @return the {@code ArrayList} of the bound fluents according to the
 	 *         parameter.
-	 * @throws CloneNotSupportedException
 	 */
-	public ArrayList<SimpleSentence> fluentsToInitiate(SimpleSentence event) throws CloneNotSupportedException {
+	public ArrayList<SimpleSentence> fluentsToInitiate(SimpleSentence event) {
 		ArrayList<SimpleSentence> fluents = new ArrayList<SimpleSentence>();
 		
 		for(Initiator initiator : this.initiators) {
@@ -144,9 +142,8 @@ public class Action {
 	 *            the version of the action that is performed on the database.
 	 * @return the {@code ArrayList} of the bound fluents according to the
 	 *         parameter.
-	 * @throws CloneNotSupportedException
 	 */
-	public ArrayList<SimpleSentence> fluentsToTerminate(SimpleSentence event) throws CloneNotSupportedException {
+	public ArrayList<SimpleSentence> fluentsToTerminate(SimpleSentence event) {
 		ArrayList<SimpleSentence> fluents = new ArrayList<SimpleSentence>();
 		
 		for(Terminator terminator : this.terminators) {

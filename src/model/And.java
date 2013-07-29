@@ -15,16 +15,6 @@ import java.util.ArrayList;
 public class And extends AbstractOperator {
 	
 	/**
-	 * Empty constructor of the class. This has no use except for the methods
-	 * {@link AbstractOperator#standardizeVariablesApart(java.util.Hashtable)
-	 * standardizeVariablesApart()} and
-	 * {@link AbstractOperator#replaceVariables(SubstitutionSet)
-	 * replaceVariables()}.
-	 */
-	public And() {
-	}
-
-	/**
 	 * Constructor of the class.
 	 * 
 	 * @param operands
@@ -45,6 +35,17 @@ public class And extends AbstractOperator {
 	public And(ArrayList<Goal> operands) {
 		super(operands);
 	}
+	
+	/**
+	 * Generic constructor of the object. It allows the methods of the abstract
+	 * class {@code AbstractOperator} to create the correct object very easily.
+	 * 
+	 * @see model.AbstractOperator#create(java.util.ArrayList)
+	 */
+	@Override
+	protected AbstractOperator create(ArrayList<Goal> operands) {
+		return new And(operands);
+	}
 
 	/**
 	 * Creates a solver which is a node in the tree proof. This is the version
@@ -59,10 +60,9 @@ public class And extends AbstractOperator {
 	 *            the solution known so far at the parent node.
 	 * @return the node of the tree of proof.
 	 * @see Goal#getSolver(RuleSet, SubstitutionSet)
-	 * @throws CloneNotSupportedException
 	 */
 	@Override
-	public AndSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) throws CloneNotSupportedException {
+	public AndSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) {
 		return new AndSolutionNode(this, rules, parentSolution);
 	}
 

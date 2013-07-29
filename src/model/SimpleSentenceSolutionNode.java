@@ -24,7 +24,7 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 	 * @see model.AbstractSolutionNode#nextSolution()
 	 */
 	@Override
-	public SubstitutionSet nextSolution() throws CloneNotSupportedException {
+	public SubstitutionSet nextSolution() {
 		SubstitutionSet solution;
 		
 		// If there is a child in the proof tree, try to get an alternative solution
