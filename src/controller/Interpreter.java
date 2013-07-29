@@ -501,16 +501,16 @@ public class Interpreter {
 		// When there is no & anymore, it is the final operand
 		while (searchIndexEnd != -1) {
 			searchString = string.substring(searchIndexStart, searchIndexEnd);
+			
 			// If the search string is a valid operand, then go to the next
-			// comma and start searching from it
+			// & and start searching from it
 			if (isSimpleSentence(searchString) || isNegation(searchString)) {
 				searchIndexStart = searchIndexEnd + 1;
 				searchIndexEnd = string.indexOf('&', searchIndexStart);
 
-				// If it is not a valid operand, then it is not a valid operator
+			// If it is not a valid operand, then it is not a valid operator
 			} else {
-
-				return false;
+				searchIndexEnd = string.indexOf('&', searchIndexEnd + 1);
 			}
 		}
 
@@ -580,23 +580,45 @@ public class Interpreter {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 
-		// Split the string to get the name and the parameters of the sentence
-		String[] stringOperands = string.split("&");
-		Goal[] operands = new Goal[stringOperands.length];
-
-		if (variables == null) {
-			variables = new HashMap<String, Variable>();
-		}
-
 		if (this.isAnd(string)) {
-			for (int i = 0; i < stringOperands.length; i++) {
-				if (isSimpleSentence(stringOperands[i])) {
-					operands[i] = stringToSimpleSentence(stringOperands[i], variables);
-				} else if (isNegation(stringOperands[i])) {
-					operands[i] = stringToNegation(stringOperands[i], variables);
+			// Split the string to get the name and the parameters of the sentence
+			ArrayList<Goal> operands = new ArrayList<Goal>();
+	
+			int searchIndexStart = 0;
+			int searchIndexEnd = string.indexOf('&', searchIndexStart);
+			String searchString;
+	
+			// While it finds a & it search for an operand
+			// When there is no & anymore, it is the final operand
+			while (searchIndexEnd != -1) {
+				searchString = string.substring(searchIndexStart, searchIndexEnd);
+				
+				// If the search string is a valid operand, then go to the next
+				// & and start searching from it
+				if (isSimpleSentence(searchString)) {
+					searchIndexStart = searchIndexEnd + 1;
+					searchIndexEnd = string.indexOf('&', searchIndexStart);
+					operands.add(this.stringToSimpleSentence(searchString, variables));
+				} else if (isNegation(searchString)) {
+					searchIndexStart = searchIndexEnd + 1;
+					searchIndexEnd = string.indexOf('&', searchIndexStart);
+					operands.add(this.stringToNegation(searchString, variables));
+	
+				// If it is not a valid operand, then it is not a valid operator
+				} else {
+					searchIndexEnd = string.indexOf('&', searchIndexEnd + 1);
 				}
 			}
-
+	
+			// Check the last operand
+			searchString = string.substring(searchIndexStart);
+			if (isSimpleSentence(searchString)) {
+				operands.add(this.stringToSimpleSentence(searchString, variables));
+			} else if (isNegation(searchString)) {
+				operands.add(this.stringToNegation(searchString, variables));
+			}
+	
+			// If it is actually an operand, succeed, if not fail
 			return new And(operands);
 		} else {
 			throw new RemoteException("It is not a AND-clause.");
