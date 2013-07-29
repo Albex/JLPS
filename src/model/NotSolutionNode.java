@@ -53,7 +53,7 @@ public class NotSolutionNode extends AbstractSolutionNode {
 			return null;
 		} else {
 
-			return new SubstitutionSet();
+			return this.getParentSolution();
 		}
 	}
 

@@ -5,6 +5,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Stack;
 
 /**
  * This class represents the reactive rules of a LPS framework.
@@ -16,6 +17,7 @@ public class ReactiveRule implements PCExpression {
 
 	private Goal conditions;
 	private SimpleSentence goal;
+	private ArrayList<String> actions;
 	
 	/**
 	 * Constructor of the class.
@@ -30,6 +32,40 @@ public class ReactiveRule implements PCExpression {
 	public ReactiveRule(Goal conditions, SimpleSentence goal) {
 		this.conditions = conditions;
 		this.goal = goal;
+		
+		this.actions = new ArrayList<String>();
+		
+		Stack<Goal> conditionsParser = new Stack<Goal>();
+		conditionsParser.push(this.conditions);
+		while(!conditionsParser.empty()) {
+			// If it is a and, just split all the operands
+			if (conditionsParser.peek() instanceof And) {
+				And currentOperand = (And) conditionsParser.pop();
+				conditionsParser.addAll(currentOperand.getOperands());
+			
+			// If it is a not, no need to go deeper, it needs a complete solver to get more information.
+			} else if (conditionsParser.peek() instanceof Not) {
+				conditionsParser.pop();
+			
+			// Else it is a simple sentence, so just check if it is an action or not
+			} else {
+				SimpleSentence currentOperand = (SimpleSentence) conditionsParser.pop();
+				Action action = Database.getInstance().getDSet().getAction(currentOperand.getName());
+				if (action != null) {
+					this.actions.add(action.getName());
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Gets the actions that are in the condition clause.
+	 * 
+	 * @return an {@code ArrayList} containing all the actions in the condition
+	 *         clause.
+	 */
+	public ArrayList<String> getActions() {
+		return this.actions;
 	}
 	
 	/**

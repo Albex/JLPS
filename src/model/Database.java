@@ -91,6 +91,15 @@ public class Database {
 
 		return Database.instance;
 	}
+	
+	/**
+	 * Gets the D set of the database.
+	 * 
+	 * @return a {@code DSet} object representing the D set of the database.
+	 */
+	public DSet getDSet() {
+		return this.dSet;
+	}
 
 	/**
 	 * This method display the state of the database in the console.

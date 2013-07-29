@@ -15,7 +15,7 @@ public class AndSolutionNode extends AbstractSolutionNode {
 	private AbstractSolutionNode headSolutionNode = null;
 	private AbstractSolutionNode tailSolutionNode = null;
 	
-	private AbstractOperator operatorTail = null;
+	private Goal operatorTail = null;
 	
 	/**
 	 * Constructor of the class.
@@ -84,20 +84,13 @@ public class AndSolutionNode extends AbstractSolutionNode {
 		// If there are no new solutions with the previous try,
 		// try to get an alternative head solution and then one corresponding tail solution		
 		while ((solution = this.headSolutionNode.nextSolution()) != null) {
-			// If there is no tail, the head solution is the complete solution
-			if (this.operatorTail.isEmpty()) {
+		// It creates a new solution node for the tail with the parent substitution set.
+		// And then get a solution with this substitution set. If it is not null it returns it. 
+			this.tailSolutionNode = this.operatorTail.getSolver(this.getRuleSet(), solution);
+			SubstitutionSet tailSolution = this.tailSolutionNode.nextSolution();
+			if (tailSolution != null) {
 				
-				return solution;
-				
-			// Otherwise it creates a new solution node for the tail with the parent substitution set.
-			// And then get a solution with this substitution set. If it is not null it returns it. 
-			} else {
-				this.tailSolutionNode = this.operatorTail.getSolver(this.getRuleSet(), solution);
-				SubstitutionSet tailSolution = this.tailSolutionNode.nextSolution();
-				if (tailSolution != null) {
-					
-					return tailSolution;
-				}
+				return tailSolution;
 			}
 		}
 		

@@ -32,8 +32,8 @@ public class ReactiveRuleSet {
 		
 		this.reactiveRules = new ArrayList<ReactiveRule>();
 		
-		for (int i = 0; i < rulesArray.length; i++) {
-			this.reactiveRules.add(rulesArray[i]);
+		for(ReactiveRule rule : rulesArray) {
+			this.reactiveRules.add(rule);
 		}
 	}
 	
@@ -63,13 +63,18 @@ public class ReactiveRuleSet {
 	 * @param ruleSet
 	 *            the table of truth to which the conditions are submitted to be
 	 *            checked.
+	 * @param events
+	 *            the events/actions that have been performed on the database
+	 *            during this cycle. 
 	 * @return an {@code ArrayList} object containing all the fired goals.
 	 */
-	public ArrayList<Unifiable> fireRules(RuleSet ruleSet) {
+	public ArrayList<Unifiable> fireRules(RuleSet ruleSet, ArrayList<String> events) {
 		ArrayList<Unifiable> goals = new ArrayList<Unifiable>();
 		
 		for(ReactiveRule rule : this.reactiveRules) {
-			goals.addAll(rule.fireRule(ruleSet));
+			if (events.containsAll(rule.getActions())) {
+				goals.addAll(rule.fireRule(ruleSet));
+			}
 		}
 		
 		return goals;

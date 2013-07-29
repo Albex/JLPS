@@ -87,14 +87,31 @@ public abstract class AbstractOperator implements Goal {
 	 * Gets the tail of the operator. An operator is seen as its head (the first
 	 * operand) and its tail (all the other operands).
 	 * 
-	 * @return the tail of the operator as an object of the same class.
+	 * @return the tail of the operator as an object of the same class if there
+	 *         are several tail operands or as the operand itself if there is
+	 *         only one.
 	 */
-	public AbstractOperator getOperatorTail() {
+	public Goal getOperatorTail() {
 		ArrayList<Goal> tail = new ArrayList<Goal>(this.operands);
 		tail.remove(0);
-		AbstractOperator tailOperator = this.create(tail);
+		Goal tailOperator;
+		if (tail.size() == 1) {
+			tailOperator = tail.get(0);
+		} else {
+			tailOperator = this.create(tail);
+		}
 		
 		return tailOperator;
+	}
+	
+	/**
+	 * Gets all the operands of the operator.
+	 * 
+	 * @return an {@code ArrayList} object containing all the operands of the
+	 *         operator.
+	 */
+	public ArrayList<Goal> getOperands() {
+		return this.operands;
 	}
 	
 	/**

@@ -50,9 +50,14 @@ class FiringRulesState implements CycleState {
 	 */
     private void fireRules(RuleSet events) {
     	RuleSet ruleSet = Database.getInstance().getRuleSet();
-    	
     	ruleSet.addRules(events.getRules());
-    	ArrayList<Unifiable> goals = ReactiveRuleSet.getInstance().fireRules(ruleSet);
+    	
+    	ArrayList<String> eventsName = new ArrayList<String>();
+    	for (Rule event : events.getRules()) {
+    		eventsName.add(event.getHead().getName());
+    	}
+    	
+    	ArrayList<Unifiable> goals = ReactiveRuleSet.getInstance().fireRules(ruleSet, eventsName);
     	System.out.println(goals);
     }
     
