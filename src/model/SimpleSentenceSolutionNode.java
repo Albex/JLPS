@@ -17,15 +17,15 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 	/**
 	 * Constructor of the class.
 	 * 
-	 * @param goal
+	 * @param clause
 	 *            the simple sentence to be proved by this subtree.
 	 * @param rules
 	 *            the rules representing context of the proof.
 	 * @param parentSolution
 	 *            the solution of the parent node in the tree of proof.
 	 */
-	public SimpleSentenceSolutionNode(SimpleSentence goal, RuleSet rules, SubstitutionSet parentSolution) {
-		super(goal, rules, parentSolution);
+	public SimpleSentenceSolutionNode(SimpleSentence clause, RuleSet rules, SubstitutionSet parentSolution) {
+		super(clause, rules, parentSolution);
 	}
 
 	/**
@@ -64,12 +64,12 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 			SimpleSentence head = rule.getHead();
 			
 			// Unify its head
-			solution = ((SimpleSentence) this.getGoal()).unify(head, this.getParentSolution());
+			solution = ((SimpleSentence) this.getClause()).unify(head, this.getParentSolution());
 			
 			// If there is a solution to the unification
 			if (solution != null) {
 				// Get the body of the rule
-				Goal tail = rule.getBody();
+				Clause tail = rule.getBody();
 				
 				// If there is no body, solution is the whole solution
 				if (tail == null) {

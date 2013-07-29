@@ -6,12 +6,12 @@ package model;
 import java.util.Hashtable;
 
 /**
- * This class represents predicates. It implements {@link Unifiable} and {@link Goal}.
+ * This class represents predicates. It implements {@link Unifiable} and {@link Clause}.
  * 
  * @author Alexandre Camus
  * 
  */
-public class SimpleSentence implements Unifiable, Goal, Cloneable {
+public class SimpleSentence implements Unifiable, Clause {
 
 	protected Unifiable[] terms;
 
@@ -54,7 +54,7 @@ public class SimpleSentence implements Unifiable, Goal, Cloneable {
 	 * @param parentSolution
 	 *            the solution known so far at the parent node.
 	 * @return the node of the tree of proof.
-	 * @see Goal#getSolver(RuleSet, SubstitutionSet)
+	 * @see Clause#getSolver(RuleSet, SubstitutionSet)
 	 */
 	@Override
 	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) {

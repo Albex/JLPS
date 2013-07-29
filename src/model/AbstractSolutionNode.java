@@ -14,7 +14,7 @@ public abstract class AbstractSolutionNode {
 
 	private RuleSet rules;
 	private Rule currentRule = null;
-	private Goal goal = null;
+	private Clause clause = null;
 	public static int nodesCreated = 0;
 	
 	// saving the parent solution allows backtracking to the original state
@@ -26,17 +26,17 @@ public abstract class AbstractSolutionNode {
 	/**
 	 * Constructor of the class.
 	 * 
-	 * @param goal
+	 * @param clause
 	 *            the clause to be proved by this subtree.
 	 * @param rules
 	 *            the rules representing context of the proof.
 	 * @param parentSolution
 	 *            the solution of the parent node in the tree of proof.
 	 */
-	public AbstractSolutionNode(Goal goal, RuleSet rules, SubstitutionSet parentSolution) {
+	public AbstractSolutionNode(Clause clause, RuleSet rules, SubstitutionSet parentSolution) {
 		this.rules = rules;
 		this.parentSolution = parentSolution;
-		this.goal = goal;
+		this.clause = clause;
 	}
 	
 	/**
@@ -117,10 +117,10 @@ public abstract class AbstractSolutionNode {
 	/**
 	 * Get the clause to prove in the context rules.
 	 * 
-	 * @return a {@code Goal} object representing the clause to prove.
+	 * @return a {@code Clause} object representing the clause to prove.
 	 */
-	public Goal getGoal() {
-		return this.goal;
+	public Clause getClause() {
+		return this.clause;
 	}
 	
 }

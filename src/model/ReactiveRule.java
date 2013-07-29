@@ -15,7 +15,7 @@ import java.util.Stack;
  */
 public class ReactiveRule implements PCExpression {
 
-	private Goal conditions;
+	private Clause conditions;
 	private SimpleSentence goal;
 	private ArrayList<String> actions;
 	
@@ -29,13 +29,13 @@ public class ReactiveRule implements PCExpression {
 	 *            the goal to fire if the conditions are true. This is the right
 	 *            part of the implication.
 	 */
-	public ReactiveRule(Goal conditions, SimpleSentence goal) {
+	public ReactiveRule(Clause conditions, SimpleSentence goal) {
 		this.conditions = conditions;
 		this.goal = goal;
 		
 		this.actions = new ArrayList<String>();
 		
-		Stack<Goal> conditionsParser = new Stack<Goal>();
+		Stack<Clause> conditionsParser = new Stack<Clause>();
 		conditionsParser.push(this.conditions);
 		while(!conditionsParser.empty()) {
 			// If it is a and, just split all the operands
@@ -110,9 +110,9 @@ public class ReactiveRule implements PCExpression {
 		SimpleSentence newGoal = this.goal.replaceVariables(s);
 		
 		// If the conditions of this rule isn't null, create the bound one
-		Goal newConditions = null;
+		Clause newConditions = null;
 		if (this.conditions != null) {
-			newConditions = (Goal) this.conditions.replaceVariables(s);
+			newConditions = (Clause) this.conditions.replaceVariables(s);
 		}
 		
 		// Create the bound reactive rule
@@ -140,9 +140,9 @@ public class ReactiveRule implements PCExpression {
 		SimpleSentence newGoal = this.goal.standardizeVariablesApart(newVars);
 		
 		// If the conditions of this rule isn't null, create the standardized one
-		Goal newConditions = null;
+		Clause newConditions = null;
 		if (this.conditions != null) {
-			newConditions = (Goal) this.conditions.standardizeVariablesApart(newVars);
+			newConditions = (Clause) this.conditions.standardizeVariablesApart(newVars);
 		}
 		
 		// Create the standardized reactive rule

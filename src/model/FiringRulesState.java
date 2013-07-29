@@ -45,7 +45,7 @@ class FiringRulesState implements CycleState {
 	 * rules and gets the new goals to solve.
 	 * 
 	 * @param events
-	 * @see ReactiveRuleSet#fireRules(RuleSet)
+	 * @see ReactiveRuleSet#fireRules(RuleSet, ArrayList)
 	 * @see #handlerMethod(CycleHandler, String, RuleSet)
 	 */
     private void fireRules(RuleSet events) {

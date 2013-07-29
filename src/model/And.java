@@ -21,7 +21,7 @@ public class And extends AbstractOperator {
 	 *            the operands of the and-operator in an array or as independent
 	 *            variables.
 	 */
-	public And(Goal... operands) {
+	public And(Clause... operands) {
 		super(operands);
 	}
 
@@ -32,7 +32,7 @@ public class And extends AbstractOperator {
 	 *            the operands of the and-operator in an {@code ArrayList}
 	 *            object.
 	 */
-	public And(ArrayList<Goal> operands) {
+	public And(ArrayList<Clause> operands) {
 		super(operands);
 	}
 	
@@ -43,7 +43,7 @@ public class And extends AbstractOperator {
 	 * @see model.AbstractOperator#create(java.util.ArrayList)
 	 */
 	@Override
-	protected AbstractOperator create(ArrayList<Goal> operands) {
+	protected AbstractOperator create(ArrayList<Clause> operands) {
 		return new And(operands);
 	}
 
@@ -59,7 +59,7 @@ public class And extends AbstractOperator {
 	 * @param parentSolution
 	 *            the solution known so far at the parent node.
 	 * @return the node of the tree of proof.
-	 * @see Goal#getSolver(RuleSet, SubstitutionSet)
+	 * @see Clause#getSolver(RuleSet, SubstitutionSet)
 	 */
 	@Override
 	public AndSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) {

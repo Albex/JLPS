@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import model.And;
+import model.Clause;
 import model.Constant;
 import model.DPostDeclaration;
-import model.Goal;
 import model.Initiator;
 import model.Not;
 import model.ReactiveRule;
@@ -582,7 +582,7 @@ public class Interpreter {
 
 		if (this.isAnd(string)) {
 			// Split the string to get the name and the parameters of the sentence
-			ArrayList<Goal> operands = new ArrayList<Goal>();
+			ArrayList<Clause> operands = new ArrayList<Clause>();
 	
 			int searchIndexStart = 0;
 			int searchIndexEnd = string.indexOf('&', searchIndexStart);
@@ -678,7 +678,7 @@ public class Interpreter {
 	}
 	
 	/**
-	 * Converts the input string into a {@code Goal} object. The input string
+	 * Converts the input string into a {@code Clause} object. The input string
 	 * should be a clause. It uses the methods
 	 * {@link #stringToAnd(String, HashMap) stringToAnd()},
 	 * {@link #stringToNegation(String, HashMap) stringToNegation()} and
@@ -690,21 +690,21 @@ public class Interpreter {
 	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
 	 * 
 	 * @param string
-	 *            to be converted into the {@code Goal} object.
+	 *            to be converted into the {@code Clause} object.
 	 * @param variables
 	 *            the variables already created to be reused if necessary and it
 	 *            will be updated with the new created variables.
-	 * @return the {@code Goal} object representing the clause string input.
+	 * @return the {@code Clause} object representing the clause string input.
 	 * @throws RemoteException
 	 *             if the input does not correspond to a clause according to the
 	 *             method {@code isNot()}, {@code isAnd()} or
 	 *             {@code isSimpleSentence()}.
-	 * @see Goal
+	 * @see Clause
 	 * @see #isNegation(String)
 	 * @see #isAnd(String)
 	 * @see #isSimpleSentence(String)
 	 */
-	public Goal stringToGoal(String string, HashMap<String, Variable> variables) throws RemoteException {
+	public Clause stringToClause(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 		
@@ -761,7 +761,7 @@ public class Interpreter {
 	/**
 	 * Converts the input string into a {@code ReactiveRule} object. The input
 	 * string should be a reactive rule. It uses the methods
-	 * {@link #stringToGoal(String, HashMap) stringToGoal()} and
+	 * {@link #stringToClause(String, HashMap) stringToClause()} and
 	 * {@link #stringToSimpleSentence(String, HashMap) stringToSimpleSentence()}
 	 * recursively to create the reactive rule.
 	 * <p>
@@ -797,7 +797,7 @@ public class Interpreter {
 				conditionsAndGoal[0] = conditionsAndGoal[0].substring(1, conditionsAndGoal[0].length() - 1);
 			}
 			
-			Goal conditions = this.stringToGoal(conditionsAndGoal[0], variables);
+			Clause conditions = this.stringToClause(conditionsAndGoal[0], variables);
 			SimpleSentence goal = this.stringToSimpleSentence(conditionsAndGoal[1], variables);
 			
 			return new ReactiveRule(conditions, goal);

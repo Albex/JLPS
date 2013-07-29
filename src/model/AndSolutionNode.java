@@ -15,22 +15,22 @@ public class AndSolutionNode extends AbstractSolutionNode {
 	private AbstractSolutionNode headSolutionNode = null;
 	private AbstractSolutionNode tailSolutionNode = null;
 	
-	private Goal operatorTail = null;
+	private Clause operatorTail = null;
 	
 	/**
 	 * Constructor of the class.
 	 * 
-	 * @param goal
+	 * @param clause
 	 *            the and clause to be proved by this subtree.
 	 * @param rules
 	 *            the rules representing context of the proof.
 	 * @param parentSolution
 	 *            the solution of the parent node in the tree of proof.
 	 */
-	public AndSolutionNode(And goal, RuleSet rules, SubstitutionSet parentSolution) {
-		super(goal, rules, parentSolution);
-		this.headSolutionNode = goal.getFirstOperand().getSolver(rules, parentSolution);
-		this.operatorTail = goal.getOperatorTail();
+	public AndSolutionNode(And clause, RuleSet rules, SubstitutionSet parentSolution) {
+		super(clause, rules, parentSolution);
+		this.headSolutionNode = clause.getFirstOperand().getSolver(rules, parentSolution);
+		this.operatorTail = clause.getOperatorTail();
 	}
 	
 	/**

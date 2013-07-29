@@ -15,7 +15,7 @@ import java.util.Hashtable;
 public class Rule implements PCExpression, Cloneable {
 
 	private SimpleSentence head;
-	private Goal body;
+	private Clause body;
 	
 	/**
 	 * Constructor of the class in case of a simple fact.
@@ -35,7 +35,7 @@ public class Rule implements PCExpression, Cloneable {
 	 * @param body
 	 *            the definition of the element.
 	 */
-	public Rule(SimpleSentence head, Goal body) {
+	public Rule(SimpleSentence head, Clause body) {
 		this.head = head;
 		this.body = body;
 	}
@@ -54,9 +54,9 @@ public class Rule implements PCExpression, Cloneable {
 	 * Gets the body of the rule. The body is either {@code null} for a fact or
 	 * a clause for a complete rule.
 	 * 
-	 * @return a {@code Goal} object representing the body.
+	 * @return a {@code Clause} object representing the body.
 	 */
-	public Goal getBody() {
+	public Clause getBody() {
 		return this.body;
 	}
 
@@ -78,9 +78,9 @@ public class Rule implements PCExpression, Cloneable {
 		SimpleSentence newHead = this.getHead().replaceVariables(s);
 		
 		// If the body of this rule isn't null, create the bound one
-		Goal newBody = null;
+		Clause newBody = null;
 		if (this.getBody() != null) {
-			newBody = (Goal) this.getBody().replaceVariables(s);
+			newBody = (Clause) this.getBody().replaceVariables(s);
 		}
 		
 		// Create the bound rule
@@ -107,9 +107,9 @@ public class Rule implements PCExpression, Cloneable {
 		SimpleSentence newHead = this.getHead().standardizeVariablesApart(newVars);
 		
 		// If the body of this rule isn't null, create the standardized one
-		Goal newBody = null;
+		Clause newBody = null;
 		if (this.getBody() != null) {
-			newBody = (Goal) this.getBody().standardizeVariablesApart(newVars);
+			newBody = (Clause) this.getBody().standardizeVariablesApart(newVars);
 		}
 		
 		// Create the standardized rule

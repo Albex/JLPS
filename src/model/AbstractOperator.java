@@ -8,14 +8,14 @@ import java.util.Hashtable;
 
 /**
  * This class is the abstract class that gathers all the operator classes. It
- * implements {@link Goal}.
+ * implements {@link Clause}.
  * 
  * @author Alexandre Camus
  * 
  */
-public abstract class AbstractOperator implements Goal {
+public abstract class AbstractOperator implements Clause {
 
-	protected ArrayList<Goal> operands;
+	protected ArrayList<Clause> operands;
 	
 	/**
 	 * Constructor of the class.
@@ -24,10 +24,10 @@ public abstract class AbstractOperator implements Goal {
 	 *            the operands of the operator in an array or as independent
 	 *            variables.
 	 */
-	public AbstractOperator(Goal... operands) {
-		Goal[] operandArray = operands;
+	public AbstractOperator(Clause... operands) {
+		Clause[] operandArray = operands;
 		
-		this.operands = new ArrayList<Goal>();
+		this.operands = new ArrayList<Clause>();
 		
 		for (int i = 0; i < operandArray.length; i++) {
 			this.operands.add(operandArray[i]);
@@ -40,7 +40,7 @@ public abstract class AbstractOperator implements Goal {
 	 * @param operands
 	 *            the operands of the operator in an {@code ArrayList} object.
 	 */
-	public AbstractOperator(ArrayList<Goal> operands) {
+	public AbstractOperator(ArrayList<Clause> operands) {
 		this.operands = operands;
 	}
 	
@@ -50,7 +50,7 @@ public abstract class AbstractOperator implements Goal {
 	 * @param operands
 	 *            the new operands in an {@code ArrayList} object.
 	 */
-	public void setOperands(ArrayList<Goal> operands) {
+	public void setOperands(ArrayList<Clause> operands) {
 		this.operands = operands;
 	}
 	
@@ -70,7 +70,7 @@ public abstract class AbstractOperator implements Goal {
 	 *            of the operand to get.
 	 * @return return the operand number {@code index}.
 	 */
-	public Goal getOperand(int index) {
+	public Clause getOperand(int index) {
 		return this.operands.get(index);
 	}
 	
@@ -79,7 +79,7 @@ public abstract class AbstractOperator implements Goal {
 	 * 
 	 * @return the first operand.
 	 */
-	public Goal getFirstOperand() {
+	public Clause getFirstOperand() {
 		return this.operands.get(0);
 	}
 	
@@ -91,10 +91,10 @@ public abstract class AbstractOperator implements Goal {
 	 *         are several tail operands or as the operand itself if there is
 	 *         only one.
 	 */
-	public Goal getOperatorTail() {
-		ArrayList<Goal> tail = new ArrayList<Goal>(this.operands);
+	public Clause getOperatorTail() {
+		ArrayList<Clause> tail = new ArrayList<Clause>(this.operands);
 		tail.remove(0);
-		Goal tailOperator;
+		Clause tailOperator;
 		if (tail.size() == 1) {
 			tailOperator = tail.get(0);
 		} else {
@@ -110,7 +110,7 @@ public abstract class AbstractOperator implements Goal {
 	 * @return an {@code ArrayList} object containing all the operands of the
 	 *         operator.
 	 */
-	public ArrayList<Goal> getOperands() {
+	public ArrayList<Clause> getOperands() {
 		return this.operands;
 	}
 	
@@ -130,7 +130,7 @@ public abstract class AbstractOperator implements Goal {
 	 * @see model.And#create(java.util.ArrayList)
 	 * @see model.Not#create(java.util.ArrayList)
 	 */
-	protected abstract AbstractOperator create(ArrayList<Goal> operands);
+	protected abstract AbstractOperator create(ArrayList<Clause> operands);
 	
 	/**
 	 * Replaces all the variables in the clause according to the specified
@@ -147,11 +147,11 @@ public abstract class AbstractOperator implements Goal {
 	@Override
 	public AbstractOperator replaceVariables(SubstitutionSet s) {
 		// Create the operands of the new bound operator
-		ArrayList<Goal> newOperands = new ArrayList<Goal>();
+		ArrayList<Clause> newOperands = new ArrayList<Clause>();
 		
 		// Bind each operand recursively
 		for (int i = 0; i < this.operandCount(); i++) {
-			newOperands.add((Goal) this.getOperand(i).replaceVariables(s));
+			newOperands.add((Clause) this.getOperand(i).replaceVariables(s));
 		}
 		
 		// Create the bound operator
@@ -175,11 +175,11 @@ public abstract class AbstractOperator implements Goal {
 	@Override
 	public AbstractOperator standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
 		// Create the operands of the new standardized operator
-		ArrayList<Goal> newOperands = new ArrayList<Goal>();
+		ArrayList<Clause> newOperands = new ArrayList<Clause>();
 		
 		// Standardize each operand recursively
 		for(int i = 0; i < this.operandCount(); i++) {
-			newOperands.add((Goal) this.getOperand(i).standardizeVariablesApart(newVars));
+			newOperands.add((Clause) this.getOperand(i).standardizeVariablesApart(newVars));
 		}
 		
 		// Create the new standardized operator

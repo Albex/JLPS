@@ -18,16 +18,16 @@ public class NotSolutionNode extends AbstractSolutionNode {
 	/**
 	 * Constructor of the class.
 	 * 
-	 * @param goal
+	 * @param clause
 	 *            the negative clause to be proved by this subtree.
 	 * @param rules
 	 *            the rules representing context of the proof.
 	 * @param parentSolution
 	 *            the solution of the parent node in the tree of proof.
 	 */
-	public NotSolutionNode(Not goal, RuleSet rules, SubstitutionSet parentSolution) {
-		super(goal, rules, parentSolution);
-		this.tailSolutionNode = goal.getFirstOperand().getSolver(rules, parentSolution);
+	public NotSolutionNode(Not clause, RuleSet rules, SubstitutionSet parentSolution) {
+		super(clause, rules, parentSolution);
+		this.tailSolutionNode = clause.getFirstOperand().getSolver(rules, parentSolution);
 	}
 
 	/**

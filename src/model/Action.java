@@ -17,7 +17,7 @@ public class Action {
 	private SimpleSentence action;
 	private ArrayList<Initiator> initiators;
 	private ArrayList<Terminator> terminators;
-	private Goal conditions;
+	private Clause conditions;
 	
 	/**
 	 * Constructor of the class.
@@ -35,7 +35,7 @@ public class Action {
 	 *            the preconditions that must be satisfied before performing the
 	 *            action.
 	 */
-	public Action(SimpleSentence action, ArrayList<Initiator> initiators, ArrayList<Terminator> terminators, Goal conditions) {
+	public Action(SimpleSentence action, ArrayList<Initiator> initiators, ArrayList<Terminator> terminators, Clause conditions) {
 		this.action = action;
 		this.initiators = initiators;
 		this.terminators = terminators;

@@ -8,11 +8,11 @@ package model;
  * @author Alexandre Camus
  * 
  */
-public interface Goal extends PCExpression {
+public interface Clause extends PCExpression {
 
 	/**
 	 * Creates a solver which is a node in the tree proof. This method must be
-	 * implemented in every implementation of {@code Goal}.
+	 * implemented in every implementation of {@code Clause}.
 	 * <p>
 	 * This function is recursive over all objects that can be proved and
 	 * creates the tree of proof for a clause.
