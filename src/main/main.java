@@ -49,7 +49,7 @@ public class main {
 			
 			System.out.println(new RuleSet(events));
 			
-			ReactiveRule rule = Interpreter.getInstance().stringToReactiveRule("p1(X) & !p2() & e1(X) -> g1(X)", null);
+			ReactiveRule rule = Interpreter.getInstance().stringToReactiveRule("p1(X) & e1(X) & !(p2() & e2()) -> g1(X)", null);
 			ReactiveRuleSet.getInstance(rule);
 			System.out.println("Reactive rules :" + ReactiveRuleSet.getInstance().toString() + "\n");
 			
