@@ -37,6 +37,7 @@ class FiringRulesState implements CycleState {
     @Override
     public void handlerMethod(final CycleHandler STATE_CONTEXT, final String NAME, RuleSet events) {
     	this.fireRules(events);
+    	STATE_CONTEXT.setState(new SolvingGoalState());
     }
 
 	/**
@@ -57,8 +58,12 @@ class FiringRulesState implements CycleState {
     		eventsName.add(event.getHead().getName());
     	}
     	
-    	ArrayList<Unifiable> goals = ReactiveRuleSet.getInstance().fireRules(ruleSet, eventsName);
+    	ArrayList<SimpleSentence> goals = ReactiveRuleSet.getInstance().fireRules(ruleSet, eventsName);
     	System.out.println(goals);
+    	
+    	for(SimpleSentence goal : goals) {
+    		GoalsList.getInstance().addGoal(goal, ruleSet);
+    	}
     }
     
 }

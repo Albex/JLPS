@@ -45,6 +45,7 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 		if (this.child != null) {
 			solution = this.child.nextSolution();
 			if (solution != null) {
+				setDeepestLeaf(this.child.getDeepestLeaf());
 				
 				return solution;
 			}
@@ -73,6 +74,7 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 				
 				// If there is no body, solution is the whole solution
 				if (tail == null) {
+					setDeepestLeaf(this);
 					
 					return solution;
 				}
@@ -83,6 +85,7 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 				
 				// If the new node has a solution return it
 				if (childSolution != null) {
+					setDeepestLeaf(this.child.getDeepestLeaf());
 					
 					return childSolution;
 				}
@@ -91,7 +94,9 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 		
 		// If there is no solution for the current node after trying with every rule
 		// Fail and return null
+		setDeepestLeaf(this);
+		
 		return null;
 	}
-
+	
 }

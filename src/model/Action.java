@@ -90,27 +90,26 @@ public class Action {
 	 * The method gets every solution for the conditions of the action and
 	 * applies the bindings got to the generic {@code SimpleSentence}.
 	 * 
+	 * @param event
+	 *            the bound action to test if it can be performed.
 	 * @param rules
 	 *            on which the conditions will be tested to get solutions and
 	 *            bindings.
-	 * @return the {@code ArrayList} that contains every version of the action.
-	 *         If there is no solution, it will be empty (but not null).
+	 * @return true if this bound action can be performed. False otherwise.
 	 */
-	public ArrayList<SimpleSentence> actionsAllowed(RuleSet rules) {
-		ArrayList<SimpleSentence> actions = new ArrayList<SimpleSentence>();
-		
+	public boolean actionsAllowed(SimpleSentence event, RuleSet rules) {
 		if (this.conditions != null) {
-			AbstractSolutionNode root = this.conditions.getSolver(rules, new SubstitutionSet());
-			SubstitutionSet solution;
+			SubstitutionSet bindings = this.action.unify(event, new SubstitutionSet());
+			Clause boundConditions = (Clause) this.conditions.replaceVariables(bindings);
+			AbstractSolutionNode root = boundConditions.getSolver(rules, new SubstitutionSet());
 			
-			while((solution = root.nextSolution()) != null) {
-				actions.add((SimpleSentence) this.action.replaceVariables(solution));
+			if (root.nextSolution() == null) {
+
+				return false;
 			}
-		} else {
-			actions.add(this.action);
 		}
-		
-		return actions;
+
+		return true;
 	}
 	
 	/**

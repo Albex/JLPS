@@ -29,7 +29,12 @@ class SolvingGoalState implements CycleState {
 	 */
 	@Override
 	public void handlerMethod(CycleHandler STATE_CONTEXT, String NAME, RuleSet events) {
-		// TODO Auto-generated method stub
+		solveGoals(events);
+		STATE_CONTEXT.setState(new DatabaseUpdateState());
+	}
+	
+	private void solveGoals(RuleSet events) {
+		GoalsList.getInstance().solveGoals(events);
 	}
 
 }

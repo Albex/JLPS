@@ -77,14 +77,14 @@ public class ReactiveRule implements PCExpression {
 	 *            checked.
 	 * @return an {@code ArrayList} object containing all the goals created.
 	 */
-	public ArrayList<Unifiable> fireRule(RuleSet database) {
-		ArrayList<Unifiable> goals = new ArrayList<Unifiable>();
+	public ArrayList<SimpleSentence> fireRule(RuleSet database) {
+		ArrayList<SimpleSentence> goals = new ArrayList<SimpleSentence>();
 		ReactiveRule standardizedRule = this.standardizeVariablesApart(new Hashtable<Variable, Variable>());
 		AbstractSolutionNode root = standardizedRule.conditions.getSolver(database, new SubstitutionSet());
 		SubstitutionSet solution;
 		
 		while((solution = root.nextSolution()) != null) {
-			goals.add((Unifiable) standardizedRule.goal.replaceVariables(solution));
+			goals.add(standardizedRule.goal.replaceVariables(solution));
 		}
 		
 		return goals;

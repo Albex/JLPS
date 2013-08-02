@@ -13,7 +13,6 @@ package model;
 public class NotSolutionNode extends AbstractSolutionNode {
 
 	private AbstractSolutionNode tailSolutionNode = null;
-	private boolean solutionFlag = false;
 	
 	/**
 	 * Constructor of the class.
@@ -29,6 +28,10 @@ public class NotSolutionNode extends AbstractSolutionNode {
 		super(clause, rules, parentSolution);
 		this.tailSolutionNode = clause.getFirstOperand().getSolver(rules, parentSolution);
 	}
+	
+	public void reset() {
+		this.solutionFlag = false;
+	}
 
 	/**
 	 * Creates the next solution for the negative clause of the node. If no solution
@@ -42,6 +45,7 @@ public class NotSolutionNode extends AbstractSolutionNode {
 	@Override
 	public SubstitutionSet nextSolution() {
 		if (this.solutionFlag) {
+			setDeepestLeaf(this);
 			
 			return null;
 		} else {
@@ -49,10 +53,12 @@ public class NotSolutionNode extends AbstractSolutionNode {
 		}
 		
 		if (this.tailSolutionNode.nextSolution() != null) {
+			setDeepestLeaf(this);
 			
 			return null;
 		} else {
-
+			setDeepestLeaf(this);
+			
 			return this.getParentSolution();
 		}
 	}

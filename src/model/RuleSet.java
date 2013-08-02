@@ -123,6 +123,16 @@ public class RuleSet {
 			this.rules.add(rule);
 		}
 	}
+	
+	/**
+	 * Adds the specified rule.
+	 * 
+	 * @param rule
+	 *            the {@code Rule} object representing the rule to add.
+	 */
+	public void addRule(Rule rule) {
+		this.rules.add(rule);
+	}
 
 	/**
 	 * Returns the set in the form of:

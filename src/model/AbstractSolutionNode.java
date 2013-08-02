@@ -15,6 +15,8 @@ public abstract class AbstractSolutionNode {
 	private RuleSet rules;
 	private Rule currentRule = null;
 	private Clause clause = null;
+	private AbstractSolutionNode deepestLeaf = this;
+	protected boolean solutionFlag = false;
 	public static int nodesCreated = 0;
 	
 	// saving the parent solution allows backtracking to the original state
@@ -56,9 +58,11 @@ public abstract class AbstractSolutionNode {
 	 * @param newParentSolution
 	 *            the new parent solution to use to create the new subtree.
 	 */
-	protected void reset(SubstitutionSet newParentSolution) {
+	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
 		this.parentSolution = newParentSolution;
 		this.ruleNumber = 0;
+		this.solutionFlag = false;
+		this.rules = (newRuleSet == null) ? this.rules : newRuleSet;
 	}
 	
 	/**
@@ -115,12 +119,32 @@ public abstract class AbstractSolutionNode {
 	}
 	
 	/**
-	 * Get the clause to prove in the context rules.
+	 * Gets the clause to prove in the context rules.
 	 * 
 	 * @return a {@code Clause} object representing the clause to prove.
 	 */
 	public Clause getClause() {
 		return this.clause;
+	}
+	
+	/**
+	 * Sets the deepest leaf to the specified leaf.
+	 * 
+	 * @param leaf
+	 *            the deepest leaf of the tree (the one that failed).
+	 */
+	public void setDeepestLeaf(AbstractSolutionNode leaf) {
+		this.deepestLeaf = leaf;
+	}
+	
+	/**
+	 * Gets the deepest leaf of the tree.
+	 * 
+	 * @return an {@code AbstractSolutionNode} object representing the deepest
+	 *         leaf of the tree.
+	 */
+	public AbstractSolutionNode getDeepestLeaf() {
+		return this.deepestLeaf;
 	}
 	
 }

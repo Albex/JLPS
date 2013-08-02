@@ -68,8 +68,8 @@ public class ReactiveRuleSet {
 	 *            during this cycle. 
 	 * @return an {@code ArrayList} object containing all the fired goals.
 	 */
-	public ArrayList<Unifiable> fireRules(RuleSet ruleSet, ArrayList<String> events) {
-		ArrayList<Unifiable> goals = new ArrayList<Unifiable>();
+	public ArrayList<SimpleSentence> fireRules(RuleSet ruleSet, ArrayList<String> events) {
+		ArrayList<SimpleSentence> goals = new ArrayList<SimpleSentence>();
 		
 		for(ReactiveRule rule : this.reactiveRules) {
 			if (events.containsAll(rule.getActions())) {

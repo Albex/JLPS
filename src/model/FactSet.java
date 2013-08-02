@@ -70,16 +70,18 @@ public class FactSet {
 	 *            the fact to remove.
 	 */
 	public void removeFacts(Unifiable fact) {
-		for(Iterator<SimpleSentence> facts = this.facts.get(fact.getName()).iterator(); facts.hasNext();) {
-			Unifiable currentFact = facts.next();
-			
-			if (fact.unify(currentFact, new SubstitutionSet()) != null) {
-				facts.remove();
+		if (this.facts.containsKey(fact.getName())) {
+			for(Iterator<SimpleSentence> facts = this.facts.get(fact.getName()).iterator(); facts.hasNext();) {
+				Unifiable currentFact = facts.next();
+				
+				if (fact.unify(currentFact, new SubstitutionSet()) != null) {
+					facts.remove();
+				}
 			}
-		}
-		
-		if (this.facts.get(fact.getName()).size() == 0) {
-			this.facts.remove(fact.getName());
+			
+			if (this.facts.get(fact.getName()).size() == 0) {
+				this.facts.remove(fact.getName());
+			}
 		}
 	}
 	

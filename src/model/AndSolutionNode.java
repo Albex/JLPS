@@ -76,18 +76,22 @@ public class AndSolutionNode extends AbstractSolutionNode {
 		if (this.tailSolutionNode != null) {
 			solution = tailSolutionNode.nextSolution();
 			if (solution != null) {
+				setDeepestLeaf(this.tailSolutionNode.getDeepestLeaf());
 				
 				return solution;
 			}
 		}
 		
 		// If there are no new solutions with the previous try,
-		// try to get an alternative head solution and then one corresponding tail solution		
+		// try to get an alternative head solution and then one corresponding tail solution
+		boolean enterWhile = false;
 		while ((solution = this.headSolutionNode.nextSolution()) != null) {
 		// It creates a new solution node for the tail with the parent substitution set.
-		// And then get a solution with this substitution set. If it is not null it returns it. 
+		// And then get a solution with this substitution set. If it is not null it returns it.
+			enterWhile = true;
 			this.tailSolutionNode = this.operatorTail.getSolver(this.getRuleSet(), solution);
 			SubstitutionSet tailSolution = this.tailSolutionNode.nextSolution();
+			setDeepestLeaf(this.tailSolutionNode.getDeepestLeaf());
 			if (tailSolution != null) {
 				
 				return tailSolution;
@@ -95,6 +99,10 @@ public class AndSolutionNode extends AbstractSolutionNode {
 		}
 		
 		// If both above cases fail, there is no solution
+		if (!enterWhile) {
+			setDeepestLeaf(this);
+		}
+		
 		return null;
 	}
 
