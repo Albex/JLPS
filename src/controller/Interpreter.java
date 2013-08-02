@@ -11,52 +11,21 @@ import model.DPostDeclaration;
 import model.Initiator;
 import model.Not;
 import model.ReactiveRule;
+import model.Rule;
 import model.SimpleSentence;
 import model.Terminator;
 import model.Unifiable;
 import model.Variable;
 
 /**
- * This is the controller class. It is a singleton. Do not use the constructor.
- * Use the {@link #getInstance() getInstance()} method instead which gives you
- * the instance of the class. It translates Prolog-like declaration into objects
- * for the program.
+ * This is the controller class. It is a static class. It translates Prolog-like
+ * declaration into objects for the program.
  * 
  * @author Alexandre Camus
  * 
  */
 public class Interpreter {
 
-	private static volatile Interpreter instance = null;
-	
-	/**
-	 * Constructor of the class. To be not used by itself as the class is a
-	 * singleton. Use the specific method {@code getInstance()} instead.
-	 * 
-	 * @see #getInstance()
-	 */
-	private Interpreter() {
-		super();
-	}
-
-	/**
-	 * Gets the only object of this singleton class. Use it as a static method.
-	 * 
-	 * @return instance the only object of this class. If the object was not
-	 *         already created it will create it.
-	 */
-	public final static Interpreter getInstance() {
-		if (Interpreter.instance == null) {
-			synchronized (Interpreter.class) {
-				if (Interpreter.instance == null) {
-					Interpreter.instance = new Interpreter();
-				}
-			}
-		}
-
-		return Interpreter.instance;
-	}
-    
 	/**
 	 * Checks whether the input string matches the constant pattern. A constant
 	 * must start with a number or a non-capital letter. It is a alpha-numeric
@@ -69,7 +38,7 @@ public class Interpreter {
 	 *            that is the constant.
 	 * @return true if the string correspond to the constant pattern.
 	 */
-	public boolean isConstant(String string) {
+	public static boolean isConstant(String string) {
 		// Delete all the spaces before checking any matching
 		string = string.replaceAll(" ", "");
 
@@ -90,14 +59,14 @@ public class Interpreter {
 	 * @see Constant
 	 * @see #isConstant(String)
 	 */
-	public Constant stringToConstant(String string) throws RemoteException {
+	public static Constant stringToConstant(String string) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 
 		// Create the Constant to be returned
 		Constant res;
 
-		if (this.isConstant(string)) {
+		if (isConstant(string)) {
 			res = new Constant(string);
 
 			return res;
@@ -119,7 +88,7 @@ public class Interpreter {
 	 *            that is the variable.
 	 * @return true if the string correspond to the variable pattern.
 	 */
-	public boolean isVariable(String string) {
+	public static boolean isVariable(String string) {
 		// Delete all the spaces before checking any matching
 		string = string.replaceAll(" ", "");
 
@@ -147,7 +116,7 @@ public class Interpreter {
 	 * @see Variable
 	 * @see #isVariable(String)
 	 */
-	public Variable stringToVariable(String string, HashMap<String, Variable> variables) throws RemoteException {
+	public static Variable stringToVariable(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 
@@ -158,7 +127,7 @@ public class Interpreter {
 			variables = new HashMap<String, Variable>();
 		}
 
-		if (this.isVariable(string)) {
+		if (isVariable(string)) {
 			if (variables.containsKey(string)) {
 				res = variables.get(string);
 			} else {
@@ -194,7 +163,7 @@ public class Interpreter {
 	 * @see <a href="http://en.wikipedia.org/wiki/Prolog">Prolog
 	 *      documentation</a>
 	 */
-	public boolean isSimpleSentence(String string) {
+	public static boolean isSimpleSentence(String string) {
 		// Delete all the spaces before checking any matching
 		string = string.replaceAll(" ", "");
 		
@@ -273,7 +242,7 @@ public class Interpreter {
 	 * @see SimpleSentence
 	 * @see #isSimpleSentence(String)
 	 */
-	public SimpleSentence stringToSimpleSentence(String string, HashMap<String, Variable> variables) throws RemoteException {
+	public static SimpleSentence stringToSimpleSentence(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 
@@ -369,7 +338,7 @@ public class Interpreter {
 	 *            syntax.
 	 * @return true if the string is a DPost declaration, otherwise false.
 	 */
-	public boolean isDPostDeclaration(String string) {
+	public static boolean isDPostDeclaration(String string) {
 		// Delete all the spaces before checking any matching
 		string = string.replaceAll(" ", "");
 		
@@ -450,11 +419,11 @@ public class Interpreter {
 	 * @see SimpleSentence
 	 * @see #isSimpleSentence(String)
 	 */
-	public DPostDeclaration stringToDPost(String string, HashMap<String, Variable> variables) throws RemoteException {
+	public static DPostDeclaration stringToDPost(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 
-		if (this.isDPostDeclaration(string)) {
+		if (isDPostDeclaration(string)) {
 			if (variables == null) {
 				variables = new HashMap<String, Variable>();
 			}
@@ -489,7 +458,7 @@ public class Interpreter {
 	 *            to be checked whether or not it is an and-clause.
 	 * @return true if the string is an and-clause, otherwise false.
 	 */
-	public boolean isAnd(String string) {
+	public static boolean isAnd(String string) {
 		// Delete all the spaces before checking any matching
 		string = string.replaceAll(" ", "");
 
@@ -533,7 +502,7 @@ public class Interpreter {
 	 * 			  to be checked whether or not it is a negative clause.
 	 * @return true if the string is a negative clause, otherwise false.
 	 */
-	public boolean isNegation(String string) {
+	public static boolean isNegation(String string) {
 		// Delete all the spaces before checking any matching
 		string = string.replaceAll(" ", "");
 		
@@ -576,11 +545,11 @@ public class Interpreter {
 	 * @see And
 	 * @see #isAnd(String)
 	 */
-	public And stringToAnd(String string, HashMap<String, Variable> variables) throws RemoteException {
+	public static And stringToAnd(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 
-		if (this.isAnd(string)) {
+		if (isAnd(string)) {
 			// Split the string to get the name and the parameters of the sentence
 			ArrayList<Clause> operands = new ArrayList<Clause>();
 	
@@ -598,11 +567,11 @@ public class Interpreter {
 				if (isSimpleSentence(searchString)) {
 					searchIndexStart = searchIndexEnd + 1;
 					searchIndexEnd = string.indexOf('&', searchIndexStart);
-					operands.add(this.stringToSimpleSentence(searchString, variables));
+					operands.add(stringToSimpleSentence(searchString, variables));
 				} else if (isNegation(searchString)) {
 					searchIndexStart = searchIndexEnd + 1;
 					searchIndexEnd = string.indexOf('&', searchIndexStart);
-					operands.add(this.stringToNegation(searchString, variables));
+					operands.add(stringToNegation(searchString, variables));
 	
 				// If it is not a valid operand, then it is not a valid operator
 				} else {
@@ -613,9 +582,9 @@ public class Interpreter {
 			// Check the last operand
 			searchString = string.substring(searchIndexStart);
 			if (isSimpleSentence(searchString)) {
-				operands.add(this.stringToSimpleSentence(searchString, variables));
+				operands.add(stringToSimpleSentence(searchString, variables));
 			} else if (isNegation(searchString)) {
-				operands.add(this.stringToNegation(searchString, variables));
+				operands.add(stringToNegation(searchString, variables));
 			}
 	
 			// If it is actually an operand, succeed, if not fail
@@ -650,7 +619,7 @@ public class Interpreter {
 	 * @see Not
 	 * @see #isNegation(String)
 	 */
-	public Not stringToNegation(String string, HashMap<String, Variable> variables) throws RemoteException {
+	public static Not stringToNegation(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 
@@ -658,19 +627,19 @@ public class Interpreter {
 			variables = new HashMap<String, Variable>();
 		}
 
-		if (this.isNegation(string)) {
+		if (isNegation(string)) {
 			if (string.charAt(1) == '(') {
 				string = string.substring(2, string.length() - 1);
 			} else {
 				string = string.substring(1);
 			}
 
-			if (this.isSimpleSentence(string)) {
+			if (isSimpleSentence(string)) {
 
-				return new Not(this.stringToSimpleSentence(string, variables));
+				return new Not(stringToSimpleSentence(string, variables));
 			} else {
 
-				return new Not(this.stringToAnd(string, variables));
+				return new Not(stringToAnd(string, variables));
 			}
 		} else {
 			throw new RemoteException("It is not a negative clause.");
@@ -704,7 +673,7 @@ public class Interpreter {
 	 * @see #isAnd(String)
 	 * @see #isSimpleSentence(String)
 	 */
-	public Clause stringToClause(String string, HashMap<String, Variable> variables) throws RemoteException {
+	public static Clause stringToClause(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 		
@@ -712,15 +681,15 @@ public class Interpreter {
 			variables = new HashMap<String, Variable>();
 		}
 		
-		if (this.isAnd(string)) {
+		if (isSimpleSentence(string)) {
 			
-			return this.stringToAnd(string, variables);
-		} else if (this.isSimpleSentence(string)) {
+			return stringToSimpleSentence(string, variables);
+		} else if (isNegation(string)) {
 			
-			return this.stringToSimpleSentence(string, variables);
-		} else if (this.isNegation(string)) {
+			return stringToNegation(string, variables);
+		} else if (isAnd(string)) {
 			
-			return this.stringToNegation(string, variables);
+			return stringToAnd(string, variables);
 		} else {
 			throw new RemoteException("It is not a clause.");
 		}
@@ -732,13 +701,13 @@ public class Interpreter {
 	 * simple sentence.
 	 * <p>
 	 * This method is used to throw exceptions in
-	 * {@link #stringToReactiveRule(String, HashMap) stringToConstant()}.
+	 * {@link #stringToReactiveRule(String, HashMap) stringToReactiveRule()}.
 	 * 
 	 * @param string
 	 *            to be checked whether or not it is a reactive rule.
 	 * @return true if the string is a reactive rule, otherwise false.
 	 */
-	public boolean isReactiveRule(String string) {
+	public static boolean isReactiveRule(String string) {
 		// Delete all the spaces before checking any matching
 		string = string.replaceAll(" ", "");
 		
@@ -782,7 +751,7 @@ public class Interpreter {
 	 * @see ReactiveRule
 	 * @see #isReactiveRule(String)
 	 */
-	public ReactiveRule stringToReactiveRule(String string, HashMap<String, Variable> variables) throws RemoteException {
+	public static ReactiveRule stringToReactiveRule(String string, HashMap<String, Variable> variables) throws RemoteException {
 		// Delete any spaces before converting
 		string = string.replaceAll(" ", "");
 		
@@ -790,20 +759,96 @@ public class Interpreter {
 			variables = new HashMap<String, Variable>();
 		}
 		
-		if (this.isReactiveRule(string)) {
+		if (isReactiveRule(string)) {
 			String[] conditionsAndGoal = string.split("->");
 			
 			if (conditionsAndGoal[0].charAt(0) == '(') {
 				conditionsAndGoal[0] = conditionsAndGoal[0].substring(1, conditionsAndGoal[0].length() - 1);
 			}
 			
-			Clause conditions = this.stringToClause(conditionsAndGoal[0], variables);
-			SimpleSentence goal = this.stringToSimpleSentence(conditionsAndGoal[1], variables);
+			Clause conditions = stringToClause(conditionsAndGoal[0], variables);
+			SimpleSentence goal = stringToSimpleSentence(conditionsAndGoal[1], variables);
 			
 			return new ReactiveRule(conditions, goal);
 		} else {
 			throw new RemoteException("It is not a reactive rule.");
 		}
+	}
+	
+	/**
+	 * Checks whether the input string matches a rule. A rule is a binary
+	 * backward imply. Its first operand is a simple sentence. Its second
+	 * operand is a clause.
+	 * <p>
+	 * This method is used to throw exceptions in
+	 * {@link #stringToRule(String, HashMap) stringToRule()}.
+	 * 
+	 * @param string
+	 *            to be checked whether or not it is a rule.
+	 * @return true if the string is a rule, otherwise false.
+	 */
+	public static boolean isRule(String string) {
+		// Delete all the spaces before checking any matching
+		string = string.replaceAll(" ", "");
 		
+		int imply = string.indexOf(":-");
+		if (imply == -1) {
+			
+			return isSimpleSentence(string);
+		}
+		
+		String body = string.substring(imply + 2);
+		boolean isBody = isNegation(body) || isSimpleSentence(body) || isAnd(body);
+		
+		return isSimpleSentence(string.substring(0, imply)) && isBody;
+	}
+	
+	/**
+	 * Converts the input string into a {@code Rule} object. The input string
+	 * should be a rule. It uses the methods
+	 * {@link #stringToClause(String, HashMap) stringToClause()} and
+	 * {@link #stringToSimpleSentence(String, HashMap) stringToSimpleSentence()}
+	 * recursively to create the rule.
+	 * <p>
+	 * The variable {@code variables} is used to pass the variables created to
+	 * the whole clause to avoid to create two different variables for the same
+	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
+	 * 
+	 * @param string
+	 *            to be converted into the {@code Rule} object.
+	 * @param variables
+	 *            the variables already created to be reused if necessary and it
+	 *            will be updated with the new created variables.
+	 * @return the {@code Rule} object representing the reactive rule string
+	 *         input.
+	 * @throws RemoteException
+	 *             if the input does not correspond to a reactive rule according
+	 *             to the method {@code isRule()}
+	 * @see Rule
+	 * @see #isRule(String)
+	 */
+	public static Rule stringToRule(String string, HashMap<String, Variable> variables) throws RemoteException {
+		// Delete any spaces before converting
+		string = string.replaceAll(" ", "");
+		
+		if (variables == null) {
+			variables = new HashMap<String, Variable>();
+		}
+		
+		if (isRule(string)) {
+			String[] headAndBody = string.split(":-");
+			
+			if (headAndBody.length == 1) {
+				
+				return new Rule(stringToSimpleSentence(string, null));
+			}
+			
+			SimpleSentence head = stringToSimpleSentence(headAndBody[0], variables);
+			Clause body = stringToClause(headAndBody[1], variables);
+			
+			return new Rule(head, body);
+		} else {
+			throw new RemoteException("It is not a rule.");
+		}
 	}
 }
