@@ -61,7 +61,7 @@ public class main {
 			RuleSet definition = new RuleSet(Interpreter.stringToRule("g1(X) :- e1(X)", null));
 			Goal g1 = new Goal(definition.getRule(0).getHead(), definition);
 			GoalSet set = new GoalSet(g1);
-			GoalsList.getInstance(set, new RuleSet());
+			GoalsList.getInstance(set);
 			
 			CycleHandler.getInstance().setEvents(new RuleSet(events));
 			

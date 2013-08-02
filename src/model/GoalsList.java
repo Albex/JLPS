@@ -8,8 +8,15 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @author Albex
- *
+ * This is a singleton class that represents the goals list of the framework. It
+ * contains the method to solve the goals.
+ * <p>
+ * The constructor is private as you must not use it. Instead use the
+ * {@code getInstance()} method to get the only object of the class (or to
+ * create it).
+ * 
+ * @author Alexandre Camus
+ * @see #solveGoals(RuleSet)
  */
 public class GoalsList {
 	
@@ -19,7 +26,7 @@ public class GoalsList {
 	private static volatile GoalsList instance = null;
 
 	/**
-	 * 
+	 * Constructor of the class.
 	 */
 	private GoalsList() {
 		this.goalsDefinitions = new GoalSet();
@@ -28,12 +35,15 @@ public class GoalsList {
 	}
 	
 	/**
+	 * Constructor of the class.
 	 * 
+	 * @param goalsDefinitions
+	 *            the set of goals that will be used in the framework.
 	 */
-	private GoalsList(GoalSet goalsDefinitions, RuleSet nextEvents) {
+	private GoalsList(GoalSet goalsDefinitions) {
 		this.goalsDefinitions = goalsDefinitions;
 		this.goalsList = new HashMap<Goal, AbstractSolutionNode>();
-		this.nextEvents = nextEvents;
+		this.nextEvents = new RuleSet();
 	}
 	
 	/**
@@ -60,11 +70,11 @@ public class GoalsList {
 	 * 
 	 * @return the only instance of the class {@code Database}.
 	 */
-	public final static GoalsList getInstance(GoalSet goalsDefinitions, RuleSet nextEvents) {
+	public final static GoalsList getInstance(GoalSet goalsDefinitions) {
 		if (GoalsList.instance == null) {
 			synchronized (GoalsList.class) {
 				if (GoalsList.instance == null) {
-					GoalsList.instance = new GoalsList(goalsDefinitions, nextEvents);
+					GoalsList.instance = new GoalsList(goalsDefinitions);
 				}
 			}
 		}
@@ -72,12 +82,27 @@ public class GoalsList {
 		return GoalsList.instance;
 	}
 	
+	/**
+	 * Adds the specified event to the list of events that will be performed
+	 * during the next cycle.
+	 * 
+	 * @param event
+	 *            the event to add.
+	 */
 	public void addNextEvent(SimpleSentence event) {
 		if (this.nextEvents.getRuleCount() == 0 || event.getSolver(this.nextEvents, new SubstitutionSet()) == null) {
 			this.nextEvents.addRule(new Rule(event));
 		}
 	}
 	
+	/**
+	 * Adds the specified goal to the list of goals.
+	 * 
+	 * @param goal
+	 *            the goal to add.
+	 * @param ruleSet
+	 *            the rules to use to build the tree of proof.
+	 */
 	public void addGoal(SimpleSentence goal, RuleSet ruleSet) {
 		// Create the bound goal from the generic definition
 		Goal completeGoal = new Goal(this.goalsDefinitions.getGoal(goal.getName()), goal);
@@ -89,8 +114,17 @@ public class GoalsList {
 		this.goalsList.put(completeGoal, definition.getSolver(ruleSet, new SubstitutionSet()));
 	}
 	
-	public void solveGoal(Iterator<Goal> goals, RuleSet ruleSet) {
-		Goal goal = goals.next();
+	/**
+	 * Solves the specified goal. It starts from the last node and carries on,
+	 * hopping the new cycle will provide new materials for the proof.
+	 * 
+	 * @param goal
+	 *            the goal to solve.
+	 * @param ruleSet
+	 *            the ruleSet to reset the tree with.
+	 * @return true if the goal is solved. False otherwise.
+	 */
+	public boolean solveGoal(Goal goal, RuleSet ruleSet) {
 		AbstractSolutionNode root = this.goalsList.get(goal);
 		AbstractSolutionNode leaf = root.getDeepestLeaf();
 		leaf.reset(leaf.getParentSolution(), ruleSet);
@@ -98,9 +132,8 @@ public class GoalsList {
 		
 		// If there is a solution the goal is solved
 		if (solution != null) {
-			goals.remove();
 			
-			return;
+			return true;
 		}
 			
 		// If the leaf is a stuck and
@@ -113,7 +146,7 @@ public class GoalsList {
 				if (action != null) {
 					this.addNextEvent((SimpleSentence) simpleSentence);
 					
-					return;
+					return false;
 				}
 			}
 		}
@@ -129,7 +162,7 @@ public class GoalsList {
 					this.addNextEvent(simpleSentence);
 				}
 				
-				return;
+				return false;
 			}
 		}
 					
@@ -137,9 +170,8 @@ public class GoalsList {
 		if (goal.hasNextDefinition()) {
 			root = goal.getNextDefinition().getSolver(ruleSet, new SubstitutionSet());
 			this.goalsList.put(goal, root);
-			solveGoal(goals, ruleSet);
 			
-			return;
+			return solveGoal(goal, ruleSet);
 		
 		// If there is no other definition reset and wait for the next cycle
 		} else {
@@ -147,29 +179,51 @@ public class GoalsList {
 			root = goal.getNextDefinition().getSolver(ruleSet, new SubstitutionSet());
 			this.goalsList.put(goal, root);
 			
-			return;
+			return false;
 		}
 	}
 
+	/**
+	 * Solves all the goal in the list.
+	 * 
+	 * @param events
+	 *            the events that have been performed during the cycle.
+	 */
 	public void solveGoals(RuleSet events) {
 		RuleSet ruleSet = Database.getInstance().getRuleSet();
     	ruleSet.addRules(events.getRules());
     	
     	Set<Goal> keys = this.goalsList.keySet();
     	for(Iterator<Goal> goals = keys.iterator(); goals.hasNext();) {
-    		solveGoal(goals, ruleSet);
+    		Goal goal = goals.next();
+    		if (solveGoal(goal, ruleSet)) {
+    			goals.remove();
+    		}
     	}
     	
     	CycleHandler.getInstance().setEvents(nextEvents);
 	}
 
-	/** (non-Javadoc)
+	/**
+	 * Returns the set in the form of:
+	 * "{
+	 * 	[definitionChosen] => [currentNode]
+	 * }".
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return this.goalsList.toString();
+		String res = "{\n";
+		
+		for(Goal goal : this.goalsList.keySet()) {
+			AbstractSolutionNode tree = this.goalsList.get(goal);
+			res += "[" + goal.getGoal().toString() + " :- ";
+			res += tree.getClause().toString() + "] => [" + tree.getDeepestLeaf().getClause().toString() + "]\n";
+		}
+		
+		res += "}";
+		return res;
 	}
-	
 
 }

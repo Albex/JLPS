@@ -33,10 +33,10 @@ public class Goal {
 	/**
 	 * Constructor of the class
 	 * 
+	 * @param genericGoal
+	 *            the generic representation of the goal.
 	 * @param goal
-	 *            the predicate form of the goal.
-	 * @param definitions
-	 *            the definitions of the goal.
+	 *            the actual form of the new goal.
 	 */
 	public Goal(Goal genericGoal, SimpleSentence goal) {
 		this.goal = goal;
@@ -68,17 +68,20 @@ public class Goal {
 		return this.goal;
 	}
 	
+	/**
+	 * Checks if the goal has a next definition.
+	 * 
+	 * @return a true if the definition counter is below the number of
+	 *         definitions.
+	 */
 	public boolean hasNextDefinition() {
 		return this.nextDefinition < this.definitions.getRuleCount();
 	}
 
 	/**
-	 * Gets the next definition of the goal and binds it to the bindings implied
-	 * by the specified goal.
+	 * Gets the next definition of the goal.
 	 * 
-	 * @param boundGoal
-	 *            the bound goal for which the definition is needed.
-	 * @return a {@code PCExpression} object representing the definition. If
+	 * @return a {@code Clause} object representing the definition. If
 	 *         there is no next definition, returns {@code null}.
 	 */
 	public Clause getNextDefinition() {
@@ -87,12 +90,8 @@ public class Goal {
 			Rule rule = this.definitions.getRule(nextDefinition);
 			// Next rule to get update
 			updateNextRule();
-			// Get the bindings to do
-			SubstitutionSet bindings = rule.getHead().unify(this.goal, new SubstitutionSet());
-			// Apply these bindings
-			Clause boundDefinition = (Clause) rule.getBody().replaceVariables(bindings);
 	
-			return boundDefinition;
+			return rule.getBody();
 		} else {
 			
 			return null;
