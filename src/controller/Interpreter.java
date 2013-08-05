@@ -8,6 +8,7 @@ import model.And;
 import model.Clause;
 import model.Constant;
 import model.DPostDeclaration;
+import model.Equal;
 import model.Initiator;
 import model.Not;
 import model.ReactiveRule;
@@ -487,7 +488,7 @@ public class Interpreter {
 		searchString = string.substring(searchIndexStart);
 
 		// If it is actually an operand, succeed, if not fail
-		return isSimpleSentence(searchString) || isNegation(searchString);
+		return isSimpleSentence(searchString) || isNegation(searchString) || isEquality(searchString);
 	}
 	
 	/**
@@ -518,7 +519,36 @@ public class Interpreter {
 			string = string.substring(1);
 		}
 		
-		return isSimpleSentence(string) || isNegation(string) || isAnd(string);
+		return isSimpleSentence(string) || isNegation(string) || isAnd(string) || isEquality(string);
+	}
+	
+	/**
+	 * Checks whether the input string matches an equality clause. An equality
+	 * clause is a binary operator. Its both operands are a variable and a
+	 * unifiable sentence.
+	 * <p>
+	 * This method is used to throw exceptions in
+	 * {@link #stringToEquality(String, HashMap) stringToEquality()}.
+	 * 
+	 * @param string
+	 *            to be checked whether or not it is an equality clause.
+	 * @return true if the string is an equality clause, otherwise false.
+	 */
+	public static boolean isEquality(String string) {
+		// Delete all the spaces before checking any matching
+		string = string.replaceAll(" ", "");
+		
+		String[] operands = string.split("==");
+		
+		if (operands.length != 2) {
+			
+			return false;
+		}
+		
+		boolean operand1 = isVariable(operands[0]);
+		boolean operand2 = isConstant(operands[1]) || isVariable(operands[1]) || isSimpleSentence(operands[1]);
+		
+		return operand1 && operand2;
 	}
 	
 	/**
@@ -572,6 +602,10 @@ public class Interpreter {
 					searchIndexStart = searchIndexEnd + 1;
 					searchIndexEnd = string.indexOf('&', searchIndexStart);
 					operands.add(stringToNegation(searchString, variables));
+				} else if (isEquality(searchString)) {
+					searchIndexStart = searchIndexEnd + 1;
+					searchIndexEnd = string.indexOf('&', searchIndexStart);
+					operands.add(stringToEquality(searchString, variables));
 	
 				// If it is not a valid operand, then it is not a valid operator
 				} else {
@@ -637,12 +671,67 @@ public class Interpreter {
 			if (isSimpleSentence(string)) {
 
 				return new Not(stringToSimpleSentence(string, variables));
+			} else if (isEquality(string)) {
+
+				return new Not(stringToEquality(string, variables));
 			} else {
 
 				return new Not(stringToAnd(string, variables));
 			}
 		} else {
 			throw new RemoteException("It is not a negative clause.");
+		}
+	}
+	
+	/**
+	 * Converts the input string into a {@code Equal} object. The input string
+	 * should be an equality clause. It uses the methods
+	 * {@link #stringToConstant(String) stringToConstant()},
+	 * {@link #stringToVariable(String, HashMap) stringToVariable()} and
+	 * {@link #stringToSimpleSentence(String, HashMap) stringToSimpleSentence()}
+	 * recursively to create the whole clause.
+	 * <p>
+	 * The variable {@code variables} is used to pass the variables created to
+	 * the whole clause to avoid to create two different variables for the same
+	 * one. Initialize it with {@code null} or a brand new {@code HashMap}.
+	 * 
+	 * @param string
+	 *            to be converted into the {@code Equal} object.
+	 * @param variables
+	 *            the variables already created to be reused if necessary and it
+	 *            will be updated with the new created variables.
+	 * @return the {@code Equal} object representing the equality clause string
+	 *         input.
+	 * @throws RemoteException
+	 *             if the input does not correspond to an equality clause
+	 *             according to the method {@code isEquality()}.
+	 * @see Equal
+	 * @see #isEquality(String)
+	 */
+	public static Equal stringToEquality(String string, HashMap<String, Variable> variables) throws RemoteException {
+		// Delete any spaces before converting
+		string = string.replaceAll(" ", "");
+		
+		if (variables == null) {
+			variables = new HashMap<String, Variable>();
+		}
+		
+		if (isEquality(string)) {
+			String[] operands = string.split("==");
+			
+			Variable operand1 = stringToVariable(operands[0], variables);
+			Unifiable operand2;
+			if (isConstant(operands[1])) {
+				operand2 = stringToConstant(operands[1]);
+			} else if (isVariable(operands[1])) {
+				operand2 = stringToVariable(operands[1], variables);
+			} else {
+				operand2 = stringToSimpleSentence(operands[1], variables);
+			}
+			
+			return new Equal(operand1, operand2);
+		} else {
+			throw new RemoteException("It is not an equality clause.");
 		}
 	}
 	
@@ -687,6 +776,9 @@ public class Interpreter {
 		} else if (isNegation(string)) {
 			
 			return stringToNegation(string, variables);
+		} else if (isEquality(string)) {
+			
+			return stringToEquality(string, variables);
 		} else if (isAnd(string)) {
 			
 			return stringToAnd(string, variables);
