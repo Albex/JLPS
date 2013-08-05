@@ -129,6 +129,46 @@ public class Constant implements Unifiable {
 		
 		return null;
 	}
+	
+	/**
+	 * Checks if the constant and the specified {@code expr} expression given
+	 * the bindings {@code s} are equal. This tries to get bindings in order to
+	 * make logically equivalent the constant and the specified expression.
+	 * <p>
+	 * This method is recursive over all {@code Unifiable} implementations.
+	 * 
+	 * @param expr
+	 *            an expression to unify with the expression.
+	 * @param s
+	 *            the {@code SubstitutionSet} object representing the bindings
+	 *            so far and/or the constraints applied.
+	 * @return true if the specified bindings make logically equivalent the
+	 *         constant and the specified one.
+	 * @see model.Unifiable#equal(Unifiable, SubstitutionSet)
+	 */
+	public boolean equal(Unifiable expr, SubstitutionSet s) {
+		// Equal constants can be unified
+		if (expr instanceof Constant) {
+			if (this == expr) {
+				
+				return true;
+			}
+
+			if (this.printName.equals(((Constant) expr).getName())) {
+				
+				return true;
+			}
+			
+		// If this is a variable, use the unify method of Variable
+		} else if (expr instanceof Variable) {
+			
+			return expr.equal(this, s);
+			
+		// Otherwise it can't be unified to a sentence or a different constant
+		}
+		
+		return false;
+	}
 
 	/**
 	 * Returns the constant under the form of:

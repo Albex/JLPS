@@ -62,7 +62,7 @@ public class Not extends AbstractOperator {
 	 */
 	@Override
 	public String toString() {
-		return "!(" + this.getFirstOperand().toString() + ")";
+		return "!(" + this.getOperand(0).toString() + ")";
 	}
 	
 }

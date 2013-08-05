@@ -75,12 +75,22 @@ public abstract class AbstractOperator implements Clause {
 	}
 	
 	/**
-	 * Gets the first operand of the operator.
+	 * Gets the first positive operand of the operator.
 	 * 
 	 * @return the first operand.
 	 */
-	public Clause getFirstOperand() {
-		return this.operands.get(0);
+	public Clause getFirstPositiveOperand() {
+		int i = 0;
+		while (this.operands.get(i) instanceof Not) {
+			i++;
+			
+			if (i >= this.operandCount()) {
+				
+				return this.operands.get(0);
+			}
+		}
+		
+		return this.operands.get(i);
 	}
 	
 	/**

@@ -43,7 +43,7 @@ public class main {
 			ArrayList<Terminator> terminators = new ArrayList<Terminator>();
 			terminators.add(t1);
 			Clause conditions = Interpreter.stringToSimpleSentence("p3(d(X))", null);
-			Action e1 = new Action(Interpreter.stringToSimpleSentence("e1(X)", null), initiators, terminators, conditions);
+			Action e1 = new Action(Interpreter.stringToSimpleSentence("e1(X)", null), initiators, terminators, conditions, null);
 			
 			Database.getInstance(db, new RuleSet(), new DSet(e1));
 			Database.getInstance().printOut();
@@ -56,9 +56,8 @@ public class main {
 			
 			ReactiveRule rule = Interpreter.stringToReactiveRule("p1(X) & e1(X) & !(p2() & e2()) -> g1(X)", null);
 			ReactiveRuleSet.getInstance(rule);
-			System.out.println("Reactive rules :" + ReactiveRuleSet.getInstance().toString() + "\n");
 			
-			RuleSet definition = new RuleSet(Interpreter.stringToRule("g1(X) :- e1(X)", null));
+			RuleSet definition = new RuleSet(Interpreter.stringToRule("g1(X) :- e1(3)", null));
 			Goal g1 = new Goal(definition.getRule(0).getHead(), definition);
 			GoalSet set = new GoalSet(g1);
 			GoalsList.getInstance(set);
@@ -68,6 +67,8 @@ public class main {
 			CycleHandler.getInstance().handlerMethod("update");
 			
 			Database.getInstance().printOut();
+			
+			System.out.println("Reactive rules :" + ReactiveRuleSet.getInstance().toString() + "\n");
 			
 			CycleHandler.getInstance().handlerMethod("firing");
 			

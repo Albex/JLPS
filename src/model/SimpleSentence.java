@@ -216,6 +216,56 @@ public class SimpleSentence implements Unifiable, Clause {
 			return null;
 		}
 	}
+	
+	/**
+	 * Checks if the simple sentence and the specified {@code expr} expression
+	 * given the bindings {@code s} are equal. This tries to get bindings in
+	 * order to make logically equivalent the simple sentence and the specified
+	 * expression.
+	 * <p>
+	 * This method is recursive over all {@code Unifiable} implementations.
+	 * 
+	 * @param expr
+	 *            an expression to unify with the expression.
+	 * @param s
+	 *            the {@code SubstitutionSet} object representing the bindings
+	 *            so far and/or the constraints applied.
+	 * @return true if the specified bindings make logically equivalent the
+	 *         simple sentence and the specified one.
+	 * @see model.Unifiable#equal(Unifiable, SubstitutionSet)
+	 */
+	public boolean equal(Unifiable expr, SubstitutionSet s) {
+		// Case of a simple sentence
+		if (expr instanceof SimpleSentence) {
+			SimpleSentence s2 = (SimpleSentence) expr;
+
+			// If they don't have the same length they can't be unified
+			if (this.length() != s2.length()) {
+
+				return false;
+			} else {
+				// Checking each argument if they can be unified
+				for (int i = 0; i < this.length(); i++) {
+					if (!this.getTerm(i).equal(s2.getTerm(i), s)) {
+						
+						return false;
+					}
+				}
+
+				return true;
+			}
+
+		// Case of a variable: apply recursively the method
+		} else if (expr instanceof Variable) {
+
+			return expr.equal(this, s);
+
+		// Otherwise (error or constant) they can't be unified
+		} else {
+
+			return false;
+		}
+	}
 
 	/**
 	 * Returns the simple sentence under the form of:

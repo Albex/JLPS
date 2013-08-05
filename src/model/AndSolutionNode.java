@@ -29,7 +29,7 @@ public class AndSolutionNode extends AbstractSolutionNode {
 	 */
 	public AndSolutionNode(And clause, RuleSet rules, SubstitutionSet parentSolution) {
 		super(clause, rules, parentSolution);
-		this.headSolutionNode = clause.getFirstOperand().getSolver(rules, parentSolution);
+		this.headSolutionNode = clause.getFirstPositiveOperand().getSolver(rules, parentSolution);
 		this.operatorTail = clause.getOperatorTail();
 	}
 	

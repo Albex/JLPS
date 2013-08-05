@@ -26,7 +26,7 @@ public class NotSolutionNode extends AbstractSolutionNode {
 	 */
 	public NotSolutionNode(Not clause, RuleSet rules, SubstitutionSet parentSolution) {
 		super(clause, rules, parentSolution);
-		this.tailSolutionNode = clause.getFirstOperand().getSolver(rules, parentSolution);
+		this.tailSolutionNode = clause.getOperand(0).getSolver(rules, parentSolution);
 	}
 	
 	public void reset() {
@@ -52,12 +52,12 @@ public class NotSolutionNode extends AbstractSolutionNode {
 			this.solutionFlag = true;
 		}
 		
+		setDeepestLeaf(this);
+		
 		if (this.tailSolutionNode.nextSolution() != null) {
-			setDeepestLeaf(this);
 			
 			return null;
 		} else {
-			setDeepestLeaf(this);
 			
 			return this.getParentSolution();
 		}

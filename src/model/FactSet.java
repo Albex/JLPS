@@ -85,7 +85,7 @@ public class FactSet {
 			for(Iterator<SimpleSentence> facts = this.facts.get(fact.getName()).iterator(); facts.hasNext();) {
 				Unifiable currentFact = facts.next();
 				
-				if (fact.unify(currentFact, new SubstitutionSet()) != null) {
+				if (fact.equal(currentFact, new SubstitutionSet())) {
 					facts.remove();
 				}
 			}
@@ -100,7 +100,7 @@ public class FactSet {
 	 * Checks if the specified fact can be made true in the set.
 	 * <p>
 	 * The test is done thanks to the
-	 * {@link Unifiable#unify(Unifiable, SubstitutionSet) unify()} function.
+	 * {@link Unifiable#equal(Unifiable, SubstitutionSet) equal()} function.
 	 * 
 	 * @param fact
 	 *            that is checked if it is true in the set.
@@ -110,7 +110,7 @@ public class FactSet {
 		boolean exists = false;
 		
 		for (Unifiable currentFact : this.facts.get(fact.getName())) {
-			if (fact.unify(currentFact, new SubstitutionSet()) != null) {
+			if (fact.equal(currentFact, new SubstitutionSet())) {
 				exists = true;
 			}
 		}

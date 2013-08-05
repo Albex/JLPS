@@ -40,4 +40,22 @@ public interface Unifiable extends PCExpression {
 	 */
 	public SubstitutionSet unify(Unifiable expr, SubstitutionSet s);
 	
+	/**
+	 * Checks if the expression and the specified {@code expr} expression given
+	 * the bindings {@code s} are equal. This tries to get bindings in order to
+	 * make logically equivalent the expression and the specified expression.
+	 * <p>
+	 * This method is recursive over all {@code Unifiable} implementations.
+	 * 
+	 * @param expr
+	 *            an expression to unify with the expression.
+	 * @param s
+	 *            the {@code SubstitutionSet} object representing the bindings
+	 *            so far and/or the constraints applied.
+	 * @return true if the specified bindings make logically equivalent the
+	 *         expression and the specified one.
+	 * @see SubstitutionSet
+	 */
+	public boolean equal(Unifiable expr, SubstitutionSet s);
+	
 }
