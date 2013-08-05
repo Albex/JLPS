@@ -36,6 +36,17 @@ public class DSet {
 	}
 	
 	/**
+	 * Constructor of the class.
+	 * 
+	 * @param actions
+	 *            an array of the actions to be stored in the set or each action
+	 *            as a parameter.
+	 */
+	public DSet(ArrayList<Action> actions) {
+		this.actions = actions;
+	}
+	
+	/**
 	 * Gets the action corresponding to the specified name.
 	 * 
 	 * @param eventName the name of the action to get.

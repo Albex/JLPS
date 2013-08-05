@@ -43,6 +43,17 @@ public class FactSet {
 	}
 	
 	/**
+	 * Constructor of the class.
+	 * 
+	 * @param facts
+	 *            an array of the facts to be stored in the set or each fact as
+	 *            a parameter.
+	 */
+	public FactSet(HashMap<String, ArrayList<SimpleSentence>> facts) {
+		this.facts = facts;
+	}
+	
+	/**
 	 * Gets the facts.
 	 * 
 	 * @return the {@code HashMap} containing all the facts.

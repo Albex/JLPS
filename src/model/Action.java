@@ -18,6 +18,7 @@ public class Action {
 	private ArrayList<Initiator> initiators;
 	private ArrayList<Terminator> terminators;
 	private Clause conditions;
+	private Clause conflicts;
 	
 	/**
 	 * Constructor of the class.
@@ -35,11 +36,12 @@ public class Action {
 	 *            the preconditions that must be satisfied before performing the
 	 *            action.
 	 */
-	public Action(SimpleSentence action, ArrayList<Initiator> initiators, ArrayList<Terminator> terminators, Clause conditions) {
+	public Action(SimpleSentence action, ArrayList<Initiator> initiators, ArrayList<Terminator> terminators, Clause conditions, Clause conflicts) {
 		this.action = action;
 		this.initiators = initiators;
 		this.terminators = terminators;
 		this.conditions = conditions;
+		this.conflicts = conflicts;
 	}
 	
 	/**
@@ -97,13 +99,23 @@ public class Action {
 	 *            bindings.
 	 * @return true if this bound action can be performed. False otherwise.
 	 */
-	public boolean actionsAllowed(SimpleSentence event, RuleSet rules) {
+	public boolean actionsAllowed(SimpleSentence event, RuleSet rules, RuleSet nextEvents) {
+		SubstitutionSet bindings = this.action.unify(event, new SubstitutionSet());
 		if (this.conditions != null) {
-			SubstitutionSet bindings = this.action.unify(event, new SubstitutionSet());
 			Clause boundConditions = (Clause) this.conditions.replaceVariables(bindings);
-			AbstractSolutionNode root = boundConditions.getSolver(rules, new SubstitutionSet());
+			AbstractSolutionNode conditionsRoot = boundConditions.getSolver(rules, new SubstitutionSet());
 			
-			if (root.nextSolution() == null) {
+			if (conditionsRoot.nextSolution() == null) {
+
+				return false;
+			}
+		}
+		
+		if (this.conflicts != null) {
+			Clause boundConflicts = (Clause) this.conflicts.replaceVariables(bindings);
+			AbstractSolutionNode conflictsRoot = boundConflicts.getSolver(rules, new SubstitutionSet());
+			
+			if (conflictsRoot.nextSolution() == null) {
 
 				return false;
 			}

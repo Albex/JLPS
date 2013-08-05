@@ -144,7 +144,9 @@ public class GoalsList {
 				
 				// If it is an action add it to the next action to do
 				if (action != null) {
-					this.addNextEvent((SimpleSentence) simpleSentence);
+					if (action.actionsAllowed((SimpleSentence) simpleSentence, ruleSet, this.nextEvents)) {
+						this.addNextEvent((SimpleSentence) simpleSentence);
+					}
 					
 					return false;
 				}
@@ -158,7 +160,7 @@ public class GoalsList {
 			
 			// If it is an action add it to the next action to do
 			if (action != null) {
-				if (action.actionsAllowed(simpleSentence, ruleSet)) {
+				if (action.actionsAllowed(simpleSentence, ruleSet, this.nextEvents)) {
 					this.addNextEvent(simpleSentence);
 				}
 				
