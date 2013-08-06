@@ -58,6 +58,12 @@ public class AndSolutionNode extends AbstractSolutionNode {
 	protected AbstractSolutionNode getTailSolutionNode() {
 		return this.tailSolutionNode;
 	}
+	
+	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
+		super.reset(newParentSolution, newRuleSet);
+		this.headSolutionNode.reset(this.getParentSolution(), this.getRuleSet());
+		this.tailSolutionNode = null;
+	}
 
 	/**
 	 * Creates the next solution for the and clause of the node. If no solution
@@ -75,6 +81,7 @@ public class AndSolutionNode extends AbstractSolutionNode {
 		// First try to create a new solution with the same head solution but a different tail solution
 		if (this.tailSolutionNode != null) {
 			solution = tailSolutionNode.nextSolution();
+
 			if (solution != null) {
 				setDeepestLeaf(this.tailSolutionNode.getDeepestLeaf());
 				

@@ -17,7 +17,7 @@ import java.util.Hashtable;
  */
 public class Equal implements Clause {
 	
-	Variable operand1;
+	Unifiable operand1;
 	Unifiable operand2;
 
 	/**
@@ -28,7 +28,7 @@ public class Equal implements Clause {
 	 * @param operand2
 	 *            the right operand of the equal sentence.
 	 */
-	public Equal(Variable operand1, Unifiable operand2) {
+	public Equal(Unifiable operand1, Unifiable operand2) {
 		this.operand1 = operand1;
 		this.operand2 = operand2;
 	}
@@ -38,7 +38,7 @@ public class Equal implements Clause {
 	 * 
 	 * @return the left operand of the equal sentence.
 	 */
-	public Variable getOperand1() {
+	public Unifiable getOperand1() {
 		return this.operand1;
 	}
 	
@@ -85,7 +85,7 @@ public class Equal implements Clause {
 	 */
 	@Override
 	public Equal replaceVariables(SubstitutionSet s) {
-		Variable newOperand1 = (Variable) this.operand1.replaceVariables(s);
+		Unifiable newOperand1 = (Unifiable) this.operand1.replaceVariables(s);
 		Unifiable newOperand2 = (Unifiable) this.operand2.replaceVariables(s);
 		
 		return new Equal(newOperand1, newOperand2);
@@ -107,7 +107,7 @@ public class Equal implements Clause {
 	 */
 	@Override
 	public Equal standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
-		Variable newOperand1 = (Variable) this.operand1.standardizeVariablesApart(newVars);
+		Unifiable newOperand1 = (Unifiable) this.operand1.standardizeVariablesApart(newVars);
 		Unifiable newOperand2 = (Unifiable) this.operand2.standardizeVariablesApart(newVars);
 		
 		return new Equal(newOperand1, newOperand2);

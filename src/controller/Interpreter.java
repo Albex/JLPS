@@ -474,7 +474,7 @@ public class Interpreter {
 			
 			// If the search string is a valid operand, then go to the next
 			// & and start searching from it
-			if (isSimpleSentence(searchString) || isNegation(searchString)) {
+			if (isSimpleSentence(searchString) || isNegation(searchString) || isEquality(searchString)) {
 				searchIndexStart = searchIndexEnd + 1;
 				searchIndexEnd = string.indexOf('&', searchIndexStart);
 
@@ -514,6 +514,10 @@ public class Interpreter {
 		}
 		
 		if (string.charAt(1) == '(') {
+			if (string.charAt(string.length() -1) != ')') {
+				
+				return false;
+			}
 			string = string.substring(2, string.length() - 1);
 		} else {
 			string = string.substring(1);
@@ -619,6 +623,8 @@ public class Interpreter {
 				operands.add(stringToSimpleSentence(searchString, variables));
 			} else if (isNegation(searchString)) {
 				operands.add(stringToNegation(searchString, variables));
+			} else if (isEquality(searchString)) {
+				operands.add(stringToEquality(searchString, variables));
 			}
 	
 			// If it is actually an operand, succeed, if not fail
@@ -674,6 +680,9 @@ public class Interpreter {
 			} else if (isEquality(string)) {
 
 				return new Not(stringToEquality(string, variables));
+			} else if (isNegation(string)) {
+
+				return new Not(stringToNegation(string, variables));
 			} else {
 
 				return new Not(stringToAnd(string, variables));

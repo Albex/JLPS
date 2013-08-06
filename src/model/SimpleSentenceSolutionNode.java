@@ -27,6 +27,11 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 	public SimpleSentenceSolutionNode(SimpleSentence clause, RuleSet rules, SubstitutionSet parentSolution) {
 		super(clause, rules, parentSolution);
 	}
+	
+	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
+		super.reset(newParentSolution, newRuleSet);
+		this.child = null;
+	}
 
 	/**
 	 * Creates the next solution for the simple sentence of the node. If no solution

@@ -113,7 +113,7 @@ public class Action {
 		
 		if (this.conflicts != null) {
 			Clause boundConflicts = (Clause) this.conflicts.replaceVariables(bindings);
-			AbstractSolutionNode conflictsRoot = boundConflicts.getSolver(rules, new SubstitutionSet());
+			AbstractSolutionNode conflictsRoot = boundConflicts.getSolver(nextEvents, new SubstitutionSet());
 			
 			if (conflictsRoot.nextSolution() == null) {
 
@@ -173,6 +173,7 @@ public class Action {
 	@Override
 	public String toString() {
 		String conditions = (this.conditions == null) ? "true" : this.conditions.toString();
+		conditions += (this.conflicts == null) ? "" : " & " + this.conflicts.toString();
 		
 		return "if (" + conditions + ") " + this.getName() + "=[" + this.initiators.toString() + ", " + this.terminators.toString() + "]";
 	}

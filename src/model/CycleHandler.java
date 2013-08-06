@@ -21,7 +21,6 @@ public final class CycleHandler {
 	 * @see #getInstance()
 	 */
 	private CycleHandler() {
-        super();
         setState(new DatabaseUpdateState());
     }
 	
@@ -100,7 +99,12 @@ public final class CycleHandler {
 	 *            triggered during the last cycle.
 	 */
 	public void setEvents(RuleSet events) {
-		this.events = events;
+		if (this.events == null) {
+			this.events = new RuleSet();
+		} else {
+		this.events.getRules().clear();
+		}
+		this.events.addRules(events.getRules());
 	}
 
 }

@@ -3,8 +3,6 @@
  */
 package model;
 
-import java.util.HashMap;
-
 /**
  * This class is the abstract class that gathers all the solution-node classes.
  * A solution node is a node in a tree of proof.
@@ -18,8 +16,6 @@ public abstract class AbstractSolutionNode {
 	private Rule currentRule = null;
 	private Clause clause = null;
 	private AbstractSolutionNode deepestLeaf = this;
-	protected boolean solutionFlag = false;
-	protected HashMap<Variable, Variable> differentVariables;
 	public static int nodesCreated = 0;
 	
 	// saving the parent solution allows backtracking to the original state
@@ -42,7 +38,6 @@ public abstract class AbstractSolutionNode {
 		this.rules = rules;
 		this.parentSolution = parentSolution;
 		this.clause = clause;
-		this.differentVariables = new HashMap<Variable, Variable>();
 	}
 	
 	/**
@@ -65,7 +60,6 @@ public abstract class AbstractSolutionNode {
 	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
 		this.parentSolution = newParentSolution;
 		this.ruleNumber = 0;
-		this.solutionFlag = false;
 		this.rules = (newRuleSet == null) ? this.rules : newRuleSet;
 	}
 	

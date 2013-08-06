@@ -90,7 +90,7 @@ public class GoalsList {
 	 *            the event to add.
 	 */
 	public void addNextEvent(SimpleSentence event) {
-		if (this.nextEvents.getRuleCount() == 0 || event.getSolver(this.nextEvents, new SubstitutionSet()) == null) {
+		if (event.getSolver(this.nextEvents, new SubstitutionSet()).nextSolution() == null) {
 			this.nextEvents.addRule(new Rule(event));
 		}
 	}
@@ -129,16 +129,18 @@ public class GoalsList {
 		AbstractSolutionNode leaf = root.getDeepestLeaf();
 		leaf.reset(leaf.getParentSolution(), ruleSet);
 		SubstitutionSet solution = leaf.nextSolution();
+		leaf = leaf.getDeepestLeaf();
+		root.setDeepestLeaf(leaf);
 		
 		// If there is a solution the goal is solved
 		if (solution != null) {
 			
 			return true;
 		}
-			
+		
 		// If the leaf is a stuck and
 		if (leaf instanceof AndSolutionNode) {
-			Clause simpleSentence = ((AndSolutionNode) leaf).getHeadSolutionNode().getClause();
+			Clause simpleSentence = (Clause) ((AndSolutionNode) leaf).getHeadSolutionNode().getClause().replaceVariables(leaf.getParentSolution());
 			if (simpleSentence instanceof SimpleSentence) {
 				Action action = Database.getInstance().getDSet().getAction(((SimpleSentence) simpleSentence).getName());
 				
@@ -155,7 +157,7 @@ public class GoalsList {
 		
 		// If the leaf is a stuck simple sentence
 		if (leaf instanceof SimpleSentenceSolutionNode) {
-			SimpleSentence simpleSentence = (SimpleSentence) leaf.getClause();
+			SimpleSentence simpleSentence = (SimpleSentence) leaf.getClause().replaceVariables(leaf.getParentSolution());
 			Action action = Database.getInstance().getDSet().getAction(simpleSentence.getName());
 			
 			// If it is an action add it to the next action to do
@@ -203,7 +205,8 @@ public class GoalsList {
     		}
     	}
     	
-    	CycleHandler.getInstance().setEvents(nextEvents);
+    	CycleHandler.getInstance().setEvents(this.nextEvents);
+    	this.nextEvents.getRules().clear();
 	}
 
 	/**
@@ -221,7 +224,8 @@ public class GoalsList {
 		for(Goal goal : this.goalsList.keySet()) {
 			AbstractSolutionNode tree = this.goalsList.get(goal);
 			res += "[" + goal.getGoal().toString() + " :- ";
-			res += tree.getClause().toString() + "] => [" + tree.getDeepestLeaf().getClause().toString() + "]\n";
+			res += tree.getClause().toString() + "] => [";
+			res += tree.getDeepestLeaf().getClause().replaceVariables(tree.getDeepestLeaf().getParentSolution()).toString() + "]\n";
 		}
 		
 		res += "}";

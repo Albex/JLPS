@@ -13,6 +13,7 @@ package model;
 public class NotSolutionNode extends AbstractSolutionNode {
 
 	private AbstractSolutionNode tailSolutionNode = null;
+	private boolean solutionFlag = false;
 	
 	/**
 	 * Constructor of the class.
@@ -29,8 +30,10 @@ public class NotSolutionNode extends AbstractSolutionNode {
 		this.tailSolutionNode = clause.getOperand(0).getSolver(rules, parentSolution);
 	}
 	
-	public void reset() {
+	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
+		super.reset(newParentSolution, newRuleSet);
 		this.solutionFlag = false;
+		this.tailSolutionNode.reset(this.getParentSolution(), this.getRuleSet());
 	}
 
 	/**
@@ -54,7 +57,8 @@ public class NotSolutionNode extends AbstractSolutionNode {
 		
 		setDeepestLeaf(this);
 		
-		if (this.tailSolutionNode.nextSolution() != null) {
+		SubstitutionSet solution = this.tailSolutionNode.nextSolution();
+		if (solution != null) {
 			
 			return null;
 		} else {

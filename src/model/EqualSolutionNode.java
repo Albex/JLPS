@@ -25,6 +25,10 @@ public class EqualSolutionNode extends AbstractSolutionNode {
 	public EqualSolutionNode(Equal clause, RuleSet rules, SubstitutionSet parentSolution) {
 		super(clause, rules, parentSolution);
 	}
+	
+	/*protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
+		super.reset(newParentSolution, newRuleSet);
+	}*/
 
 	/**
 	 * Creates the next solution for the equality of the node. If no solution
@@ -37,13 +41,13 @@ public class EqualSolutionNode extends AbstractSolutionNode {
 	 */
 	@Override
 	public SubstitutionSet nextSolution() {
-		Variable v1 = ((Equal) getClause()).getOperand1();
+		Unifiable v1 = ((Equal) getClause()).getOperand1();
 		Unifiable v2 = ((Equal) getClause()).getOperand2();
 		SubstitutionSet solution = this.getParentSolution();
-		
+
 		if (v1.equal(v2, solution)) {
-			
-			return this.getParentSolution();
+
+			return solution;
 		}
 		
 		return null;
