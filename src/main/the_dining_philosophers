@@ -1,0 +1,74 @@
+/** @author Alexandre Camus
+* 
+* The Dining Philosophers
+*
+*/
+
+Database {
+
+	// We are defining the Lext set of the LPS Framework
+	Facts {
+		available(f0).
+		available(f1).
+		available(f2).
+		available(f3).
+		available(f4).
+	}
+	
+	// We are defining the Lint set of the LPS Framework
+	Rules {
+		adjacent(f0, philosopher(0), f1).
+		adjacent(f1, philosopher(1), f2).
+		adjacent(f2, philosopher(2), f3).
+		adjacent(f3, philosopher(3), f4).
+		adjacent(f4, philosopher(4), f0).
+	}
+	
+}
+
+// We are defining the domain theory of the LPS Framework
+DSet {
+
+	pickupForks(F1, philosopher(I), F2) = {
+		Preconditions [
+			conditions: available(F1) & available(F2).
+			conflicts: !pickupForks(F2, philosopher(J), F3) & !pickupForks(F3, philosopher(K), F1).
+		]
+		Postconditions [
+			terminates(pickupForks(F1, philosopher(I), F2), available(F1)).
+			terminates(pickupForks(F1, philosopher(I), F2), available(F2)).
+		]
+	}
+		
+	putdownForks(F1, philosopher(I), F2) = {
+		Postconditions [
+			initiates(putdownForks(F1, philosopher(I), F2), available(F1)).
+			initiates(putdownForks(F1, philosopher(I), F2), available(F2)).
+		]
+	}
+}
+
+// We are defining the reactive rules of the LPS Framework
+ReactiveRules {
+
+		timeToEat(philosopher(I)) -> dine(philosopher(I)).
+		
+}
+
+// We are defining the goals' definitions of the LPS Framework
+Goals {
+
+	dine(philosopher(I)) :- adjacent(F1, philosopher(I), F2) & pickupForks(F1, philosopher(I), F2)
+		& putdownForks(F1, philosopher(I), F2).
+	
+}
+
+// We are defining the initial events of the LPS Framework
+Events {
+
+	timeToEat(philosopher(0)).
+	timeToEat(philosopher(1)).
+	timeToEat(philosopher(2)).
+	timeToEat(philosopher(3)).
+	timeToEat(philosopher(4)).
+}
