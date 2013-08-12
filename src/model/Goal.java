@@ -69,6 +69,19 @@ public class Goal {
 	}
 	
 	/**
+	 * Adds the specified rule-definition to the goal's definitions.
+	 * <p>
+	 * This method should be used only while creating the {@code Goal} object.
+	 * 
+	 * @param rule
+	 *            the {@code Rule} object representing the definition to add.
+	 */
+	public void addDefinition(Rule rule) {
+		SubstitutionSet s = rule.getHead().unify(this.goal, new SubstitutionSet());
+		this.definitions.addRule(rule.replaceVariables(s));
+	}
+	
+	/**
 	 * Checks if the goal has a next definition.
 	 * 
 	 * @return a true if the definition counter is below the number of

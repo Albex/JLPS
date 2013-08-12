@@ -47,6 +47,16 @@ public class DSet {
 	}
 	
 	/**
+	 * Adds the specified action to the set.
+	 * 
+	 * @param action
+	 *            to add in the set.
+	 */
+	public void addAction(Action action) {
+		this.actions.add(action);
+	}
+	
+	/**
 	 * Gets the action corresponding to the specified name.
 	 * 
 	 * @param eventName the name of the action to get.
@@ -62,6 +72,8 @@ public class DSet {
 		
 		return null;
 	}
+	
+	
 
 	/**
 	 * Returns the set in the form of:

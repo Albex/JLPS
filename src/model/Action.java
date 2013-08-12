@@ -99,11 +99,13 @@ public class Action {
 	 *            bindings.
 	 * @return true if this bound action can be performed. False otherwise.
 	 */
-	public boolean actionsAllowed(SimpleSentence event, RuleSet rules, RuleSet nextEvents) {
+	public boolean actionsAllowed(SimpleSentence event, RuleSet rules, RuleSet events, RuleSet nextEvents) {
 		SubstitutionSet bindings = this.action.unify(event, new SubstitutionSet());
 		if (this.conditions != null) {
 			Clause boundConditions = (Clause) this.conditions.replaceVariables(bindings);
-			AbstractSolutionNode conditionsRoot = boundConditions.getSolver(rules, new SubstitutionSet());
+			RuleSet conRules = rules;
+			conRules.addRules(events.getRules());
+			AbstractSolutionNode conditionsRoot = boundConditions.getSolver(conRules, new SubstitutionSet());
 			
 			if (conditionsRoot.nextSolution() == null) {
 
@@ -113,7 +115,9 @@ public class Action {
 		
 		if (this.conflicts != null) {
 			Clause boundConflicts = (Clause) this.conflicts.replaceVariables(bindings);
-			AbstractSolutionNode conflictsRoot = boundConflicts.getSolver(nextEvents, new SubstitutionSet());
+			RuleSet conRules = rules;
+			conRules.addRules(nextEvents.getRules());
+			AbstractSolutionNode conflictsRoot = boundConflicts.getSolver(conRules, new SubstitutionSet());
 			
 			if (conflictsRoot.nextSolution() == null) {
 

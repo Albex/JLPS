@@ -52,6 +52,26 @@ ArrayList<Goal> goals;
 	}
 	
 	/**
+	 * Adds the specified definition to the right goal or creates it if needed.
+	 * <p>
+	 * This method should be used only while creating the {@code GoalSet}
+	 * object.
+	 * 
+	 * @param rule
+	 *            the {@code Rule} object representing the rule to add.
+	 */
+	public void addDefinition(Rule rule) {
+		Goal goal = getGoal(rule.getHead().getName());
+		
+		if (goal != null) {
+			getGoal(rule.getHead().getName()).addDefinition(rule);
+		} else {
+			goal = new Goal(rule.getHead(), new RuleSet(rule));
+			this.goals.add(goal);
+		}
+	}
+	
+	/**
 	 * Returns the set in the form of:
 	 * "Goals set:
 	 *  {

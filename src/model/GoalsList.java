@@ -35,18 +35,6 @@ public class GoalsList {
 	}
 	
 	/**
-	 * Constructor of the class.
-	 * 
-	 * @param goalsDefinitions
-	 *            the set of goals that will be used in the framework.
-	 */
-	private GoalsList(GoalSet goalsDefinitions) {
-		this.goalsDefinitions = goalsDefinitions;
-		this.goalsList = new HashMap<Goal, AbstractSolutionNode>();
-		this.nextEvents = new RuleSet();
-	}
-	
-	/**
 	 * This is the method to get an instance of the class.
 	 * Use it as shown: {@code Database.getInstance()}
 	 * 
@@ -65,23 +53,19 @@ public class GoalsList {
 	}
 	
 	/**
-	 * This is the method to get an instance of the class.
-	 * Use it as shown: {@code Database.getInstance()}
-	 * 
-	 * @return the only instance of the class {@code Database}.
+	 * @param goalsDefinitions the goalsDefinitions to set
 	 */
-	public final static GoalsList getInstance(GoalSet goalsDefinitions) {
-		if (GoalsList.instance == null) {
-			synchronized (GoalsList.class) {
-				if (GoalsList.instance == null) {
-					GoalsList.instance = new GoalsList(goalsDefinitions);
-				}
-			}
-		}
-
-		return GoalsList.instance;
+	public void setGoalsDefinitions(GoalSet goalsDefinitions) {
+		this.goalsDefinitions = goalsDefinitions;
 	}
 	
+	/**
+	 * @param goalsDefinitions the goalsDefinitions to set
+	 */
+	public GoalSet getGoalsDefinitions() {
+		return this.goalsDefinitions;
+	}
+
 	/**
 	 * Adds the specified event to the list of events that will be performed
 	 * during the next cycle.
@@ -124,10 +108,12 @@ public class GoalsList {
 	 *            the ruleSet to reset the tree with.
 	 * @return true if the goal is solved. False otherwise.
 	 */
-	public boolean solveGoal(Goal goal, RuleSet ruleSet) {
+	public boolean solveGoal(Goal goal, RuleSet ruleSet, RuleSet events) {
+		RuleSet rulesAndEvents = ruleSet;
+		rulesAndEvents.addRules(events.getRules());
 		AbstractSolutionNode root = this.goalsList.get(goal);
 		AbstractSolutionNode leaf = root.getDeepestLeaf();
-		leaf.reset(leaf.getParentSolution(), ruleSet);
+		leaf.reset(leaf.getParentSolution(), rulesAndEvents);
 		SubstitutionSet solution = leaf.nextSolution();
 		leaf = leaf.getDeepestLeaf();
 		root.setDeepestLeaf(leaf);
@@ -146,7 +132,7 @@ public class GoalsList {
 				
 				// If it is an action add it to the next action to do
 				if (action != null) {
-					if (action.actionsAllowed((SimpleSentence) simpleSentence, ruleSet, this.nextEvents)) {
+					if (action.actionsAllowed((SimpleSentence) simpleSentence, ruleSet, events, this.nextEvents)) {
 						this.addNextEvent((SimpleSentence) simpleSentence);
 					}
 					
@@ -162,7 +148,7 @@ public class GoalsList {
 			
 			// If it is an action add it to the next action to do
 			if (action != null) {
-				if (action.actionsAllowed(simpleSentence, ruleSet, this.nextEvents)) {
+				if (action.actionsAllowed(simpleSentence, ruleSet, events, this.nextEvents)) {
 					this.addNextEvent(simpleSentence);
 				}
 				
@@ -172,15 +158,15 @@ public class GoalsList {
 					
 		// Otherwise, according to the strategy, get the next definition to check.
 		if (goal.hasNextDefinition()) {
-			root = goal.getNextDefinition().getSolver(ruleSet, new SubstitutionSet());
+			root = goal.getNextDefinition().getSolver(rulesAndEvents, new SubstitutionSet());
 			this.goalsList.put(goal, root);
 			
-			return solveGoal(goal, ruleSet);
+			return solveGoal(goal, ruleSet, events);
 		
 		// If there is no other definition reset and wait for the next cycle
 		} else {
 			goal.reset();
-			root = goal.getNextDefinition().getSolver(ruleSet, new SubstitutionSet());
+			root = goal.getNextDefinition().getSolver(rulesAndEvents, new SubstitutionSet());
 			this.goalsList.put(goal, root);
 			
 			return false;
@@ -195,12 +181,11 @@ public class GoalsList {
 	 */
 	public void solveGoals(RuleSet events) {
 		RuleSet ruleSet = Database.getInstance().getRuleSet();
-    	ruleSet.addRules(events.getRules());
     	
     	Set<Goal> keys = this.goalsList.keySet();
     	for(Iterator<Goal> goals = keys.iterator(); goals.hasNext();) {
     		Goal goal = goals.next();
-    		if (solveGoal(goal, ruleSet)) {
+    		if (solveGoal(goal, ruleSet, events)) {
     			goals.remove();
     		}
     	}

@@ -32,25 +32,6 @@ public class Database {
 	}
 
 	/**
-	 * This is the second constructor of the class that allows to initiate the
-	 * database. It is private as it must not be called. Use the method
-	 * {@code getInstance(FactSet, RuleSet, DSet)} instead.
-	 * 
-	 * @see #getInstance(FactSet, RuleSet, DSet)
-	 * @param initialFacts
-	 *            contains the initial facts.
-	 * @param initialRules
-	 *            contains the initial rules.
-	 * @param dSet
-	 *            contains all the actions definitions.
-	 */
-	private Database(FactSet initialFacts, RuleSet initialRules, DSet dSet) {
-		this.factsDatabase = initialFacts;
-		this.rulesDatabase = initialRules;
-		this.dSet = dSet;
-	}
-
-	/**
 	 * This is the method to get an instance of the class.
 	 * Use it as shown: {@code Database.getInstance()}
 	 * 
@@ -69,29 +50,26 @@ public class Database {
 	}
 
 	/**
-	 * This is the second method to get an instance of the class. It allows one
-	 * to initiate all the attributes of the class.
-	 * 
-	 * @return the only instance of the class {@code Database}.
-	 * @param initialFacts
-	 *            contains the initial facts.
-	 * @param initialRules
-	 *            contains the initial rules.
-	 * @param dSet
-	 *            contains all the actions definitions.
+	 * @param factsDatabase the factsDatabase to set
 	 */
-	public final static Database getInstance(FactSet initialFacts, RuleSet initialRules, DSet dSet) {
-		if (Database.instance == null) {
-			synchronized (Database.class) {
-				if (Database.instance == null) {
-					Database.instance = new Database(initialFacts, initialRules, dSet);
-				}
-			}
-		}
-
-		return Database.instance;
+	public void setFactsDatabase(FactSet factsDatabase) {
+		this.factsDatabase = factsDatabase;
 	}
-	
+
+	/**
+	 * @param rulesDatabase the rulesDatabase to set
+	 */
+	public void setRulesDatabase(RuleSet rulesDatabase) {
+		this.rulesDatabase = rulesDatabase;
+	}
+
+	/**
+	 * @param dSet the dSet to set
+	 */
+	public void setdSet(DSet dSet) {
+		this.dSet = dSet;
+	}
+
 	/**
 	 * Gets the D set of the database.
 	 * 
