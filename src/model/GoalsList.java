@@ -53,14 +53,19 @@ public class GoalsList {
 	}
 	
 	/**
-	 * @param goalsDefinitions the goalsDefinitions to set
+	 * Sets the goals definitions set.
+	 * 
+	 * @param goalsDefinitions
+	 *            the set containing all the goals definitions.
 	 */
 	public void setGoalsDefinitions(GoalSet goalsDefinitions) {
 		this.goalsDefinitions = goalsDefinitions;
 	}
 	
 	/**
-	 * @param goalsDefinitions the goalsDefinitions to set
+	 * Gets the goals definitions set.
+	 * 
+	 * @return a {@code GoalSet} object containing all the goals definitions.
 	 */
 	public GoalSet getGoalsDefinitions() {
 		return this.goalsDefinitions;
@@ -106,6 +111,8 @@ public class GoalsList {
 	 *            the goal to solve.
 	 * @param ruleSet
 	 *            the ruleSet to reset the tree with.
+	 * @param events
+	 *            the events that have been used to update the database.
 	 * @return true if the goal is solved. False otherwise.
 	 */
 	public boolean solveGoal(Goal goal, RuleSet ruleSet, RuleSet events) {

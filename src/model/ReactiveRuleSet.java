@@ -56,7 +56,7 @@ public class ReactiveRuleSet {
 	}
 	
 	/**
-	 * Adds all the reactive rule that are in the specified {@code ArrayList}.
+	 * Adds the specified reactive rule.
 	 * 
 	 * @param rule
 	 *            the {@code ReactiveRule} object representing the reactive rule

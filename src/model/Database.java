@@ -50,21 +50,30 @@ public class Database {
 	}
 
 	/**
-	 * @param factsDatabase the factsDatabase to set
+	 * Sets the facts of the database.
+	 * 
+	 * @param factsDatabase
+	 *            the facts of the database to set
 	 */
 	public void setFactsDatabase(FactSet factsDatabase) {
 		this.factsDatabase = factsDatabase;
 	}
 
 	/**
-	 * @param rulesDatabase the rulesDatabase to set
+	 * Sets the rules of the database.
+	 * 
+	 * @param factsDatabase
+	 *            the rules of the database to set
 	 */
 	public void setRulesDatabase(RuleSet rulesDatabase) {
 		this.rulesDatabase = rulesDatabase;
 	}
 
 	/**
-	 * @param dSet the dSet to set
+	 * Sets the domain theory of the database.
+	 * 
+	 * @param factsDatabase
+	 *            the D set of the database to set
 	 */
 	public void setdSet(DSet dSet) {
 		this.dSet = dSet;

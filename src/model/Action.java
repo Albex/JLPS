@@ -97,6 +97,10 @@ public class Action {
 	 * @param rules
 	 *            on which the conditions will be tested to get solutions and
 	 *            bindings.
+	 * @param events
+	 *            the events that have been used to update the database.
+	 * @param nextEvents
+	 *            the events that will be perform during the next cycle so far.
 	 * @return true if this bound action can be performed. False otherwise.
 	 */
 	public boolean actionsAllowed(SimpleSentence event, RuleSet rules, RuleSet events, RuleSet nextEvents) {

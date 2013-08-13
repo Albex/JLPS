@@ -46,9 +46,7 @@ HashMap<String, Variable> variables = new HashMap<String, Variable>();
 
 /**
 *
-*
 * Unifiable
-*
 *
 **/
 unifiable returns [Unifiable unifiable]
@@ -85,7 +83,12 @@ simpleSentence returns [SimpleSentence simpleSentence]
       ')'
       {$simpleSentence = new SimpleSentence(name, parameters);}
   ;
-  
+
+/**
+*
+* DPost declarations
+*
+**/
 initiator returns [Initiator initiator]
   :   'initiates'
       '('
@@ -104,9 +107,7 @@ terminator returns [Terminator terminator]
 
 /**
 *
-*
-* Clause definition
-*
+* Clauses definitions
 *
 */
 equal returns [Equal equal]
@@ -136,7 +137,12 @@ and returns [Clause clause]
 truth returns [Clause clause = null]
   :   'true'
   ;
- 
+  
+/**
+*
+* Rules definitions
+*
+**/
 reactiveRule returns [ReactiveRule rule]
   :   (conditions = and | conditions = truth) '->' simpleSentence '.'
       {$rule = new ReactiveRule($conditions.clause, $simpleSentence.simpleSentence);}
@@ -152,6 +158,11 @@ fluent returns [SimpleSentence rule]
   :   simpleSentence '.' {$rule = $simpleSentence.simpleSentence;}
   ;
   
+/**
+*
+* Sets definitions
+*
+**/
 lext returns [boolean w, FactSet set]
   :   {$set = new FactSet(); $w = true;}
       ('Lext' | 'lext' | 'facts' | 'Facts') '{'
@@ -251,6 +262,11 @@ file returns [boolean[\] w]
       EOF
   ;
 
+/**
+*
+* Tokens
+*
+**/
 CONSTANT : ('a'..'z' | '0'..'9') ('A'..'Z' | 'a'..'z' | '0'..'9' | '_')*;
 VARIABLE : ('A'..'Z') ('A'..'Z' | 'a'..'z' | '0'..'9' | '_')*;
 WS : (' ' | '\t' | '\n' | '\r' | '\f')+  {$channel = HIDDEN;};
