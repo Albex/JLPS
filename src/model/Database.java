@@ -62,7 +62,7 @@ public class Database {
 	/**
 	 * Sets the rules of the database.
 	 * 
-	 * @param factsDatabase
+	 * @param rulesDatabase
 	 *            the rules of the database to set
 	 */
 	public void setRulesDatabase(RuleSet rulesDatabase) {
@@ -72,7 +72,7 @@ public class Database {
 	/**
 	 * Sets the domain theory of the database.
 	 * 
-	 * @param factsDatabase
+	 * @param dSet
 	 *            the D set of the database to set
 	 */
 	public void setdSet(DSet dSet) {
