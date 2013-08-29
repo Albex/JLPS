@@ -1,7 +1,10 @@
 package main;
 
 import java.io.IOException;
+import java.util.Scanner;
+
 import org.antlr.runtime.ANTLRFileStream;
+import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
@@ -12,6 +15,7 @@ import model.CycleHandler;
 import model.Database;
 import model.GoalsList;
 import model.ReactiveRuleSet;
+import model.Rule;
 import controller.syntax.JLPSSyntaxLexer;
 import controller.syntax.JLPSSyntaxParser;
 
@@ -57,8 +61,9 @@ public class JLPS {
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		try {
 			fileReader(fileOpener(args[0], true));
 		} catch (IOException e1) {
@@ -67,18 +72,78 @@ public class JLPS {
 			e1.printStackTrace();
 		}
 		
+		System.out.println("INITIAL STATE\n----------------");
 		Database.getInstance().printOut();
 		System.out.println("Reactive rules: {\n" + ReactiveRuleSet.getInstance().toString() + "\n}\n");
 		System.out.println("Events: \n" + CycleHandler.getInstance().getEvents());
 		
-		for(int i = 1; i < 8; i++) {
-			CycleHandler.getInstance().handlerMethod("\nUPDATE " + i);
+		boolean carryOn = true;
+		int i = 1;
+		Scanner sc;
+		
+		while (carryOn) {
+			CycleHandler.getInstance().handlerMethod("\nUPDATE " + i + "\n----------------");
 			Database.getInstance().printOut();
-			CycleHandler.getInstance().handlerMethod("\nFIRING " + i);
-			CycleHandler.getInstance().handlerMethod("\nSOLVING " + i);
+			CycleHandler.getInstance().handlerMethod("\nFIRING " + i + "\n----------------");
+			CycleHandler.getInstance().handlerMethod("\nSOLVING " + i + "\n----------------");
 			System.out.println(GoalsList.getInstance().toString());
 			System.out.println("Events: \n" + CycleHandler.getInstance().getEvents());
+			
+			sc = new Scanner(System.in);
+			System.out.println("\n?????????????????????????????????\nState " + i + ". Would you like to carry on? [y/N]");
+			String answer = sc.nextLine();
+			i++;
+
+			if (answer == null) {
+				answer = "n";
+			}
+			if (answer.toLowerCase().equals("n")) {
+				System.out.println("?????????????????????????????????\nEND");
+				carryOn = false;
+			} else {
+				System.out.println("Would you like to add events? [y/N]");
+				answer = sc.nextLine();
+				
+				if (answer == null) {
+					answer = "n";
+				}
+				if (answer.toLowerCase().equals("y")) {
+					while (true) {
+						System.out.println("\nEnter one event (with a dot at the end) or if you are done, enter /");
+						answer = sc.nextLine();
+						if (answer.equals("/")) {
+							System.out.println("?????????????????????????????????\n");
+							System.out.println("New events set: \n" + CycleHandler.getInstance().getEvents());
+							break;
+						}
+						JLPSSyntaxLexer lexer = new JLPSSyntaxLexer(new ANTLRStringStream(answer));
+						TokenStream tokenStream = new CommonTokenStream(lexer);
+						JLPSSyntaxParser parser = new JLPSSyntaxParser(tokenStream);
+						try {
+							Rule event = parser.rule();
+							CycleHandler.getInstance().addEvent(event);
+						} catch (RecognitionException e) {
+							e.printStackTrace();
+						}
+					}
+				} else {
+					System.out.println("?????????????????????????????????\n");
+				}
+			}
 		}
+		
+		/*Database.getInstance().printOut();
+		System.out.println("Reactive rules: {\n" + ReactiveRuleSet.getInstance().toString() + "\n}\n");
+		System.out.println("Events: \n" + CycleHandler.getInstance().getEvents());
+		
+		for(int i = 1; i < 8; i++) {
+			CycleHandler.getInstance().handlerMethod("\nUPDATE " + i + "\n----------------");
+			Database.getInstance().printOut();
+			CycleHandler.getInstance().handlerMethod("\nFIRING " + i + "\n----------------");
+			CycleHandler.getInstance().handlerMethod("\nSOLVING " + i + "\n----------------");
+			System.out.println(GoalsList.getInstance().toString());
+			System.out.println("Events: \n" + CycleHandler.getInstance().getEvents());
+		}*/
 	}
 
 	//public static void philosopher() throws RemoteException {

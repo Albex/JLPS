@@ -106,5 +106,19 @@ public final class CycleHandler {
 		}
 		this.events.addRules(events.getRules());
 	}
+	
+	/**
+	 * Adds the specified event/action to the events set.
+	 * <p>
+	 * This method is basically used when a user adds an event.
+	 * <p>
+	 * See a LPS documentation for more details on cycles and actions/events.
+	 * 
+	 * @param event
+	 *            the event under the form of a {@code Rule} object.
+	 */
+	public void addEvent(Rule event) {
+		this.events.addRule(event);
+	}
 
 }
