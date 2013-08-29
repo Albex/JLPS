@@ -13,6 +13,7 @@ package model;
 public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 
 	private AbstractSolutionNode child = null;
+	private String type = "undefined";
 	
 	/**
 	 * Constructor of the class.
@@ -24,10 +25,24 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 	 * @param parentSolution
 	 *            the solution of the parent node in the tree of proof.
 	 */
-	public SimpleSentenceSolutionNode(SimpleSentence clause, RuleSet rules, SubstitutionSet parentSolution) {
-		super(clause, rules, parentSolution);
+	public SimpleSentenceSolutionNode(SimpleSentence clause, RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
+		super(clause, rules, parentSolution, parentNode);
 	}
 	
+	public void setType(int ruleIndex) {
+		if (ruleIndex < getRuleSet().getExtensional()) {
+			this.type = "fact";
+		} else if (ruleIndex < getRuleSet().getIntensional()) {
+			this.type = "rule";
+		} else {
+			this.type = "action";
+		}
+	}
+	
+	public String getType() {
+		return this.type;
+	}
+
 	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
 		super.reset(newParentSolution, newRuleSet);
 		this.child = null;
@@ -72,6 +87,10 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 			// Unify its head
 			solution = ((SimpleSentence) this.getClause()).unify(head, this.getParentSolution());
 			
+			if (((SimpleSentence) this.getClause()).isMatched()) {
+				setType(currentRuleCount());
+			}
+			
 			// If there is a solution to the unification
 			if (solution != null) {
 				// Get the body of the rule
@@ -85,7 +104,7 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 				}
 				
 				// Otherwise create a node for the body of the rule and get a new solution for this new node
-				this.child = tail.getSolver(this.getRuleSet(), solution);
+				this.child = tail.getSolver(this.getRuleSet(), solution, this);
 				SubstitutionSet childSolution = this.child.nextSolution();
 				
 				// If the new node has a solution return it

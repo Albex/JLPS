@@ -25,9 +25,9 @@ public class NotSolutionNode extends AbstractSolutionNode {
 	 * @param parentSolution
 	 *            the solution of the parent node in the tree of proof.
 	 */
-	public NotSolutionNode(Not clause, RuleSet rules, SubstitutionSet parentSolution) {
-		super(clause, rules, parentSolution);
-		this.tailSolutionNode = clause.getOperand(0).getSolver(rules, parentSolution);
+	public NotSolutionNode(Not clause, RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
+		super(clause, rules, parentSolution, parentNode);
+		this.tailSolutionNode = clause.getOperand(0).getSolver(rules, parentSolution, this);
 	}
 	
 	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {

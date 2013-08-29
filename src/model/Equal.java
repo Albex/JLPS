@@ -66,8 +66,8 @@ public class Equal implements Clause {
 	 * @see Clause#getSolver(RuleSet, SubstitutionSet)
 	 */
 	@Override
-	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) {
-		return new EqualSolutionNode(this, rules, parentSolution);
+	public EqualSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
+		return new EqualSolutionNode(this, rules, parentSolution, parentNode);
 	}
 
 	/**

@@ -27,9 +27,9 @@ public class AndSolutionNode extends AbstractSolutionNode {
 	 * @param parentSolution
 	 *            the solution of the parent node in the tree of proof.
 	 */
-	public AndSolutionNode(And clause, RuleSet rules, SubstitutionSet parentSolution) {
-		super(clause, rules, parentSolution);
-		this.headSolutionNode = clause.getFirstPositiveOperand().getSolver(rules, parentSolution);
+	public AndSolutionNode(And clause, RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
+		super(clause, rules, parentSolution, parentNode);
+		this.headSolutionNode = clause.getFirstOperand().getSolver(rules, parentSolution, this);
 		this.operatorTail = clause.getOperatorTail();
 	}
 	
@@ -96,7 +96,7 @@ public class AndSolutionNode extends AbstractSolutionNode {
 		// It creates a new solution node for the tail with the parent substitution set.
 		// And then get a solution with this substitution set. If it is not null it returns it.
 			enterWhile = true;
-			this.tailSolutionNode = this.operatorTail.getSolver(this.getRuleSet(), solution);
+			this.tailSolutionNode = this.operatorTail.getSolver(this.getRuleSet(), solution, this);
 			SubstitutionSet tailSolution = this.tailSolutionNode.nextSolution();
 			setDeepestLeaf(this.tailSolutionNode.getDeepestLeaf());
 			if (tailSolution != null) {

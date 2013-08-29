@@ -43,7 +43,7 @@ public class And extends AbstractOperator {
 	 * @see model.AbstractOperator#create(java.util.ArrayList)
 	 */
 	@Override
-	protected AbstractOperator create(ArrayList<Clause> operands) {
+	protected And create(ArrayList<Clause> operands) {
 		return new And(operands);
 	}
 
@@ -62,8 +62,8 @@ public class And extends AbstractOperator {
 	 * @see Clause#getSolver(RuleSet, SubstitutionSet)
 	 */
 	@Override
-	public AndSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) {
-		return new AndSolutionNode(this, rules, parentSolution);
+	public AndSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
+		return new AndSolutionNode(this, rules, parentSolution, parentNode);
 	}
 
 	/**

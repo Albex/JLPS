@@ -15,7 +15,7 @@ import java.util.Stack;
  */
 public class ReactiveRule implements PCExpression {
 
-	private Clause conditions;
+	private Clause causes;
 	private SimpleSentence goal;
 	private ArrayList<String> actions;
 	
@@ -30,13 +30,13 @@ public class ReactiveRule implements PCExpression {
 	 *            part of the implication.
 	 */
 	public ReactiveRule(Clause conditions, SimpleSentence goal) {
-		this.conditions = conditions;
+		this.causes = conditions;
 		this.goal = goal;
 		
 		this.actions = new ArrayList<String>();
 		
 		Stack<Clause> conditionsParser = new Stack<Clause>();
-		conditionsParser.push(this.conditions);
+		conditionsParser.push(this.causes);
 		while(!conditionsParser.empty()) {
 			// If it is a and, just split all the operands
 			if (conditionsParser.peek() instanceof And) {
@@ -80,7 +80,7 @@ public class ReactiveRule implements PCExpression {
 	public ArrayList<SimpleSentence> fireRule(RuleSet database) {
 		ArrayList<SimpleSentence> goals = new ArrayList<SimpleSentence>();
 		ReactiveRule standardizedRule = this.standardizeVariablesApart(new Hashtable<Variable, Variable>());
-		AbstractSolutionNode root = standardizedRule.conditions.getSolver(database, new SubstitutionSet());
+		AbstractSolutionNode root = standardizedRule.causes.getSolver(database, new SubstitutionSet(), null);
 		SubstitutionSet solution;
 		
 		while((solution = root.nextSolution()) != null) {
@@ -111,8 +111,8 @@ public class ReactiveRule implements PCExpression {
 		
 		// If the conditions of this rule isn't null, create the bound one
 		Clause newConditions = null;
-		if (this.conditions != null) {
-			newConditions = (Clause) this.conditions.replaceVariables(s);
+		if (this.causes != null) {
+			newConditions = (Clause) this.causes.replaceVariables(s);
 		}
 		
 		// Create the bound reactive rule
@@ -141,8 +141,8 @@ public class ReactiveRule implements PCExpression {
 		
 		// If the conditions of this rule isn't null, create the standardized one
 		Clause newConditions = null;
-		if (this.conditions != null) {
-			newConditions = (Clause) this.conditions.standardizeVariablesApart(newVars);
+		if (this.causes != null) {
+			newConditions = (Clause) this.causes.standardizeVariablesApart(newVars);
 		}
 		
 		// Create the standardized reactive rule
@@ -158,7 +158,7 @@ public class ReactiveRule implements PCExpression {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "(" + this.conditions.toString() + ") -> " + this.goal.toString();
+		return "(" + this.causes.toString() + ") -> " + this.goal.toString();
 	}
 
 }

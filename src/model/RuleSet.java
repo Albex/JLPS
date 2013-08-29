@@ -19,6 +19,8 @@ import java.util.Hashtable;
 public class RuleSet {
 
 	private ArrayList<Rule> rules;
+	private int intensional;
+	private int extensional;
 	
 	/**
 	 * Constructor of the class.
@@ -44,6 +46,22 @@ public class RuleSet {
 	 */
 	public RuleSet(ArrayList<Rule> rules) {
 		this.rules = rules;
+	}
+	
+	public void setIntensional(int i) {
+		this.intensional = i;
+	}
+	
+	public int getIntensional() {
+		return this.intensional;
+	}
+	
+	public void setExtensional(int i) {
+		this.extensional = i;
+	}
+	
+	public int getExtensional () {
+		return this.extensional;
 	}
 	
 	/**
@@ -90,26 +108,6 @@ public class RuleSet {
 	 */
 	public int getRuleCount() {
 		return this.rules.size();
-	}
-	
-	/**
-	 * Removes the specified rule from the set.
-	 * 
-	 * @param rule
-	 *            the exact {@code Rule} object to remove.
-	 */
-	public void removeRule(Rule rule) {
-		this.rules.remove(rule);
-	}
-	
-	/**
-	 * Removes the rule at the specified position from the set.
-	 * 
-	 * @param index
-	 *            the position of the rule to remove.
-	 */
-	public void removeRule(int index) {
-		this.rules.remove(index);
 	}
 	
 	/**

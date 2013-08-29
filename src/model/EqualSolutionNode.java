@@ -22,8 +22,8 @@ public class EqualSolutionNode extends AbstractSolutionNode {
 	 * @param parentSolution
 	 *            the solution of the parent node in the tree of proof.
 	 */
-	public EqualSolutionNode(Equal clause, RuleSet rules, SubstitutionSet parentSolution) {
-		super(clause, rules, parentSolution);
+	public EqualSolutionNode(Equal clause, RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
+		super(clause, rules, parentSolution, parentNode);
 	}
 	
 	/*protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {

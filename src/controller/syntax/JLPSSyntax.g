@@ -93,16 +93,20 @@ initiator returns [Initiator initiator]
   :   'initiates'
       '('
         event = simpleSentence ',' fact = simpleSentence
-        {$initiator = new Initiator($event.simpleSentence, $fact.simpleSentence);}
       ')'
+      {Clause body = null;}
+      (':-' and {body = $and.clause;})?
+      {$initiator = new Initiator($event.simpleSentence, $fact.simpleSentence, body);}
   ;
   
 terminator returns [Terminator terminator]
   :   'terminates'
       '('
         event = simpleSentence ',' fact = simpleSentence
-        {$terminator = new Terminator($event.simpleSentence, $fact.simpleSentence);}
+        {Clause body = null;}
       ')'
+      (':-' and {body = $and.clause;})?
+      {$terminator = new Terminator($event.simpleSentence, $fact.simpleSentence, body);}
   ;
 
 /**
@@ -182,15 +186,15 @@ lint returns [boolean w, RuleSet set]
   ;
   
 preconditions returns [Clause conditions, Clause conflicts]
-  :   'Preconditions' '['
-      ('conditions' ':' (cond = and | cond = truth) '.' {$conditions = $cond.clause;})?
-      ('conflicts' ':' (conf = and | conf = truth) '.' {$conflicts = $conf.clause;})?
+  :   ('Preconditions' | 'preconditions') '['
+      (('conditions' | 'Conditions') ':' (cond = and | cond = truth) '.' {$conditions = $cond.clause;})?
+      (('conflicts' | 'Conflicts') ':' (conf = and | conf = truth) '.' {$conflicts = $conf.clause;})?
       ']'
   ;
   
 postconditions returns [ArrayList<Terminator> terminators, ArrayList<Initiator> initiators]
   :   {$terminators = new ArrayList<Terminator>(); $initiators = new ArrayList<Initiator>();}
-      'Postconditions' '['
+      ('Postconditions' | 'postconditions') '['
       (terminator '.' {$terminators.add($terminator.terminator);})*
       (initiator '.'{$initiators.add($initiator.initiator);})*
       ']'
@@ -209,13 +213,22 @@ action returns [Action action]
       {$action = new Action($simpleSentence.simpleSentence, initiators, terminators, conditions, conflicts);}
       {this.variables = new HashMap<String, Variable>();}
   ;
+  
+macroaction returns [Rule macroaction]
+  :   rule
+      {$macroaction = $rule.rule;}
+  ;
  
 d returns [boolean w, DSet set]
-  :   {$set = new DSet(); $w = true;}
+  :   {$set = new DSet(); $w = true; ArrayList<Rule> macros = new ArrayList<Rule>();}
       ('domain theory' | 'Domain Theory' | 'domainTheory' | 'DomainTheory' | 'dset' | 'Dset' | 'dSet' | 'DSet') '{'
       (action {$w = false; $set.addAction($action.action);})*
+      (('macroactions' | 'Macroactions') '{'
+      (macroaction {$w = false; macros.add($macroaction.macroaction);})*
+      '}')?
       '}'
       {Database.getInstance().setdSet($set);}
+      {Database.getInstance().addRulesDatabase(macros);}
   ;
   
 database returns [boolean wlint, boolean wlext, boolean wdset]

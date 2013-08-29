@@ -20,6 +20,7 @@ public abstract class AbstractSolutionNode {
 	
 	// saving the parent solution allows backtracking to the original state
 	private SubstitutionSet parentSolution;
+	private AbstractSolutionNode parentNode;
 	
 	//These variables allow the solution node to iterate over the rule set.
 	private int ruleNumber = 0;
@@ -34,9 +35,10 @@ public abstract class AbstractSolutionNode {
 	 * @param parentSolution
 	 *            the solution of the parent node in the tree of proof.
 	 */
-	public AbstractSolutionNode(Clause clause, RuleSet rules, SubstitutionSet parentSolution) {
+	public AbstractSolutionNode(Clause clause, RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
 		this.rules = rules;
 		this.parentSolution = parentSolution;
+		this.parentNode = parentNode;
 		this.clause = clause;
 	}
 	
@@ -61,6 +63,15 @@ public abstract class AbstractSolutionNode {
 		this.parentSolution = newParentSolution;
 		this.ruleNumber = 0;
 		this.rules = (newRuleSet == null) ? this.rules : newRuleSet;
+	}
+	
+	/**
+	 * Gets the number of the current rule.
+	 * 
+	 * @return the number of the current rule.
+	 */
+	public int currentRuleCount() {
+		return this.ruleNumber - 1;
 	}
 	
 	/**
@@ -96,6 +107,10 @@ public abstract class AbstractSolutionNode {
 	 */
 	public SubstitutionSet getParentSolution() {
 		return this.parentSolution;
+	}
+	
+	public AbstractSolutionNode getParentNode() {
+		return this.parentNode;
 	}
 	
 	/**

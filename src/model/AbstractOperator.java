@@ -79,18 +79,8 @@ public abstract class AbstractOperator implements Clause {
 	 * 
 	 * @return the first operand.
 	 */
-	public Clause getFirstPositiveOperand() {
-		int i = 0;
-		while (this.operands.get(i) instanceof Not) {
-			i++;
-			
-			if (i >= this.operandCount()) {
-				
-				return this.operands.get(0);
-			}
-		}
-		
-		return this.operands.get(i);
+	public Clause getFirstOperand() {
+		return this.operands.get(0);
 	}
 	
 	/**

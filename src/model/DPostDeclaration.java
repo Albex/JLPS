@@ -10,6 +10,7 @@ public abstract class DPostDeclaration {
 	
 	protected SimpleSentence event;
 	protected SimpleSentence fluent;
+	protected Clause body;
 	
 	/**
 	 * Constructor of the object.
@@ -23,6 +24,24 @@ public abstract class DPostDeclaration {
 	protected DPostDeclaration(SimpleSentence event, SimpleSentence fluent) {
 		this.event = event;
 		this.fluent = fluent;
+		this.body = null;
+	}
+	
+	/**
+	 * Constructor of the object.
+	 * 
+	 * @param event
+	 *            is the general form of event (with often free variables).
+	 * @param fluent
+	 *            is also the general form fluent. It is the terminated or
+	 *            created by the event.
+	 * @param body
+	 * 			  is the body of the postcondition.
+	 */
+	protected DPostDeclaration(SimpleSentence event, SimpleSentence fluent, Clause body) {
+		this.event = event;
+		this.fluent = fluent;
+		this.body = body;
 	}
 
 	/**
@@ -53,8 +72,15 @@ public abstract class DPostDeclaration {
 	 *            that is bound and corresponds to this declaration.
 	 * @return the bound fluent according to the bindings.
 	 */
-	public SimpleSentence getGroundFluent(SimpleSentence event) {
+	public SimpleSentence getGroundFluent(SimpleSentence event, RuleSet rules) {
 		SubstitutionSet variablesBinding = this.event.unify(event, new SubstitutionSet());
+		if (this.body != null) {
+			variablesBinding = this.body.getSolver(rules, variablesBinding, null).nextSolution();
+			if (variablesBinding == null) {
+				
+				return null;
+			}
+		}
 		SimpleSentence groundFluent = (SimpleSentence) this.fluent.replaceVariables(variablesBinding);
 		
 		return groundFluent;

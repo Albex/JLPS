@@ -3,9 +3,12 @@
  */
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.fusesource.jansi.AnsiConsole;
 
 /**
  * This is a singleton class that represents the goals list of the framework. It
@@ -22,7 +25,7 @@ public class GoalsList {
 	
 	private RuleSet nextEvents;
 	private GoalSet goalsDefinitions;
-	private HashMap<Goal, AbstractSolutionNode> goalsList;
+	private HashMap<Goal, ArrayList<AbstractSolutionNode>> goalsList;
 	private static volatile GoalsList instance = null;
 
 	/**
@@ -30,7 +33,7 @@ public class GoalsList {
 	 */
 	private GoalsList() {
 		this.goalsDefinitions = new GoalSet();
-		this.goalsList = new HashMap<Goal, AbstractSolutionNode>();
+		this.goalsList = new HashMap<Goal, ArrayList<AbstractSolutionNode>>();
 		this.nextEvents = new RuleSet();
 	}
 	
@@ -79,7 +82,7 @@ public class GoalsList {
 	 *            the event to add.
 	 */
 	public void addNextEvent(SimpleSentence event) {
-		if (event.getSolver(this.nextEvents, new SubstitutionSet()).nextSolution() == null) {
+		if (event.getSolver(this.nextEvents, new SubstitutionSet(), null).nextSolution() == null) {
 			this.nextEvents.addRule(new Rule(event));
 		}
 	}
@@ -96,11 +99,14 @@ public class GoalsList {
 		// Create the bound goal from the generic definition
 		Goal completeGoal = new Goal(this.goalsDefinitions.getGoal(goal.getName()), goal);
 		
-		// Get the next definition of the goal, which is the first one
-		Clause definition = completeGoal.getNextDefinition();
+		// Initialize the tree
+		ArrayList<AbstractSolutionNode> tree = new ArrayList<AbstractSolutionNode>();
+		while(completeGoal.hasNextDefinition()) {
+			tree.add(completeGoal.getNextDefinition().getSolver(ruleSet, new SubstitutionSet(), null));
+		}
 		
 		// Create an entry in the list of goals to solve
-		this.goalsList.put(completeGoal, definition.getSolver(ruleSet, new SubstitutionSet()));
+		this.goalsList.put(completeGoal, tree);
 	}
 	
 	/**
@@ -116,65 +122,112 @@ public class GoalsList {
 	 * @return true if the goal is solved. False otherwise.
 	 */
 	public boolean solveGoal(Goal goal, RuleSet ruleSet, RuleSet events) {
+		// Define the rules' set
 		RuleSet rulesAndEvents = ruleSet;
 		rulesAndEvents.addRules(events.getRules());
-		AbstractSolutionNode root = this.goalsList.get(goal);
-		AbstractSolutionNode leaf = root.getDeepestLeaf();
-		leaf.reset(leaf.getParentSolution(), rulesAndEvents);
-		SubstitutionSet solution = leaf.nextSolution();
-		leaf = leaf.getDeepestLeaf();
-		root.setDeepestLeaf(leaf);
 		
-		// If there is a solution the goal is solved
-		if (solution != null) {
+		for(Iterator<AbstractSolutionNode> tree = this.goalsList.get(goal).iterator(); tree.hasNext();) {
+			// Get the leaf of the tree
+			//AbstractSolutionNode leaf = this.goalsList.get(goal).get(0);
+			AbstractSolutionNode leaf = tree.next();
 			
-			return true;
-		}
-		
-		// If the leaf is a stuck and
-		if (leaf instanceof AndSolutionNode) {
-			Clause simpleSentence = (Clause) ((AndSolutionNode) leaf).getHeadSolutionNode().getClause().replaceVariables(leaf.getParentSolution());
-			if (simpleSentence instanceof SimpleSentence) {
-				Action action = Database.getInstance().getDSet().getAction(((SimpleSentence) simpleSentence).getName());
+			// Reset the leaf to the new ruleSet
+			leaf.reset(leaf.getParentSolution(), rulesAndEvents);
+			SubstitutionSet solution = leaf.nextSolution();
+			leaf = leaf.getDeepestLeaf();
+			this.goalsList.get(goal).set(0, leaf);
+			
+			// If there is a solution the goal is solved
+			if (solution != null) {
 				
-				// If it is an action add it to the next action to do
-				if (action != null) {
-					if (action.actionsAllowed((SimpleSentence) simpleSentence, ruleSet, events, this.nextEvents)) {
-						this.addNextEvent((SimpleSentence) simpleSentence);
+				return true;
+			}
+			
+			// If the leaf is a stuck and
+			if (leaf instanceof AndSolutionNode) {
+				AbstractSolutionNode head = ((AndSolutionNode) leaf).getHeadSolutionNode();
+				if (head instanceof SimpleSentenceSolutionNode) {
+					SimpleSentence simpleSentence = (SimpleSentence) head.getClause().replaceVariables(leaf.getParentSolution());
+					switch (((SimpleSentenceSolutionNode) head).getType()) {
+					case "fact":
+						// Wait
+						break;
+					case "rule":
+						// Delete the branch
+						tree.remove();
+						break;
+					case "undefined": // It might be an action or a fact
+					case "action":
+					default:
+						// Get the corresponding action
+						Action action = Database.getInstance().getDSet().getAction(((SimpleSentence) simpleSentence).getName());
+						
+						// If it is an action add it to the next action to do
+						if (action != null) {
+							if (action.actionsAllowed((SimpleSentence) simpleSentence, ruleSet, events, this.nextEvents)) {
+								this.addNextEvent((SimpleSentence) simpleSentence);
+							}
+							
+							return false;
+						}
+						break;
 					}
-					
-					return false;
 				}
 			}
-		}
-		
-		// If the leaf is a stuck simple sentence
-		if (leaf instanceof SimpleSentenceSolutionNode) {
-			SimpleSentence simpleSentence = (SimpleSentence) leaf.getClause().replaceVariables(leaf.getParentSolution());
-			Action action = Database.getInstance().getDSet().getAction(simpleSentence.getName());
 			
-			// If it is an action add it to the next action to do
-			if (action != null) {
-				if (action.actionsAllowed(simpleSentence, ruleSet, events, this.nextEvents)) {
-					this.addNextEvent(simpleSentence);
+			// If the leaf is a stuck simple sentence
+			if (leaf instanceof SimpleSentenceSolutionNode) {
+				SimpleSentence simpleSentence = (SimpleSentence) leaf.getClause().replaceVariables(leaf.getParentSolution());
+				
+				switch (((SimpleSentenceSolutionNode) leaf).getType()) {
+				case "fact":
+					// Wait
+					break;
+				case "rule":
+					// Delete the branch
+					tree.remove();
+					break;
+				case "undefined": // It might be an action or a fact
+				case "action":
+				default:
+					// Get the corresponding action
+					Action action = Database.getInstance().getDSet().getAction(((SimpleSentence) simpleSentence).getName());
+					
+					// If it is an action add it to the next action to do
+					if (action != null) {
+						if (action.actionsAllowed((SimpleSentence) simpleSentence, ruleSet, events, this.nextEvents)) {
+							this.addNextEvent((SimpleSentence) simpleSentence);
+						}
+						
+						return false;
+					}
+					break;
 				}
+			}
+						
+		/*// Otherwise, according to the strategy, get the next definition to check.
+			if (goal.hasNextDefinition()) {
+				leaf = goal.getNextDefinition().getSolver(rulesAndEvents, new SubstitutionSet(), null);
+				this.goalsList.get(goal).set(0, leaf);
+				
+				return solveGoal(goal, ruleSet, events);
+			
+			// If there is no other definition reset and wait for the next cycle
+			} else {
+				goal.reset();
+				leaf = goal.getNextDefinition().getSolver(rulesAndEvents, new SubstitutionSet(), null);
+				this.goalsList.get(goal).set(0, leaf);
 				
 				return false;
-			}
+			}*/
 		}
-					
-		// Otherwise, according to the strategy, get the next definition to check.
-		if (goal.hasNextDefinition()) {
-			root = goal.getNextDefinition().getSolver(rulesAndEvents, new SubstitutionSet());
-			this.goalsList.put(goal, root);
-			
-			return solveGoal(goal, ruleSet, events);
 		
-		// If there is no other definition reset and wait for the next cycle
+		// Check if there are still branches
+		if (this.goalsList.get(goal).isEmpty()) {
+			AnsiConsole.out.println("\u001B[33m" + "/!\\ The goal " + goal.getGoal() + " could not be resolved." + "\u001B[37m");
+			
+			return true;
 		} else {
-			goal.reset();
-			root = goal.getNextDefinition().getSolver(rulesAndEvents, new SubstitutionSet());
-			this.goalsList.put(goal, root);
 			
 			return false;
 		}
@@ -214,7 +267,7 @@ public class GoalsList {
 		String res = "{\n";
 		
 		for(Goal goal : this.goalsList.keySet()) {
-			AbstractSolutionNode tree = this.goalsList.get(goal);
+			AbstractSolutionNode tree = this.goalsList.get(goal).get(0);
 			res += "[" + goal.getGoal().toString() + " :- ";
 			res += tree.getClause().toString() + "] => [";
 			res += tree.getDeepestLeaf().getClause().replaceVariables(tree.getDeepestLeaf().getParentSolution()).toString() + "]\n";

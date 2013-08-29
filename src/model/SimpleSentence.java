@@ -13,7 +13,8 @@ import java.util.Hashtable;
  */
 public class SimpleSentence implements Unifiable, Clause {
 
-	protected Unifiable[] terms;
+	private Unifiable[] terms;
+	private boolean isMatched = false;
 
 	/**
 	 * Constructor of the class.
@@ -57,8 +58,8 @@ public class SimpleSentence implements Unifiable, Clause {
 	 * @see Clause#getSolver(RuleSet, SubstitutionSet)
 	 */
 	@Override
-	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) {
-		return new SimpleSentenceSolutionNode(this, rules, parentSolution);
+	public SimpleSentenceSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
+		return new SimpleSentenceSolutionNode(this, rules, parentSolution, parentNode);
 	}
 
 	/**
@@ -107,6 +108,15 @@ public class SimpleSentence implements Unifiable, Clause {
 	 */
 	public String getName() {
 		return this.terms[0].toString();
+	}
+	
+	/**
+	 * Checks whether the name of the simple sentence matches so far a rule in the database.
+	 * 
+	 * @return true if so far the simple sentence's name matches a rule.
+	 */
+	public boolean isMatched() {
+		return this.isMatched;
 	}
 
 	/**
@@ -200,6 +210,7 @@ public class SimpleSentence implements Unifiable, Clause {
 						
 						return null;
 					}
+					this.isMatched = true;
 				}
 
 				return sNew;

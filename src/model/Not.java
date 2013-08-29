@@ -31,7 +31,7 @@ public class Not extends AbstractOperator {
 	 * @see model.AbstractOperator#create(java.util.ArrayList)
 	 */
 	@Override
-	protected AbstractOperator create(ArrayList<Clause> operands) {
+	protected Not create(ArrayList<Clause> operands) {
 		return new Not(operands.get(0));
 	}
 
@@ -50,8 +50,8 @@ public class Not extends AbstractOperator {
 	 * @see Clause#getSolver(RuleSet, SubstitutionSet)
 	 */
 	@Override
-	public NotSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution) {
-		return new NotSolutionNode(this, rules, parentSolution);
+	public NotSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
+		return new NotSolutionNode(this, rules, parentSolution, parentNode);
 	}
 
 	/**

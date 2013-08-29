@@ -24,6 +24,6 @@ public interface Clause extends PCExpression {
 	 * @return the node of the tree of proof.
 	 * @see AbstractSolutionNode#nextSolution()
 	 */
-	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution);
+	public AbstractSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode);
 	
 }

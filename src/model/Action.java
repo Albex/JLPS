@@ -63,27 +63,7 @@ public class Action {
 	public SimpleSentence getPredicate() {
 		return this.action;
 	}
-	
-	/**
-	 * Gets all the DPost declarations that initiates fluents. It is collected
-	 * in an {@code ArrayList}.
-	 * 
-	 * @return the {@code ArrayList} containing the initiators of the action.
-	 */
-	public ArrayList<Initiator> getInitiators() {
-		return this.initiators;
-	}
-	
-	/**
-	 * Gets all the DPost declarations that terminates fluents. It is collected
-	 * in an {@code ArrayList}.
-	 * 
-	 * @return the {@code ArrayList} containing the terminators of the action.
-	 */
-	public ArrayList<Terminator> getTerminators() {
-		return this.terminators;
-	}
-	
+		
 	/**
 	 * Checks if the action can be performed. If this needs bindings for the
 	 * variables of the action, it will return every version of the action with
@@ -109,7 +89,7 @@ public class Action {
 			Clause boundConditions = (Clause) this.conditions.replaceVariables(bindings);
 			RuleSet conRules = rules;
 			conRules.addRules(events.getRules());
-			AbstractSolutionNode conditionsRoot = boundConditions.getSolver(conRules, new SubstitutionSet());
+			AbstractSolutionNode conditionsRoot = boundConditions.getSolver(conRules, new SubstitutionSet(), null);
 			
 			if (conditionsRoot.nextSolution() == null) {
 
@@ -121,7 +101,7 @@ public class Action {
 			Clause boundConflicts = (Clause) this.conflicts.replaceVariables(bindings);
 			RuleSet conRules = rules;
 			conRules.addRules(nextEvents.getRules());
-			AbstractSolutionNode conflictsRoot = boundConflicts.getSolver(conRules, new SubstitutionSet());
+			AbstractSolutionNode conflictsRoot = boundConflicts.getSolver(conRules, new SubstitutionSet(), null);
 			
 			if (conflictsRoot.nextSolution() == null) {
 
@@ -142,11 +122,14 @@ public class Action {
 	 * @return the {@code ArrayList} of the bound fluents according to the
 	 *         parameter.
 	 */
-	public ArrayList<SimpleSentence> fluentsToInitiate(SimpleSentence event) {
+	public ArrayList<SimpleSentence> fluentsToInitiate(SimpleSentence event, RuleSet rules) {
 		ArrayList<SimpleSentence> fluents = new ArrayList<SimpleSentence>();
 		
 		for(Initiator initiator : this.initiators) {
-			fluents.add(initiator.getGroundFluent(event));
+			SimpleSentence fluent = initiator.getGroundFluent(event, rules);
+			if (fluent != null) {
+				fluents.add(fluent);
+			}
 		}
 		
 		return fluents;
@@ -162,11 +145,14 @@ public class Action {
 	 * @return the {@code ArrayList} of the bound fluents according to the
 	 *         parameter.
 	 */
-	public ArrayList<SimpleSentence> fluentsToTerminate(SimpleSentence event) {
+	public ArrayList<SimpleSentence> fluentsToTerminate(SimpleSentence event, RuleSet rules) {
 		ArrayList<SimpleSentence> fluents = new ArrayList<SimpleSentence>();
 		
 		for(Terminator terminator : this.terminators) {
-			fluents.add(terminator.getGroundFluent(event));
+			SimpleSentence fluent = terminator.getGroundFluent(event, rules);
+			if (fluent != null) {
+				fluents.add(fluent);
+			}
 		}
 		
 		return fluents;

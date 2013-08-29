@@ -68,6 +68,16 @@ public class Database {
 	public void setRulesDatabase(RuleSet rulesDatabase) {
 		this.rulesDatabase = rulesDatabase;
 	}
+	
+	/**
+	 * Adds rules to the database.
+	 * 
+	 * @param rules
+	 *            the rules to add to the database.
+	 */
+	public void addRulesDatabase(ArrayList<Rule> rules) {
+		this.rulesDatabase.addRules(rules);
+	}
 
 	/**
 	 * Sets the domain theory of the database.
@@ -112,7 +122,9 @@ public class Database {
 	 */
 	public RuleSet getRuleSet() {
 		RuleSet ruleSet = this.factsDatabase.toRuleSet();
+		ruleSet.setExtensional(ruleSet.getRuleCount());
 		ruleSet.addRules(this.rulesDatabase.getRules());
+		ruleSet.setIntensional(ruleSet.getRuleCount());
 		
 		return ruleSet;
 	}
@@ -126,6 +138,11 @@ public class Database {
 	 * @see DatabaseUpdateState
 	 */
 	public void updates(RuleSet events) {
+		RuleSet rules = this.getRuleSet();
+		rules.addRules(events.getRules());
+		
+		ArrayList<SimpleSentence> fluentsToInitiate = new ArrayList<SimpleSentence>();
+		ArrayList<SimpleSentence> fluentsToTerminate = new ArrayList<SimpleSentence>();
 
 		for(Rule currentEvent : events.getRules()) {
 			// Get the action to perform
@@ -133,20 +150,26 @@ public class Database {
 			
 			if(action != null) {
 				// Get the update to perform
-				ArrayList<SimpleSentence> fluentsToInitiate = action.fluentsToInitiate(currentEvent.getHead());
-				ArrayList<SimpleSentence> fluentsToTerminate = action.fluentsToTerminate(currentEvent.getHead());
-				
-				// Do the update
-				// First the terminations
-				for (SimpleSentence currentFluent : fluentsToTerminate) {
-					this.factsDatabase.removeFacts(currentFluent);
+				ArrayList<SimpleSentence> fluents = action.fluentsToInitiate(currentEvent.getHead(), rules);
+				if (fluents != null) {
+					fluentsToInitiate.addAll(fluents);
 				}
-				
-				// Then the initiations
-				for (SimpleSentence currentFluent : fluentsToInitiate) {
-					this.factsDatabase.addFact(currentFluent);
+				fluents = action.fluentsToTerminate(currentEvent.getHead(), rules);
+				if (fluents != null) {
+					fluentsToTerminate = fluents;
 				}
 			}
+		}
+		
+		// Do the update
+		// First the terminations
+		for (SimpleSentence currentFluent : fluentsToTerminate) {
+			this.factsDatabase.removeFacts(currentFluent);
+		}
+			
+		// Then the initiations
+		for (SimpleSentence currentFluent : fluentsToInitiate) {
+			this.factsDatabase.addFact(currentFluent);
 		}
 	}
 
