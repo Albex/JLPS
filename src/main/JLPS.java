@@ -90,12 +90,12 @@ public class JLPS {
 			System.out.println("Events: \n" + CycleHandler.getInstance().getEvents());
 			
 			sc = new Scanner(System.in);
-			System.out.println("\n?????????????????????????????????\nState " + i + ". Would you like to carry on? [y/N]");
+			System.out.println("\n?????????????????????????????????\nState " + i + ". Would you like to carry on? [Y/n]");
 			String answer = sc.nextLine();
 			i++;
 
 			if (answer == null) {
-				answer = "n";
+				answer = "y";
 			}
 			if (answer.toLowerCase().equals("n")) {
 				System.out.println("?????????????????????????????????\nEND");
@@ -131,83 +131,6 @@ public class JLPS {
 				}
 			}
 		}
-		
-		/*Database.getInstance().printOut();
-		System.out.println("Reactive rules: {\n" + ReactiveRuleSet.getInstance().toString() + "\n}\n");
-		System.out.println("Events: \n" + CycleHandler.getInstance().getEvents());
-		
-		for(int i = 1; i < 8; i++) {
-			CycleHandler.getInstance().handlerMethod("\nUPDATE " + i + "\n----------------");
-			Database.getInstance().printOut();
-			CycleHandler.getInstance().handlerMethod("\nFIRING " + i + "\n----------------");
-			CycleHandler.getInstance().handlerMethod("\nSOLVING " + i + "\n----------------");
-			System.out.println(GoalsList.getInstance().toString());
-			System.out.println("Events: \n" + CycleHandler.getInstance().getEvents());
-		}*/
 	}
 
-	//public static void philosopher() throws RemoteException {
-		// Database {
-		// Facts {
-		/*SimpleSentence f1 = Interpreter.stringToSimpleSentence("available(f0)", null);
-		SimpleSentence f2 = Interpreter.stringToSimpleSentence("available(f1)", null);
-		SimpleSentence f3 = Interpreter.stringToSimpleSentence("available(f2)", null);
-		SimpleSentence f4 = Interpreter.stringToSimpleSentence("available(f3)", null);
-		SimpleSentence f5 = Interpreter.stringToSimpleSentence("available(f4)", null);
-		FactSet S = new FactSet(f1, f2, f3, f4, f5);
-		// }
-		// Rules {
-		Rule r1 = Interpreter.stringToRule("adjacent(f0, philosopher(0), f1)", null);
-		Rule r2 = Interpreter.stringToRule("adjacent(f1, philosopher(1), f2)", null);
-		Rule r3 = Interpreter.stringToRule("adjacent(f2, philosopher(2), f3)", null);
-		Rule r4 = Interpreter.stringToRule("adjacent(f3, philosopher(3), f4)", null);
-		Rule r5 = Interpreter.stringToRule("adjacent(f4, philosopher(4), f0)", null);
-		RuleSet L = new RuleSet(r1, r2, r3, r4, r5);
-		// }*/
-		/*// DSet {
-		// {
-		HashMap<String, Variable> variables = new HashMap<String, Variable>();
-		SimpleSentence a1 = Interpreter.stringToSimpleSentence("pickupForks(F1, philosopher(I), F2)", variables);
-		ArrayList<Terminator> terma1 = new ArrayList<Terminator>();
-		terma1.add((Terminator) Interpreter.stringToDPost("terminates(pickupForks(F1, philosopher(I), F2), available(F1))", variables));
-		terma1.add((Terminator) Interpreter.stringToDPost("terminates(pickupForks(F1, philosopher(I), F2), available(F2))", variables));
-		Clause conda1 = Interpreter.stringToClause("available(F1) & available(F2)", variables);
-		Clause confa1 = Interpreter.stringToAnd("!pickupForks(F2, philosopher(J), F3) & !pickupForks(F3, philosopher(K), F1)", variables);
-		Action pickup = new Action(a1, new ArrayList<Initiator>(), terma1, conda1, confa1);
-		// }
-		// {
-		variables = new HashMap<String, Variable>();
-		SimpleSentence a2 = Interpreter.stringToSimpleSentence("putdownForks(F1, philosopher(I), F2)", variables);
-		ArrayList<Initiator> inita2 = new ArrayList<Initiator>();
-		inita2.add((Initiator) Interpreter.stringToDPost("initiates(putdownForks(F1, philosopher(I), F2), available(F1))", variables));
-		inita2.add((Initiator) Interpreter.stringToDPost("initiates(putdownForks(F1, philosopher(I), F2), available(F2))", variables));
-		Action putdown = new Action(a2, inita2, new ArrayList<Terminator>(), null, null);
-		// }
-		DSet D = new DSet(pickup, putdown);
-		// }
-		Database.getInstance().setdSet(D);
-		// }*/
-		/*// ReactiveRule {
-		ReactiveRule rr1 = Interpreter.stringToReactiveRule("timeToEat(philosopher(I)) -> dine(philosopher(I))", null);
-		ReactiveRuleSet.getInstance(rr1);
-		// }*/
-		/*// Goals {
-		// {
-		variables = new HashMap<String, Variable>();
-		RuleSet definition = new RuleSet(Interpreter.stringToRule("dine(philosopher(I)) :- adjacent(F1, philosopher(I), F2) & pickupForks(F1, philosopher(I), F2) & putdownForks(F1, philosopher(I), F2)", variables));
-		Goal dine = new Goal(definition.getRule(0).getHead(), definition);
-		// }
-		GoalSet set = new GoalSet(dine);
-		GoalsList.getInstance(set);
-		// }*/
-		/*// Events {
-		RuleSet events = new RuleSet(Interpreter.stringToRule("timeToEat(philosopher(0))", null),
-				Interpreter.stringToRule("timeToEat(philosopher(1))", null),
-				Interpreter.stringToRule("timeToEat(philosopher(2))", null),
-				Interpreter.stringToRule("timeToEat(philosopher(3))", null),
-				Interpreter.stringToRule("timeToEat(philosopher(4))", null));
-		CycleHandler.getInstance().setEvents(events);
-		//}*/
-	//}
-	
 }
