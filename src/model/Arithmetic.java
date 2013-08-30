@@ -6,54 +6,67 @@ package model;
 import java.util.Hashtable;
 
 /**
- * This class represents equal clauses. It is a binary operator. It extends
- * {@link Clause}.
+ * This class represents arithmetic expressions. It is a binary operator. It
+ * extends {@link Clause}.
  * <p>
- * Equal clauses are useless as the use of constants or identical variables
- * replaces it. The purpose of this class is to represent negative equalities.
+ * Arithmetic expressions are comparison between numbers. Their operands must
+ * be bound before evaluation.
  * 
  * @author Alexandre Camus
  * 
  */
-public class Equal implements Clause {
+public class Arithmetic implements Clause {
 	
-	Unifiable operand1;
-	Unifiable operand2;
+	private Unifiable operand1;
+	private Unifiable operand2;
+	private String symbol;
 
 	/**
 	 * Constructor of the class
 	 * 
 	 * @param operand1
-	 *            the left operand of the equal sentence.
+	 *            the left operand of the arithmetic expression.
+	 * @param symbol
+	 *            the symbol of the arithmetic expression.
 	 * @param operand2
-	 *            the right operand of the equal sentence.
+	 *            the right operand of the arithmetic expression.
 	 */
-	public Equal(Unifiable operand1, Unifiable operand2) {
+	public Arithmetic(Unifiable operand1, String symbol, Unifiable operand2) {
 		this.operand1 = operand1;
 		this.operand2 = operand2;
+		this.symbol = symbol;
 	}
 	
 	/**
-	 * Gets the left operand of the equal sentence.
+	 * Gets the left operand of the arithmetic expression.
 	 * 
-	 * @return the left operand of the equal sentence.
+	 * @return the left operand of the arithmetic expression.
 	 */
 	public Unifiable getOperand1() {
 		return this.operand1;
 	}
 	
 	/**
-	 * Gets the right operand of the equal sentence.
+	 * Gets the right operand of the arithmetic expression.
 	 * 
-	 * @return the right operand of the equal sentence.
+	 * @return the right operand of the arithmetic expression.
 	 */
 	public Unifiable getOperand2() {
 		return this.operand2;
 	}
-
+	
+	/**
+	 * Gets the symbol of the arithmetic expression.
+	 * 
+	 * @return the symbol of the arithmetic expression.
+	 */
+	public String getSymbol() {
+		return this.symbol;
+	}
+	
 	/**
 	 * Creates a solver which is a node in the tree proof. This is the version
-	 * for the equality.
+	 * for the arithmetic expression.
 	 * <p>
 	 * This function is recursive over all objects that can be proved and
 	 * creates the tree of proof for a clause.
@@ -66,12 +79,12 @@ public class Equal implements Clause {
 	 * @see Clause#getSolver(RuleSet, SubstitutionSet)
 	 */
 	@Override
-	public EqualSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
-		return new EqualSolutionNode(this, rules, parentSolution, parentNode);
+	public ArithmeticSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
+		return new ArithmeticSolutionNode(this, rules, parentSolution, parentNode);
 	}
 
 	/**
-	 * Replaces all the variables in the equal clause according to the
+	 * Replaces all the variables in the arithmetic expression according to the
 	 * specified bindings.
 	 * <p>
 	 * This method is recursive over all {@link PCExpression} implementations.
@@ -79,15 +92,16 @@ public class Equal implements Clause {
 	 * @param s
 	 *            the {@code SubstitutionSet} that contains the bindings of the
 	 *            variables so far.
-	 * @return a {@code Equal} object representing the bound equal clause.
+	 * @return a {@code Arithmetic} object representing the bound arithmetic
+	 *         expression.
 	 * @see model.PCExpression#replaceVariables(model.SubstitutionSet)
 	 */
 	@Override
-	public Equal replaceVariables(SubstitutionSet s) {
+	public Arithmetic replaceVariables(SubstitutionSet s) {
 		Unifiable newOperand1 = (Unifiable) this.operand1.replaceVariables(s);
 		Unifiable newOperand2 = (Unifiable) this.operand2.replaceVariables(s);
 		
-		return new Equal(newOperand1, newOperand2);
+		return new Arithmetic(newOperand1, this.symbol, newOperand2);
 	}
 
 	/**
@@ -99,27 +113,27 @@ public class Equal implements Clause {
 	 * @param newVars
 	 *            is a parameter to save over the recursion all the variable
 	 *            replacements done so far.
-	 * @return a {@code Equal} object representing the standardized
-	 *         equal clause.
+	 * @return a {@code Arithmetic} object representing the standardized
+	 *         arithmetic expression.
 	 * @see model.PCExpression#standardizeVariablesApart(java.util.Hashtable)
 	 */
 	@Override
-	public Equal standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
+	public Arithmetic standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
 		Unifiable newOperand1 = (Unifiable) this.operand1.standardizeVariablesApart(newVars);
 		Unifiable newOperand2 = (Unifiable) this.operand2.standardizeVariablesApart(newVars);
 		
-		return new Equal(newOperand1, newOperand2);
+		return new Arithmetic(newOperand1, this.symbol, newOperand2);
 	}
 	
 	/**
-	 * Returns the equal clause under the form of:
-	 * "operand1 == operand2".
+	 * Returns the arithmetic expression under the form of:
+	 * "operand1 'symbol' operand2".
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return this.operand1.toString() + " == " + this.operand2.toString();
+		return this.operand1.toString() + this.symbol + this.operand2.toString();
 	}
 
 }

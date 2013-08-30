@@ -102,7 +102,7 @@ public class Variable implements Unifiable {
 	 * @see model.PCExpression#standardizeVariablesApart(java.util.Hashtable)
 	 */
 	@Override
-	public PCExpression standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
+	public Variable standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
 		// Get the standardize version of the variable
 		Variable newVar = newVars.get(this);
 		

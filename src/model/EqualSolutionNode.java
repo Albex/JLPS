@@ -16,7 +16,7 @@ public class EqualSolutionNode extends AbstractSolutionNode {
 	 * Constructor of the class.
 	 * 
 	 * @param clause
-	 *            the simple sentence to be proved by this subtree.
+	 *            the equal clause to be proved by this subtree.
 	 * @param rules
 	 *            the rules representing context of the proof.
 	 * @param parentSolution
@@ -26,10 +26,6 @@ public class EqualSolutionNode extends AbstractSolutionNode {
 		super(clause, rules, parentSolution, parentNode);
 	}
 	
-	/*protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
-		super.reset(newParentSolution, newRuleSet);
-	}*/
-
 	/**
 	 * Creates the next solution for the equality of the node. If no solution
 	 * exists, it will create a solution. Otherwise it will get a different
