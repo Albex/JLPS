@@ -9,8 +9,8 @@ import java.util.Hashtable;
  * This class represents arithmetic expressions. It is a binary operator. It
  * extends {@link Clause}.
  * <p>
- * Arithmetic expressions are comparison between numbers. Their operands must
- * be bound before evaluation.
+ * Arithmetic expressions are only comparisons between numbers. Their operands
+ * must be bound before evaluation.
  * 
  * @author Alexandre Camus
  * 

@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import model.Action;
 import model.And;
+import model.Arithmetic;
 import model.Clause;
 import model.Constant;
 import model.CycleHandler;
@@ -114,6 +115,11 @@ terminator returns [Terminator terminator]
 * Clauses definitions
 *
 */
+arithmetic returns [Arithmetic expr]
+  :   op1 = unifiable SYMBOL op2 = unifiable
+      {$expr = new Arithmetic($op1.unifiable, $SYMBOL.text, $op2.unifiable);}
+  ;
+  
 equal returns [Equal equal]
   :   op1 = variable '==' op2 = unifiable
       {$equal = new Equal($op1.variable, $op2.unifiable);}
@@ -280,6 +286,7 @@ file returns [boolean[\] w]
 * Tokens
 *
 **/
+SYMBOL : ('<' | '>' | '<=' | '>=' );
 CONSTANT : ('a'..'z' | '0'..'9') ('A'..'Z' | 'a'..'z' | '0'..'9' | '_')*;
 VARIABLE : ('A'..'Z') ('A'..'Z' | 'a'..'z' | '0'..'9' | '_')*;
 WS : (' ' | '\t' | '\n' | '\r' | '\f')+  {$channel = HIDDEN;};
