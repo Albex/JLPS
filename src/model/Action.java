@@ -83,13 +83,11 @@ public class Action {
 	 *            the events that will be perform during the next cycle so far.
 	 * @return true if this bound action can be performed. False otherwise.
 	 */
-	public boolean actionsAllowed(SimpleSentence event, RuleSet rules, RuleSet events, RuleSet nextEvents) {
+	public boolean actionsAllowed(SimpleSentence event, RuleSet rulesAndEvents, RuleSet rulesAndNextEvents) {
 		SubstitutionSet bindings = this.action.unify(event, new SubstitutionSet());
 		if (this.conditions != null) {
 			Clause boundConditions = (Clause) this.conditions.replaceVariables(bindings);
-			RuleSet conRules = rules;
-			conRules.addRules(events.getRules());
-			AbstractSolutionNode conditionsRoot = boundConditions.getSolver(conRules, new SubstitutionSet(), null);
+			AbstractSolutionNode conditionsRoot = boundConditions.getSolver(rulesAndEvents, new SubstitutionSet(), null);
 			
 			if (conditionsRoot.nextSolution() == null) {
 
@@ -99,9 +97,7 @@ public class Action {
 		
 		if (this.conflicts != null) {
 			Clause boundConflicts = (Clause) this.conflicts.replaceVariables(bindings);
-			RuleSet conRules = rules;
-			conRules.addRules(nextEvents.getRules());
-			AbstractSolutionNode conflictsRoot = boundConflicts.getSolver(conRules, new SubstitutionSet(), null);
+			AbstractSolutionNode conflictsRoot = boundConflicts.getSolver(rulesAndNextEvents, new SubstitutionSet(), null);
 			
 			if (conflictsRoot.nextSolution() == null) {
 

@@ -45,7 +45,11 @@ public class RuleSet {
 	 *            an {@code ArrayList} object containing the rules of the set.
 	 */
 	public RuleSet(ArrayList<Rule> rules) {
-		this.rules = rules;
+		this.rules = new ArrayList<Rule>();
+		
+		for (Rule rule : rules) {
+			this.rules.add(rule);
+		}
 	}
 	
 	public void setIntensional(int i) {
@@ -162,5 +166,5 @@ public class RuleSet {
 			return "{\n" + s + "}";
 		}
 	}
-	
+
 }

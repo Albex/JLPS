@@ -35,6 +35,19 @@ public class NotSolutionNode extends AbstractSolutionNode {
 		this.solutionFlag = false;
 		this.tailSolutionNode.reset(this.getParentSolution(), this.getRuleSet());
 	}
+	
+	/**
+	 * Gets the solution node of the not clause's tail.
+	 * <p>
+	 * This is based on the representation of an not clause. See {@link Not}
+	 * class for more details.
+	 * 
+	 * @return a {@code AbstractSolutionNode} representing the solution node of
+	 *         the tail.
+	 */
+	protected AbstractSolutionNode getTailSolutionNode() {
+		return this.tailSolutionNode;
+	}
 
 	/**
 	 * Creates the next solution for the negative clause of the node. If no solution

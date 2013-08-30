@@ -156,7 +156,7 @@ public class Database {
 				}
 				fluents = action.fluentsToTerminate(currentEvent.getHead(), rules);
 				if (fluents != null) {
-					fluentsToTerminate = fluents;
+					fluentsToTerminate.addAll(fluents);
 				}
 			}
 		}

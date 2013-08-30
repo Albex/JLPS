@@ -34,7 +34,9 @@ class SolvingGoalState implements CycleState {
 	}
 	
 	private void solveGoals(RuleSet events) {
-		GoalsList.getInstance().solveGoals(events);
+		RuleSet ruleSet = Database.getInstance().getRuleSet();
+		
+		GoalsList.getInstance().solveGoals(ruleSet, events);
 	}
 
 }
