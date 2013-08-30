@@ -118,7 +118,7 @@ public class SimpleSentence implements Unifiable, Clause {
 	public boolean isMatched() {
 		return this.isMatched;
 	}
-
+	
 	/**
 	 * Replaces all the variables in the simple sentence according to the
 	 * specified bindings.

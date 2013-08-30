@@ -1,5 +1,6 @@
 package model;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This is a singleton class that represents the database of the framework. It
@@ -17,6 +18,7 @@ public class Database {
 	private FactSet factsDatabase;
 	private RuleSet rulesDatabase;
 	private DSet dSet;
+	private HashMap<String, Integer> limits;
 	private static volatile Database instance = null;
 
 	/**
@@ -69,6 +71,14 @@ public class Database {
 		this.rulesDatabase = rulesDatabase;
 	}
 	
+	public void setLimits(HashMap<String,Integer> limits) {
+		this.limits = limits;
+	}
+	
+	public HashMap<String, Integer> getLimits() {
+		return this.limits;
+	}
+
 	/**
 	 * Adds rules to the database.
 	 * 

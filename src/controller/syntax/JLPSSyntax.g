@@ -11,6 +11,7 @@ options {
 package controller.syntax;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import model.Action;
 import model.And;
@@ -90,7 +91,7 @@ simpleSentence returns [SimpleSentence simpleSentence]
 * DPost declarations
 *
 **/
-initiator returns [Initiator initiator]
+initiator returns [Initiator initiator, String factName]
   :   'initiates'
       '('
         event = simpleSentence ',' fact = simpleSentence
@@ -98,9 +99,10 @@ initiator returns [Initiator initiator]
       {Clause body = null;}
       (':-' and {body = $and.clause;})?
       {$initiator = new Initiator($event.simpleSentence, $fact.simpleSentence, body);}
+      {$factName = $fact.simpleSentence.getName();}
   ;
   
-terminator returns [Terminator terminator]
+terminator returns [Terminator terminator, String factName]
   :   'terminates'
       '('
         event = simpleSentence ',' fact = simpleSentence
@@ -108,6 +110,7 @@ terminator returns [Terminator terminator]
       ')'
       (':-' and {body = $and.clause;})?
       {$terminator = new Terminator($event.simpleSentence, $fact.simpleSentence, body);}
+      {$factName = $fact.simpleSentence.getName();}
   ;
 
 /**
@@ -173,10 +176,10 @@ fluent returns [SimpleSentence rule]
 * Sets definitions
 *
 **/
-lext returns [boolean w, FactSet set]
-  :   {$set = new FactSet(); $w = true;}
+lext returns [boolean w, FactSet set, HashSet<String> facts]
+  :   {$set = new FactSet(); $w = true; $facts = new HashSet<String>();}
       ('Lext' | 'lext' | 'facts' | 'Facts') '{'
-      (fluent {$set.addFact($fluent.rule); $w = false;})*
+      (fluent {$set.addFact($fluent.rule); $w = false; $facts.add($fluent.rule.getName());})*
       {this.variables = new HashMap<String, Variable>();}
       {Database.getInstance().setFactsDatabase($set);}
       '}'
@@ -198,23 +201,24 @@ preconditions returns [Clause conditions, Clause conflicts]
       ']'
   ;
   
-postconditions returns [ArrayList<Terminator> terminators, ArrayList<Initiator> initiators]
-  :   {$terminators = new ArrayList<Terminator>(); $initiators = new ArrayList<Initiator>();}
+postconditions returns [ArrayList<Terminator> terminators, ArrayList<Initiator> initiators, HashSet<String> facts]
+  :   {$terminators = new ArrayList<Terminator>(); $initiators = new ArrayList<Initiator>(); $facts = new HashSet<String>();}
       ('Postconditions' | 'postconditions') '['
-      (terminator '.' {$terminators.add($terminator.terminator);})*
-      (initiator '.'{$initiators.add($initiator.initiator);})*
+      (terminator '.' {$terminators.add($terminator.terminator); $facts.add($terminator.factName);})*
+      (initiator '.'{$initiators.add($initiator.initiator); $facts.add($initiator.factName);})*
       ']'
   ;
   
-action returns [Action action]
+action returns [Action action, HashSet<String> facts, String actionName]
   :   {ArrayList<Terminator> terminators = new ArrayList<Terminator>(); 
       ArrayList<Initiator> initiators = new ArrayList<Initiator>();
       Clause conditions = null;
       Clause conflicts = null;
+      $facts = new HashSet<String>();
       }
-      simpleSentence '=' '{'
+      simpleSentence '=' '{' {$actionName = $simpleSentence.simpleSentence.getName();}
       (preconditions {conditions = $preconditions.conditions; conflicts = $preconditions.conflicts;})?
-      (postconditions {initiators = $postconditions.initiators; terminators = $postconditions.terminators;})?
+      (postconditions {initiators = $postconditions.initiators; terminators = $postconditions.terminators; $facts = $postconditions.facts;})?
       '}'
       {$action = new Action($simpleSentence.simpleSentence, initiators, terminators, conditions, conflicts);}
       {this.variables = new HashMap<String, Variable>();}
@@ -225,10 +229,11 @@ macroaction returns [Rule macroaction]
       {$macroaction = $rule.rule;}
   ;
  
-d returns [boolean w, DSet set]
-  :   {$set = new DSet(); $w = true; ArrayList<Rule> macros = new ArrayList<Rule>();}
+d returns [boolean w, DSet set, HashSet<String> facts, HashSet<String> actions]
+  :   {$set = new DSet(); $w = true; ArrayList<Rule> macros = new ArrayList<Rule>();
+      $facts = new HashSet<String>(); $actions = new HashSet<String>();}
       ('domain theory' | 'Domain Theory' | 'domainTheory' | 'DomainTheory' | 'dset' | 'Dset' | 'dSet' | 'DSet') '{'
-      (action {$w = false; $set.addAction($action.action);})*
+      (action {$w = false; $set.addAction($action.action); $facts = $action.facts; $actions.add($action.actionName);})*
       (('macroactions' | 'Macroactions') '{'
       (macroaction {$w = false; macros.add($macroaction.macroaction);})*
       '}')?
@@ -237,10 +242,10 @@ d returns [boolean w, DSet set]
       {Database.getInstance().addRulesDatabase(macros);}
   ;
   
-database returns [boolean wlint, boolean wlext, boolean wdset]
-  :   {$wlint =  true; $wlext = true; $wdset = true;}
+database returns [boolean wlint, boolean wlext, boolean wdset, HashSet<String> facts]
+  :   {$wlint =  true; $wlext = true; $wdset = true; $facts = new HashSet<String>();}
       ('database' | 'Database') '{'
-      (lext {$wlext = $lext.w;})?
+      (lext {$wlext = $lext.w; $facts = $lext.facts;})?
       (lint {$wlint = $lint.w;})?
       '}'
   ;
@@ -271,10 +276,11 @@ events returns [boolean w, RuleSet set]
       {CycleHandler.getInstance().setEvents($set);}
   ;
   
-file returns [boolean[\] w]
-  :   {$w = new boolean[6]; $w[0] = true; $w[1] = true; $w[2] = true; $w[3] = true; $w[4] = true; $w[5] = true;}
-      (database {$w[0] = $database.wlext; $w[1] = $database.wlint;})?
-      (d {$w[2] = $d.w;})?
+file returns [boolean[\] w, HashSet<String> facts, HashSet<String> actions]
+  :   {$w = new boolean[6]; $w[0] = true; $w[1] = true; $w[2] = true; $w[3] = true; $w[4] = true; $w[5] = true;
+      $facts = new HashSet<String>(); $actions = new HashSet<String>();}
+      (database {$w[0] = $database.wlext; $w[1] = $database.wlint; $facts = $database.facts;})?
+      (d {$w[2] = $d.w; $facts.addAll($d.facts); $actions = $d.actions;})?
       (reactiveRules {$w[3] = $reactiveRules.w;})?
       (goals {$w[4] = $goals.w;})?
       (events {$w[5] = $events.w;})?

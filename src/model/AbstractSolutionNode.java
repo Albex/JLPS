@@ -16,7 +16,6 @@ public abstract class AbstractSolutionNode {
 	private Rule currentRule = null;
 	private Clause clause = null;
 	private AbstractSolutionNode deepestLeaf = this;
-	private int limit = 2;
 	public static int nodesCreated = 0;
 	
 	// saving the parent solution allows backtracking to the original state
@@ -161,20 +160,4 @@ public abstract class AbstractSolutionNode {
 		return this.deepestLeaf;
 	}
 
-	/**
-	 * Checks if the limit of waited cycles is exceeded or not.
-	 * 
-	 * @return true if not.
-	 */
-	public boolean limitExceed() {
-		return !(this.limit > 0);
-	}
-
-	/**
-	 * Updates the limit every cycle. 
-	 */
-	public void limitUpdate() {
-		this.limit--;
-	}
-	
 }

@@ -14,6 +14,7 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 
 	private AbstractSolutionNode child = null;
 	private String type = "undefined";
+	private int limit;
 	
 	/**
 	 * Constructor of the class.
@@ -27,6 +28,9 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 	 */
 	public SimpleSentenceSolutionNode(SimpleSentence clause, RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
 		super(clause, rules, parentSolution, parentNode);
+		if (Database.getInstance().getLimits().containsKey(clause.getName())) {
+			this.limit = Database.getInstance().getLimits().get(clause.getName());
+		}
 	}
 	
 	public void setType(int ruleIndex) {
@@ -121,6 +125,22 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 		setDeepestLeaf(this);
 		
 		return null;
+	}
+	
+	/**
+	 * Checks if the limit of waited cycles is exceeded or not.
+	 * 
+	 * @return true if not.
+	 */
+	public boolean limitExceed() {
+		return !(this.limit > 0);
+	}
+
+	/**
+	 * Updates the limit every cycle. 
+	 */
+	public void limitUpdate() {
+		this.limit--;
 	}
 	
 }

@@ -161,11 +161,11 @@ public class GoalsList {
 			switch (((SimpleSentenceSolutionNode) head).getType()) {
 			case "fact":
 				// Wait
-				if (head.limitExceed()) {
+				if (((SimpleSentenceSolutionNode) head).limitExceed()) {
 					
 					return backtrack(leaf, goal, rulesAndEvents, ruleSet, events);
 				}
-				head.limitUpdate();
+				((SimpleSentenceSolutionNode) head).limitUpdate();
 				
 				return false;
 			case "rule":
@@ -175,11 +175,11 @@ public class GoalsList {
 			case "undefined": // It might be an action or a fact
 			case "action":
 			default:
-				if (head.limitExceed()) {
+				if (((SimpleSentenceSolutionNode) head).limitExceed()) {
 					
 					return backtrack(leaf, goal, rulesAndEvents, ruleSet, rulesAndEvents);
 				}
-				head.limitUpdate();
+				((SimpleSentenceSolutionNode) head).limitUpdate();
 				// Get the corresponding action
 				Action action = Database.getInstance().getDSet().getAction(((SimpleSentence) simpleSentence).getName());
 				
