@@ -23,7 +23,7 @@ import model.Variable;
  * declaration into objects for the program.
  * 
  * @author Alexandre Camus
- * 
+ * @deprecated
  */
 public class Interpreter {
 
