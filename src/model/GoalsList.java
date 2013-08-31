@@ -179,7 +179,6 @@ public class GoalsList {
 			case "undefined": // It might be an action or a fact
 			case "action":
 			default:
-				System.out.println("last");
 				if (((SimpleSentenceSolutionNode) head).limitExceed()) {
 					
 					return backtrack(leaf, goal, rulesAndEvents, ruleSet, rulesAndEvents);
@@ -193,7 +192,6 @@ public class GoalsList {
 					RuleSet rulesAndNextEvents = new RuleSet(ruleSet.getRules());
 					rulesAndNextEvents.addRules(this.nextEvents.getRules());
 					if (action.actionsAllowed((SimpleSentence) simpleSentence, rulesAndEvents, rulesAndNextEvents)) {
-						System.out.println(simpleSentence);
 						this.addNextEvent((SimpleSentence) simpleSentence);
 					}
 					// Trigger action
