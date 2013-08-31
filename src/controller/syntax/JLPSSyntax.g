@@ -119,7 +119,7 @@ terminator returns [Terminator terminator, String factName]
 *
 */
 arithmetic returns [Arithmetic expr]
-  :   op1 = unifiable SYMBOL op2 = unifiable
+  :   '{' op1 = unifiable SYMBOL op2 = unifiable '}'
       {$expr = new Arithmetic($op1.unifiable, $SYMBOL.text, $op2.unifiable);}
   ;
   
@@ -129,7 +129,8 @@ equal returns [Equal equal]
   ;
   
 term returns [Clause clause]
-  :   simpleSentence {$clause = $simpleSentence.simpleSentence;}
+  :   arithmetic {$clause = $arithmetic.expr;}
+  |   simpleSentence {$clause = $simpleSentence.simpleSentence;}
   |   equal {$clause = $equal.equal;}
   |   '(' and ')' {$clause = $and.clause;}
   ;
@@ -292,9 +293,9 @@ file returns [boolean[\] w, HashSet<String> facts, HashSet<String> actions]
 * Tokens
 *
 **/
-SYMBOL : ('<' | '>' | '<=' | '>=' );
-CONSTANT : ('a'..'z' | '0'..'9') ('A'..'Z' | 'a'..'z' | '0'..'9' | '_')*;
-VARIABLE : ('A'..'Z') ('A'..'Z' | 'a'..'z' | '0'..'9' | '_')*;
+SYMBOL : ('<' | '>' | '<=' | '>=' | '==');
+CONSTANT : ('a'..'z' | '0'..'9') ('A'..'Z' | 'a'..'z' | '0'..'9' | '_' | '-' | '.')*;
+VARIABLE : ('A'..'Z') ('A'..'Z' | 'a'..'z' | '0'..'9' | '_' | '-' | '.')*;
 WS : (' ' | '\t' | '\n' | '\r' | '\f')+  {$channel = HIDDEN;};
 COMMENT_LINE : '//' .* ('\n' | '\r') {$channel = HIDDEN;};
 COMMENT : '/*' .* '*/' {$channel = HIDDEN;};

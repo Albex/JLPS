@@ -146,7 +146,6 @@ public class GoalsList {
 		}
 		
 		AbstractSolutionNode head = leaf;
-		
 		// If the leaf is a stuck and, the process is done on the head of the and
 		if (leaf instanceof AndSolutionNode) {
 			head = ((AndSolutionNode) leaf).getHeadSolutionNode();
@@ -154,6 +153,11 @@ public class GoalsList {
 		// If the leaf is a stuck not, the process is done on the tail of the not
 		if (head instanceof NotSolutionNode) {
 			head = ((NotSolutionNode) leaf).getTailSolutionNode();
+		}
+		
+		if (head instanceof ArithmeticSolutionNode) {
+			
+			return backtrack(leaf, goal, rulesAndEvents, ruleSet, rulesAndEvents);
 		}
 		
 		if (head instanceof SimpleSentenceSolutionNode) {
@@ -175,6 +179,7 @@ public class GoalsList {
 			case "undefined": // It might be an action or a fact
 			case "action":
 			default:
+				System.out.println("last");
 				if (((SimpleSentenceSolutionNode) head).limitExceed()) {
 					
 					return backtrack(leaf, goal, rulesAndEvents, ruleSet, rulesAndEvents);
@@ -188,6 +193,7 @@ public class GoalsList {
 					RuleSet rulesAndNextEvents = new RuleSet(ruleSet.getRules());
 					rulesAndNextEvents.addRules(this.nextEvents.getRules());
 					if (action.actionsAllowed((SimpleSentence) simpleSentence, rulesAndEvents, rulesAndNextEvents)) {
+						System.out.println(simpleSentence);
 						this.addNextEvent((SimpleSentence) simpleSentence);
 					}
 					// Trigger action

@@ -16,6 +16,8 @@ import javax.script.ScriptException;
  */
 public class ArithmeticSolutionNode extends AbstractSolutionNode {
 
+	private boolean solutionFlag = false;
+	
 	/**
 	 * Constructor of the class.
 	 * 
@@ -28,6 +30,11 @@ public class ArithmeticSolutionNode extends AbstractSolutionNode {
 	 */
 	public ArithmeticSolutionNode(Arithmetic clause, RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {
 		super(clause, rules, parentSolution, parentNode);
+	}
+	
+	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
+		super.reset(newParentSolution, newRuleSet);
+		this.solutionFlag = false;
 	}
 
 	/**
@@ -42,6 +49,14 @@ public class ArithmeticSolutionNode extends AbstractSolutionNode {
 	 */
 	@Override
 	public SubstitutionSet nextSolution() {
+		setDeepestLeaf(this);
+		if (this.solutionFlag) {
+			
+			return null;
+		} else {
+			this.solutionFlag = true;
+		}
+		
 		SubstitutionSet solution = this.getParentSolution();
 		Unifiable v1 = (Unifiable) ((Arithmetic) getClause()).getOperand1().replaceVariables(solution);
 		Unifiable v2 = (Unifiable) ((Arithmetic) getClause()).getOperand2().replaceVariables(solution);
@@ -84,8 +99,10 @@ public class ArithmeticSolutionNode extends AbstractSolutionNode {
 		}
 	    
 		if (value) {
+			
 			return solution;
 		} else {
+			
 			return null;
 		}
 	}
