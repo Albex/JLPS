@@ -205,8 +205,8 @@ preconditions returns [Clause conditions, Clause conflicts]
 postconditions returns [ArrayList<Terminator> terminators, ArrayList<Initiator> initiators, HashSet<String> facts]
   :   {$terminators = new ArrayList<Terminator>(); $initiators = new ArrayList<Initiator>(); $facts = new HashSet<String>();}
       ('Postconditions' | 'postconditions') '['
-      (terminator '.' {$terminators.add($terminator.terminator); $facts.add($terminator.factName);})*
-      (initiator '.'{$initiators.add($initiator.initiator); $facts.add($initiator.factName);})*
+      (terminator '.' {$terminators.add($terminator.terminator); $facts.add($terminator.factName);}
+      | initiator '.'{$initiators.add($initiator.initiator); $facts.add($initiator.factName);})*
       ']'
   ;
   

@@ -257,7 +257,7 @@ public class SimpleSentence implements Unifiable, Clause {
 			} else {
 				// Checking each argument if they can be unified
 				for (int i = 0; i < this.length(); i++) {
-					if (!this.getTerm(i).equal(s2.getTerm(i), s)) {
+					if (this.getTerm(i).unify(s2.getTerm(i), new SubstitutionSet(s)) == null) {
 						
 						return false;
 					}

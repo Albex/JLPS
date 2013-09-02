@@ -147,12 +147,12 @@ public class GoalsList {
 		
 		AbstractSolutionNode head = leaf;
 		// If the leaf is a stuck and, the process is done on the head of the and
-		if (leaf instanceof AndSolutionNode) {
-			head = ((AndSolutionNode) leaf).getHeadSolutionNode();
+		if (head instanceof AndSolutionNode) {
+			head = ((AndSolutionNode) head).getHeadSolutionNode();
 		}
-		// If the leaf is a stuck not, the process is done on the tail of the not
+			// If the leaf is a stuck not, the process is done on the tail of the not
 		if (head instanceof NotSolutionNode) {
-			head = ((NotSolutionNode) leaf).getTailSolutionNode();
+			head = ((NotSolutionNode) head).getTailSolutionNode();
 		}
 		
 		if (head instanceof ArithmeticSolutionNode) {

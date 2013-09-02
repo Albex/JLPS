@@ -1,0 +1,75 @@
+/** @author Alexandre Camus
+* 
+* Traffic Lights
+* This file is a complete example of the syntax used for input files.
+* It uses all the features of the syntax.
+*
+*/
+
+Database {
+
+	// We are defining the Lext set of the LPS Framework
+	Facts {
+		green-red(road, pavement).
+		position(car(1), east).
+		position(pedestrian(1), south).
+		position(ambulance(1), east).
+	}
+	
+	// We are defining the Lint set of the LPS Framework
+	Rules {
+		side(east, road).
+		side(west, road).
+		side(south, pavement).
+		side(north, pavement).
+	}
+	
+}
+
+// We are defining the domain theory of the LPS Framework
+DSet {
+	cross(X, Y, Z) = {
+		Preconditions [
+			conditions: !(siren(A) & !(A == Y)) & side(X, L) & 
+				!(!green-red(L, O) & !(Y == ambulance(N))).
+			conflicts: !cross(A,B,C).
+		]
+		Postconditions [
+			initiates(cross(X, Y, Z), position(Y, Z)).
+			terminates(cross(X, Y, Z), position(Y, X)).
+		]
+	}
+	switch(X,Y) = {
+		Postconditions [
+			initiates(switch(X,Y), green-red(X,Y)) :- green-red(Y,X).
+			initiates(switch(X,Y), green-red(Y,X)) :- green-red(X,Y).
+			terminates(switch(X,Y), green-red(Y,X)) :- green-red(Y,X).
+			terminates(switch(X,Y), green-red(X,Y)) :- green-red(X,Y).
+		]
+	}
+}
+
+// We are defining the reactive rules of the LPS Framework
+ReactiveRules {
+	
+	siren(X) -> prior-crossing(X).
+	want-to-cross(X) -> crossing(X).
+		
+}
+
+// We are defining the goals' definitions of the LPS Framework
+Goals {
+
+	prior-crossing(X) :- position(X, Pos) & side(Pos, Loc) & side(Pos1, Loc) & 
+		!(Pos == Pos1) & cross(Pos, X, Pos1).
+	crossing(X) :- position(X, Pos) & side(Pos, Loc) & side(Pos1, Loc) & 
+		!(Pos == Pos1) & cross(Pos, X, Pos1).
+	crossing(X) :- position(X, Pos) & side(Pos, Loc) & green-red(Opp, Loc) & 
+		switch(Loc, Opp) & green-red(Loc, Opp) & side(Pos1, Loc) & !(Pos == Pos1) & cross(Pos, X, Pos1).
+	
+}
+
+// We are defining the initial events of the LPS Framework
+Events {
+	want-to-cross(pedestrian(1)).
+}

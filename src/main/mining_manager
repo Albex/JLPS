@@ -1,6 +1,6 @@
 /** @author Alexandre Camus
 * 
-* Mining Manager
+* The Mining Machines
 * This file is a complete example of the syntax used for input files.
 * It uses all the features of the syntax.
 *
@@ -8,50 +8,45 @@
 
 Database {
 
-	// We are defining the Lext set of the LPS Framework
-	Facts {
-	}
+	// No Lext set at the beginning
 	
-	// We are defining the Lint set of the LPS Framework
-	/*Rules {
-	}*/
+	// No Lint set
 }
 
 // We are defining the domain theory of the LPS Framework
 DSet {
-	alarm(T) = {
+	alarm(T,S) = {
 		Postconditions [
-			terminates(alarm(T), pump-active(T)).
+			terminates(alarm(T,S), pump-active(T)).
 		]
 	}
-	pump(T) = {
+	pump(T,S) = {
 		Postconditions [
-			initiates(pump(T), pump-active(T)).
+			initiates(pump(T,S), pump-active(T)).
 		]
 	}
-	no-action(T) = {
+	no-action(T,S) = {
 		Postconditions [
-			terminates(no-action(T), pump-active(T)).
+			terminates(no-action(T,S), pump-active(T)).
 		]
 	}
-
 }
 
 // We are defining the reactive rules of the LPS Framework
 ReactiveRules {
 
-		observed(T) -> mine-pump(T).
+		observed(T,S) -> mine-pump(T,S).
 		
 }
 
 // We are defining the goals' definitions of the LPS Framework
 Goals {
 
-	mine-pump(T) :- methane-level(M,T) & {100 <= M} & alarm(T).
-	mine-pump(T) :- methane-level(M,T) & {100 > M} & water-level(W,T) & {20 < W} & pump(T).
-	mine-pump(T) :- methane-level(M,T) & {100 > M} & water-level(W,T) & {10 < W} & pump-active(T) & pump(T).
-	mine-pump(T) :- methane-level(M,T) & {100 > M} & water-level(W,T) & {20 >= W} & {10 >= W} & no-action(T).
-	mine-pump(T) :- methane-level(M,T) & {100 > M} & water-level(W,T) & {20 >= W} & !pump-active(T).
+	mine-pump(T,S) :- methane-level(M,T) & {100 <= M} & alarm(T,S).
+	mine-pump(T,S) :- methane-level(M,T) & {100 > M} & water-level(W,T) & {20 < W} & pump(T,S).
+	mine-pump(T,S) :- methane-level(M,T) & {100 > M} & water-level(W,T) & {10 < W} & pump-active(T) & pump(T,S).
+	mine-pump(T,S) :- methane-level(M,T) & {100 > M} & water-level(W,T) & {20 >= W} & {10 >= W} & no-action(T,S).
+	mine-pump(T,S) :- methane-level(M,T) & {100 > M} & water-level(W,T) & {20 >= W} & !pump-active(T,S).
 	
 }
 
@@ -60,6 +55,6 @@ Events {
 
 	methane-level(66,1).
 	water-level(18,1).
-	observed(1).
+	observed(1,1).
 
 }
