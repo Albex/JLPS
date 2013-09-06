@@ -91,7 +91,7 @@ public class JLPS {
 		}
 		
 		if (actions != null) {
-			AnsiConsole.out.println("\u001B[36m"+"What default waiting limit should be used actions? [2]\u001B[37m");
+			AnsiConsole.out.println("\u001B[36m"+"What default waiting limit should be used for actions? [2]\u001B[37m");
 			String answer = sc.nextLine();
 			
 			if (answer.equals("")) {
@@ -132,7 +132,8 @@ public class JLPS {
 		}
 		
 		System.out.println("INITIAL STATE\n----------------");
-		Database.getInstance().printOut();
+		System.out.println(Database.getInstance().toString() + "\n");
+		System.out.println(Database.getInstance().getDSet().toString() + "\n");
 		System.out.println("Reactive rules: {\n" + ReactiveRuleSet.getInstance().toString() + "\n}\n");
 		System.out.println("Events: \n" + CycleHandler.getInstance().getEvents());
 		
@@ -145,7 +146,7 @@ public class JLPS {
 		
 		while (carryOn) {
 			CycleHandler.getInstance().handlerMethod("\nUPDATE " + i + "\n----------------");
-			Database.getInstance().printOut();
+			System.out.println(Database.getInstance().toString());
 			CycleHandler.getInstance().handlerMethod("\nFIRING " + i + "\n----------------");
 			CycleHandler.getInstance().handlerMethod("\nSOLVING " + i + "\n----------------");
 			System.out.println(GoalsList.getInstance().toString());

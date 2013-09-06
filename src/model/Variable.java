@@ -160,40 +160,6 @@ public class Variable implements Unifiable {
 	}
 	
 	/**
-	 * Checks if the variable and the specified {@code expr} expression given
-	 * the bindings {@code s} are equal. This tries to get bindings in order to
-	 * make logically equivalent the variable and the specified expression.
-	 * <p>
-	 * This method is recursive over all {@code Unifiable} implementations.
-	 * 
-	 * @param expr
-	 *            an expression to unify with the expression.
-	 * @param s
-	 *            the {@code SubstitutionSet} object representing the bindings
-	 *            so far and/or the constraints applied.
-	 * @return true if the specified bindings make logically equivalent the
-	 *         variable and the specified one.
-	 * @see model.Unifiable#equal(Unifiable, SubstitutionSet)
-	 */
-	public boolean equal(Unifiable expr, SubstitutionSet s) {
-		// Equal variables are unified
-		if (this == expr) {
-			
-			return true;
-			
-		// If the variable has a binding, try to unify the binding with expr
-		} else if (s.isBound(this)) {
-			
-			return s.getBinding(this).equal(expr, s);
-			
-		// Otherwise bind the variable to expr and succeed
-		} else {
-
-			return false;
-		}
-	}
-
-	/**
 	 * Returns the variable under the form of:
 	 * "variableName_id".
 	 * 

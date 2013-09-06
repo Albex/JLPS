@@ -53,11 +53,20 @@ public abstract class AbstractSolutionNode {
 	public abstract SubstitutionSet nextSolution();
 	
 	/**
-	 * Resets the node with the specified parent solution. The subtree will then
-	 * need to be rebuilt.
+	 * Resets the subtree to the new state of the database and resets all the
+	 * counters that prevent from infinite evaluation of the node.
 	 * 
 	 * @param newParentSolution
-	 *            the new parent solution to use to create the new subtree.
+	 *            the new parent solution of the subtree.
+	 * @param newRuleSet
+	 *            the new state of the database.
+	 * 
+	 * @see model.AndSolutionNode#reset(model.SubstitutionSet, model.RuleSet)
+	 * @see model.ArithmeticSolutionNode#reset(model.SubstitutionSet,
+	 *      model.RuleSet)
+	 * @see model.NotSolutionNode#reset(model.SubstitutionSet, model.RuleSet)
+	 * @see model.SimpleSentenceSolutionNode#reset(model.SubstitutionSet,
+	 *      model.RuleSet)
 	 */
 	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
 		this.parentSolution = newParentSolution;
@@ -109,6 +118,12 @@ public abstract class AbstractSolutionNode {
 		return this.parentSolution;
 	}
 	
+	/**
+	 * Gets the parent node.
+	 * 
+	 * @return an {@code AbstractSolutionNode} object that represents the parent
+	 *         node.
+	 */
 	public AbstractSolutionNode getParentNode() {
 		return this.parentNode;
 	}

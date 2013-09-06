@@ -28,6 +28,10 @@ public class Not extends AbstractOperator {
 	 * Generic constructor of the object. It allows the methods of the abstract
 	 * class {@code AbstractOperator} to create the correct object very easily.
 	 * 
+	 * @param operands
+	 *            the operands of the not-operator in an {@code ArrayList}
+	 *            object.
+	 * 
 	 * @see model.AbstractOperator#create(java.util.ArrayList)
 	 */
 	@Override
@@ -46,8 +50,10 @@ public class Not extends AbstractOperator {
 	 *            the {@code RuleSet} object containing the rules of knowledge.
 	 * @param parentSolution
 	 *            the solution known so far at the parent node.
+	 * @param parentNode
+	 *            the parent node in the tree.
 	 * @return the node of the tree of proof.
-	 * @see Clause#getSolver(RuleSet, SubstitutionSet)
+	 * @see Clause#getSolver(RuleSet, SubstitutionSet, AbstractSolutionNode)
 	 */
 	@Override
 	public NotSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {

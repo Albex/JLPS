@@ -70,6 +70,8 @@ public abstract class DPostDeclaration {
 	 * 
 	 * @param event
 	 *            that is bound and corresponds to this declaration.
+	 * @param rules
+	 * 			  the database.
 	 * @return the bound fluent according to the bindings.
 	 */
 	public SimpleSentence getGroundFluent(SimpleSentence event, RuleSet rules) {

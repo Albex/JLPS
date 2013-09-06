@@ -32,6 +32,19 @@ public class ArithmeticSolutionNode extends AbstractSolutionNode {
 		super(clause, rules, parentSolution, parentNode);
 	}
 	
+	/**
+	 * Resets the subtree to the new state of the database and resets all the
+	 * counters that prevent from infinite evaluation of the node.
+	 * 
+	 * @param newParentSolution
+	 *            the new parent solution of the subtree.
+	 * @param newRuleSet
+	 *            the new state of the database.
+	 * 
+	 * @see model.AbstractSolutionNode#reset(model.SubstitutionSet,
+	 *      model.RuleSet)
+	 */
+	@Override
 	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
 		super.reset(newParentSolution, newRuleSet);
 		this.solutionFlag = false;
@@ -89,6 +102,7 @@ public class ArithmeticSolutionNode extends AbstractSolutionNode {
 			return null;
 		}
 		
+		// Escape the code for Java to interpret it
 		ScriptEngineManager mgr = new ScriptEngineManager();
 	    ScriptEngine engine = mgr.getEngineByName("JavaScript");
 	    boolean value = false;

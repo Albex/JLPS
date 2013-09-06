@@ -16,7 +16,7 @@ import java.util.Set;
  * create it).
  * 
  * @author Alexandre Camus
- * @see #solveGoals(RuleSet)
+ * @see #solveGoals(RuleSet, RuleSet)
  */
 public class GoalsList {
 	
@@ -101,13 +101,14 @@ public class GoalsList {
 	}
 	
 	private boolean backtrack(AbstractSolutionNode leaf, Goal goal, RuleSet rulesAndEvents, RuleSet ruleSet, RuleSet events) {
+		// If there is another definition use it to backtrack.
 		if (goal.hasNextDefinition()) {
 			leaf = goal.getNextDefinition().getSolver(rulesAndEvents, new SubstitutionSet(), null);
 			this.goalsList.put(goal, leaf);
 			
 			return solveGoal(goal, ruleSet, events, rulesAndEvents);
 		
-		// If there is no other definition reset and wait for the next cycle
+		// If there is no other definition reset and wait for the next cycle.
 		} else {
 			goal.reset();
 			leaf = goal.getNextDefinition().getSolver(rulesAndEvents, new SubstitutionSet(), null);
@@ -133,7 +134,7 @@ public class GoalsList {
 		// Get the leaf of the tree
 		AbstractSolutionNode leaf = this.goalsList.get(goal);
 		
-		// Reset the leaf to the new ruleSet
+		// Reset the leaf to the new ruleSet and restart building the tree
 		leaf.reset(leaf.getParentSolution(), rulesAndEvents);
 		SubstitutionSet solution = leaf.nextSolution();
 		leaf = leaf.getDeepestLeaf();
@@ -145,45 +146,57 @@ public class GoalsList {
 			return true;
 		}
 		
+		// Otherwise
 		AbstractSolutionNode head = leaf;
+		
 		// If the leaf is a stuck and, the process is done on the head of the and
 		if (head instanceof AndSolutionNode) {
 			head = ((AndSolutionNode) head).getHeadSolutionNode();
 		}
-			// If the leaf is a stuck not, the process is done on the tail of the not
+		
+		// If the leaf is a stuck not, the process is done on the tail of the not
 		if (head instanceof NotSolutionNode) {
 			head = ((NotSolutionNode) head).getTailSolutionNode();
 		}
 		
+		// If the leaf is an arithmetic expression, there is nothing to do except backtracking
 		if (head instanceof ArithmeticSolutionNode) {
 			
 			return backtrack(leaf, goal, rulesAndEvents, ruleSet, rulesAndEvents);
 		}
 		
+		// If the leaf is a simple sentence, get its nature
 		if (head instanceof SimpleSentenceSolutionNode) {
 			SimpleSentence simpleSentence = (SimpleSentence) head.getClause().replaceVariables(leaf.getParentSolution());
 			switch (((SimpleSentenceSolutionNode) head).getType()) {
 			case "fact":
-				// Wait
+				// Wait if it is a fact
+				// Test if the limit is not exceeded
 				if (((SimpleSentenceSolutionNode) head).limitExceed()) {
 					
 					return backtrack(leaf, goal, rulesAndEvents, ruleSet, events);
 				}
+				// Otherwise update the limit to consider this waiting cycle
 				((SimpleSentenceSolutionNode) head).limitUpdate();
 				
 				return false;
 			case "rule":
-				// Backtrack
+				// Backtrack if it is a rule
 				
 				return backtrack(leaf, goal, rulesAndEvents, ruleSet, events);
 			case "undefined": // It might be an action or a fact
 			case "action":
+				// If it is an action, try to trigger it
 			default:
+				// Test if the limit is not exceeded
 				if (((SimpleSentenceSolutionNode) head).limitExceed()) {
 					
 					return backtrack(leaf, goal, rulesAndEvents, ruleSet, rulesAndEvents);
 				}
+				// Otherwise update the limit to consider this waiting cycle
 				((SimpleSentenceSolutionNode) head).limitUpdate();
+				
+				// Try to trigger the possible action
 				// Get the corresponding action
 				Action action = Database.getInstance().getDSet().getAction(((SimpleSentence) simpleSentence).getName());
 				
@@ -219,6 +232,7 @@ public class GoalsList {
 		rulesAndEvents.addRules(events.getRules());
     	
     	Set<Goal> keys = this.goalsList.keySet();
+    	// Try to solve every goal in the list, only and exactly once per cycle
     	for(Iterator<Goal> goals = keys.iterator(); goals.hasNext();) {
     		Goal goal = goals.next();
     		if (solveGoal(goal, ruleSet, events, rulesAndEvents)) {

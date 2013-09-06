@@ -74,13 +74,10 @@ public class Action {
 	 * 
 	 * @param event
 	 *            the bound action to test if it can be performed.
-	 * @param rules
-	 *            on which the conditions will be tested to get solutions and
-	 *            bindings.
-	 * @param events
-	 *            the events that have been used to update the database.
-	 * @param nextEvents
-	 *            the events that will be perform during the next cycle so far.
+	 * @param rulesAndEvents
+	 *            the rules and the events to check the conditions.
+	 * @param rulesAndNextEvents
+	 *            the rules and the next events so far to check the conflicts.
 	 * @return true if this bound action can be performed. False otherwise.
 	 */
 	public boolean actionsAllowed(SimpleSentence event, RuleSet rulesAndEvents, RuleSet rulesAndNextEvents) {
@@ -115,6 +112,8 @@ public class Action {
 	 * 
 	 * @param event
 	 *            the version of the action that is performed on the database.
+	 * @param rules
+	 *            the set of rules to check the body of the initators.
 	 * @return the {@code ArrayList} of the bound fluents according to the
 	 *         parameter.
 	 */
@@ -138,6 +137,8 @@ public class Action {
 	 * 
 	 * @param event
 	 *            the version of the action that is performed on the database.
+	 * @param rules
+	 *            the set of rules to check the body of the terminators.
 	 * @return the {@code ArrayList} of the bound fluents according to the
 	 *         parameter.
 	 */
@@ -156,14 +157,15 @@ public class Action {
 
 	/**
 	 * Returns the action under the form of:
-	 * "if (conditions) actionName=[[initiators], [terminators]]"
+	 * "if (conditions + conflicts) actionName=[[initiators], [terminators]]"
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		String conditions = (this.conditions == null) ? "true" : this.conditions.toString();
-		conditions += (this.conflicts == null) ? "" : " & " + this.conflicts.toString();
+		String conditions = (this.conflicts == null) ? 
+				(this.conditions == null) ? "true" : this.conditions.toString() : 
+				(this.conditions == null) ? this.conflicts.toString() : this.conditions.toString() + " & " + this.conflicts.toString();
 		
 		return "if (" + conditions + ") " + this.getName() + "=[" + this.initiators.toString() + ", " + this.terminators.toString() + "]";
 	}

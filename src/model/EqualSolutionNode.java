@@ -41,9 +41,8 @@ public class EqualSolutionNode extends AbstractSolutionNode {
 		Unifiable v2 = ((Equal) getClause()).getOperand2();
 		SubstitutionSet solution = this.getParentSolution();
 		
-		System.out.println(v1 +"=" + v2 + ":" + v1.equal(v2, solution));
-
-		if (v1.equal(v2, solution)) {
+		// Test if the two operands are equivalent
+		if (v1.unify(v2, new SubstitutionSet(solution)) != null) {
 
 			return solution;
 		}

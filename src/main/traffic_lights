@@ -28,6 +28,7 @@ Database {
 
 // We are defining the domain theory of the LPS Framework
 DSet {
+
 	cross(X, Y, Z) = {
 		Preconditions [
 			conditions: !(siren(A) & !(A == Y)) & side(X, L) & 
@@ -47,6 +48,7 @@ DSet {
 			terminates(switch(X,Y), green-red(X,Y)) :- green-red(X,Y).
 		]
 	}
+	
 }
 
 // We are defining the reactive rules of the LPS Framework
@@ -71,5 +73,7 @@ Goals {
 
 // We are defining the initial events of the LPS Framework
 Events {
+
 	want-to-cross(pedestrian(1)).
+
 }

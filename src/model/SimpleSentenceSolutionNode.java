@@ -33,6 +33,13 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 		}
 	}
 	
+	/**
+	 * Sets the type of the specified rule. The type is either "fact", "rule" or
+	 * "action".
+	 * 
+	 * @param ruleIndex
+	 *            the index in the set of rules, of the rule to type.
+	 */
 	public void setType(int ruleIndex) {
 		if (ruleIndex < getRuleSet().getExtensional()) {
 			this.type = "fact";
@@ -43,10 +50,29 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 		}
 	}
 	
+	/**
+	 * Gets the type of the specified rule. The type is either "fact", "rule" or
+	 * "action".
+	 * 
+	 * @return the type this node.
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * Resets the subtree to the new state of the database and resets all the
+	 * counters that prevent from infinite evaluation of the node.
+	 * 
+	 * @param newParentSolution
+	 *            the new parent solution of the subtree.
+	 * @param newRuleSet
+	 *            the new state of the database.
+	 * 
+	 * @see model.AbstractSolutionNode#reset(model.SubstitutionSet,
+	 *      model.RuleSet)
+	 */
+	@Override
 	protected void reset(SubstitutionSet newParentSolution, RuleSet newRuleSet) {
 		super.reset(newParentSolution, newRuleSet);
 		this.child = null;

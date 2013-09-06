@@ -9,33 +9,37 @@
 Database {
 
 	// No Lext set at the beginning
-	
 	// No Lint set
+
 }
 
 // We are defining the domain theory of the LPS Framework
 DSet {
+
 	alarm(T,S) = {
 		Postconditions [
 			terminates(alarm(T,S), pump-active(T)).
 		]
 	}
+
 	pump(T,S) = {
 		Postconditions [
 			initiates(pump(T,S), pump-active(T)).
 		]
 	}
+
 	no-action(T,S) = {
 		Postconditions [
 			terminates(no-action(T,S), pump-active(T)).
 		]
 	}
+
 }
 
 // We are defining the reactive rules of the LPS Framework
 ReactiveRules {
 
-		observed(T,S) -> mine-pump(T,S).
+	observed(T,S) -> mine-pump(T,S).
 		
 }
 

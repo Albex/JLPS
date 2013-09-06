@@ -76,7 +76,7 @@ public class Arithmetic implements Clause {
 	 * @param parentSolution
 	 *            the solution known so far at the parent node.
 	 * @return the node of the tree of proof.
-	 * @see Clause#getSolver(RuleSet, SubstitutionSet)
+	 * @see Clause#getSolver(RuleSet, SubstitutionSet, AbstractSolutionNode)
 	 */
 	@Override
 	public ArithmeticSolutionNode getSolver(RuleSet rules, SubstitutionSet parentSolution, AbstractSolutionNode parentNode) {

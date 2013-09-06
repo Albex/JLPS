@@ -45,25 +45,43 @@ public class RuleSet {
 	 *            an {@code ArrayList} object containing the rules of the set.
 	 */
 	public RuleSet(ArrayList<Rule> rules) {
-		this.rules = new ArrayList<Rule>();
-		
-		for (Rule rule : rules) {
-			this.rules.add(rule);
-		}
+		this.rules = new ArrayList<Rule>(rules);
 	}
 	
+	/**
+	 * Sets the position of the last intensional rule.
+	 * 
+	 * @param i
+	 *            the index of the last intensional rule.
+	 */
 	public void setIntensional(int i) {
 		this.intensional = i;
 	}
 	
+	/**
+	 * Gets the position of the last intensional rule.
+	 * 
+	 * @return the index of the last intensional rule.
+	 */
 	public int getIntensional() {
 		return this.intensional;
 	}
 	
+	/**
+	 * Sets the position of the last extensional rule.
+	 * 
+	 * @param i
+	 *            the index of the last extensional rule.
+	 */
 	public void setExtensional(int i) {
 		this.extensional = i;
 	}
 	
+	/**
+	 * Gets the position of the last extensional rule.
+	 * 
+	 * @return the index of the last extensional rule.
+	 */
 	public int getExtensional () {
 		return this.extensional;
 	}

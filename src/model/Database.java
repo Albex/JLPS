@@ -71,10 +71,23 @@ public class Database {
 		this.rulesDatabase = rulesDatabase;
 	}
 	
+	/**
+	 * Sets the limits of the fluents and the actions.
+	 * 
+	 * @param limits
+	 *            the mapping between the name of fluents or actions and their
+	 *            limits.
+	 */
 	public void setLimits(HashMap<String,Integer> limits) {
 		this.limits = limits;
 	}
 	
+	/**
+	 * Gets the limits of the fluents and the actions.
+	 * 
+	 * @return the mapping between the name of fluents or actions and their
+	 *         limits.
+	 */
 	public HashMap<String, Integer> getLimits() {
 		return this.limits;
 	}
@@ -109,18 +122,26 @@ public class Database {
 	}
 
 	/**
-	 * This method display the state of the database in the console.
+	 * Returns the database under the form of:
+	 * "
+	 * DB:
+	 * Facts: {  }
+	 * Rules: {
+	 * 
+	 * }
+	 * ".
+	 * 
+	 * @see java.lang.Object#toString()
 	 */
-	public final void printOut() {
+	@Override
+	public String toString() {
 		FactSet facts = this.factsDatabase;
 		RuleSet rules = this.rulesDatabase;
-		DSet dSet = this.dSet;
-		System.out.println("DB:");
-		System.out.println(facts.toString());
-		System.out.print("Rules: ");
-		System.out.println(rules.toString());
-		System.out.println(dSet.toString());
-		System.out.println("");
+		String string = "DB:\n";
+		string += facts.toString();
+		string += "\nRules: ";
+		string += rules.toString();
+		return string;
 	}
 
 	/**
@@ -154,6 +175,7 @@ public class Database {
 		ArrayList<SimpleSentence> fluentsToInitiate = new ArrayList<SimpleSentence>();
 		ArrayList<SimpleSentence> fluentsToTerminate = new ArrayList<SimpleSentence>();
 
+		// Get the fluents to terminate and to initiate
 		for(Rule currentEvent : events.getRules()) {
 			// Get the action to perform
 			Action action = this.dSet.getAction(currentEvent.getHead().getName());

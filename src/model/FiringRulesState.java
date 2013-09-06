@@ -53,14 +53,19 @@ class FiringRulesState implements CycleState {
     	RuleSet ruleSet = Database.getInstance().getRuleSet();
     	ruleSet.addRules(events.getRules());
     	
+    	// Gets all the names of the events
     	ArrayList<String> eventsName = new ArrayList<String>();
     	for (Rule event : events.getRules()) {
     		eventsName.add(event.getHead().getName());
     	}
     	
+    	// Fire the rules for real and get the goals
     	ArrayList<SimpleSentence> goals = ReactiveRuleSet.getInstance().fireRules(ruleSet, eventsName);
+    	
+    	// Show the goals fired in the console line.
     	System.out.println(goals);
     	
+    	// Add them in the goals list.
     	for(SimpleSentence goal : goals) {
     		GoalsList.getInstance().addGoal(goal, ruleSet);
     	}

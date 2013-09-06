@@ -33,6 +33,14 @@ class SolvingGoalState implements CycleState {
 		STATE_CONTEXT.setState(new DatabaseUpdateState());
 	}
 	
+	/**
+	 * Asks the {@code GoalsList} to solve the goals.
+	 * 
+	 * @param events
+	 *            the events of the current state.
+	 * @see GoalsList#solveGoals(RuleSet, RuleSet)
+	 * @see #handlerMethod(CycleHandler, String, RuleSet)
+	 */
 	private void solveGoals(RuleSet events) {
 		RuleSet ruleSet = Database.getInstance().getRuleSet();
 		

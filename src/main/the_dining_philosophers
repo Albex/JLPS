@@ -48,12 +48,13 @@ DSet {
 			initiates(putdownForks(F1, philosopher(I), F2), available(F2)).
 		]
 	}
+	
 }
 
 // We are defining the reactive rules of the LPS Framework
 ReactiveRules {
 
-		timeToEat(philosopher(I)) -> dine(philosopher(I)).
+	timeToEat(philosopher(I)) -> dine(philosopher(I)).
 		
 }
 
@@ -73,4 +74,5 @@ Events {
 	timeToEat(philosopher(2)).
 	timeToEat(philosopher(3)).
 	timeToEat(philosopher(4)).
+
 }
