@@ -1,6 +1,8 @@
 package model;
+
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This is a singleton class that represents the database of the framework. It
@@ -18,7 +20,7 @@ public class Database {
 	private FactSet factsDatabase;
 	private RuleSet rulesDatabase;
 	private DSet dSet;
-	private HashMap<String, Integer> limits;
+	private Map<String, Integer> limits;
 	private static volatile Database instance = null;
 
 	/**
@@ -39,7 +41,7 @@ public class Database {
 	 * 
 	 * @return the only instance of the class {@code Database}.
 	 */
-	public final static Database getInstance() {
+	public static Database getInstance() {
 		if (Database.instance == null) {
 			synchronized (Database.class) {
 				if (Database.instance == null) {
@@ -78,7 +80,7 @@ public class Database {
 	 *            the mapping between the name of fluents or actions and their
 	 *            limits.
 	 */
-	public void setLimits(HashMap<String,Integer> limits) {
+	public void setLimits(Map<String, Integer> limits) {
 		this.limits = limits;
 	}
 	
@@ -88,7 +90,7 @@ public class Database {
 	 * @return the mapping between the name of fluents or actions and their
 	 *         limits.
 	 */
-	public HashMap<String, Integer> getLimits() {
+	public Map<String, Integer> getLimits() {
 		return this.limits;
 	}
 
@@ -98,7 +100,7 @@ public class Database {
 	 * @param rules
 	 *            the rules to add to the database.
 	 */
-	public void addRulesDatabase(ArrayList<Rule> rules) {
+	public void addRulesDatabase(List<Rule> rules) {
 		this.rulesDatabase.addRules(rules);
 	}
 
@@ -172,8 +174,8 @@ public class Database {
 		RuleSet rules = this.getRuleSet();
 		rules.addRules(events.getRules());
 		
-		ArrayList<SimpleSentence> fluentsToInitiate = new ArrayList<SimpleSentence>();
-		ArrayList<SimpleSentence> fluentsToTerminate = new ArrayList<SimpleSentence>();
+		List<SimpleSentence> fluentsToInitiate = new ArrayList<SimpleSentence>();
+		List<SimpleSentence> fluentsToTerminate = new ArrayList<SimpleSentence>();
 
 		// Get the fluents to terminate and to initiate
 		for(Rule currentEvent : events.getRules()) {
@@ -182,7 +184,7 @@ public class Database {
 			
 			if(action != null) {
 				// Get the update to perform
-				ArrayList<SimpleSentence> fluents = action.fluentsToInitiate(currentEvent.getHead(), rules);
+				List<SimpleSentence> fluents = action.fluentsToInitiate(currentEvent.getHead(), rules);
 				if (fluents != null) {
 					fluentsToInitiate.addAll(fluents);
 				}

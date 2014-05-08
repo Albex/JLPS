@@ -5,6 +5,7 @@ package model;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,7 +23,7 @@ public class GoalsList {
 	
 	private RuleSet nextEvents;
 	private GoalSet goalsDefinitions;
-	private HashMap<Goal, AbstractSolutionNode> goalsList;
+	private Map<Goal, AbstractSolutionNode> goalsList;
 	private static volatile GoalsList instance = null;
 
 	/**
@@ -40,7 +41,7 @@ public class GoalsList {
 	 * 
 	 * @return the only instance of the class {@code Database}.
 	 */
-	public final static GoalsList getInstance() {
+	public static GoalsList getInstance() {
 		if (GoalsList.instance == null) {
 			synchronized (GoalsList.class) {
 				if (GoalsList.instance == null) {
@@ -198,14 +199,14 @@ public class GoalsList {
 				
 				// Try to trigger the possible action
 				// Get the corresponding action
-				Action action = Database.getInstance().getDSet().getAction(((SimpleSentence) simpleSentence).getName());
+				Action action = Database.getInstance().getDSet().getAction(simpleSentence.getName());
 				
 				// If it is an action add it to the next action to do
 				if (action != null) {
 					RuleSet rulesAndNextEvents = new RuleSet(ruleSet.getRules());
 					rulesAndNextEvents.addRules(this.nextEvents.getRules());
-					if (action.actionsAllowed((SimpleSentence) simpleSentence, rulesAndEvents, rulesAndNextEvents)) {
-						this.addNextEvent((SimpleSentence) simpleSentence);
+					if (action.actionsAllowed(simpleSentence, rulesAndEvents, rulesAndNextEvents)) {
+						this.addNextEvent(simpleSentence);
 					}
 					// Trigger action
 					

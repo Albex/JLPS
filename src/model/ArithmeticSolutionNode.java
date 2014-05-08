@@ -77,9 +77,9 @@ public class ArithmeticSolutionNode extends AbstractSolutionNode {
 		
 		// If the left operand is not bound and not a constant, no solution
 		if (!(v1 instanceof Constant)) {
-			
-			return null;
-		}
+
+            return null;
+        }
 			
 		// If the right operand is not bound and not a constant, no solution
 		if (!(v2 instanceof Constant)) {
@@ -103,9 +103,9 @@ public class ArithmeticSolutionNode extends AbstractSolutionNode {
 		}
 		
 		// Escape the code for Java to interpret it
-		ScriptEngineManager mgr = new ScriptEngineManager();
-	    ScriptEngine engine = mgr.getEngineByName("JavaScript");
-	    boolean value = false;
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngine engine = mgr.getEngineByName("JavaScript");
+        boolean value = false;
 		try {
 			value = (boolean) engine.eval(value1+symbol+value2);
 		} catch (ScriptException e) {

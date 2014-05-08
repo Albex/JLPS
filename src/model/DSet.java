@@ -4,6 +4,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class represents the D set of the database. This is where all the
@@ -16,7 +18,7 @@ import java.util.ArrayList;
  */
 public class DSet {
 
-	ArrayList<Action> actions;
+	List<Action> actions;
 	
 	/**
 	 * Constructor of the class.
@@ -26,13 +28,7 @@ public class DSet {
 	 *            as a parameter.
 	 */
 	public DSet(Action... actions) {
-		Action[] actionsArray = actions;
-		
-		this.actions = new ArrayList<Action>();
-		
-		for(Action action : actionsArray) {
-			this.actions.add(action);
-		}
+		this.actions = new ArrayList<Action>(Arrays.asList(actions));
 	}
 	
 	/**
@@ -42,7 +38,7 @@ public class DSet {
 	 *            an array of the actions to be stored in the set or each action
 	 *            as a parameter.
 	 */
-	public DSet(ArrayList<Action> actions) {
+	public DSet(List<Action> actions) {
 		this.actions = actions;
 	}
 	
@@ -87,7 +83,7 @@ public class DSet {
 	 */
 	@Override
 	public String toString() {
-		String string = new String("D set: \n{\n");
+		String string = "D set: \n{\n";
 		String delimiter = "";
 		for (Action action : actions) {
 			string += delimiter + action.toString();

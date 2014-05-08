@@ -84,9 +84,7 @@ public class Rule implements PCExpression, Cloneable {
 		}
 		
 		// Create the bound rule
-		Rule newRule = new Rule(newHead, newBody);
-		
-		return newRule;
+        return new Rule(newHead, newBody);
 	}
 
 	/**
@@ -113,9 +111,8 @@ public class Rule implements PCExpression, Cloneable {
 		}
 		
 		// Create the standardized rule
-		Rule newRule = new Rule(newHead, newBody);
-		
-		return newRule;
+
+        return new Rule(newHead, newBody);
 	}
 
 	/**

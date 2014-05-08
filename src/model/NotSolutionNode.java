@@ -88,9 +88,8 @@ public class NotSolutionNode extends AbstractSolutionNode {
 		setDeepestLeaf(this);
 		
 		// Check if the tail has a solution
-		SubstitutionSet solution = this.tailSolutionNode.nextSolution();
 		// If it does, the negation is false
-		if (solution != null) {
+		if (this.tailSolutionNode.nextSolution() != null) {
 			
 			return null;
 		// If it doesn't, the negation is true

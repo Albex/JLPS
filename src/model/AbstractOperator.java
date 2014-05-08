@@ -4,7 +4,9 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 
 /**
  * This class is the abstract class that gathers all the operator classes. It
@@ -15,7 +17,7 @@ import java.util.Hashtable;
  */
 public abstract class AbstractOperator implements Clause {
 
-	protected ArrayList<Clause> operands;
+	protected List<Clause> operands;
 	
 	/**
 	 * Constructor of the class.
@@ -25,32 +27,26 @@ public abstract class AbstractOperator implements Clause {
 	 *            variables.
 	 */
 	public AbstractOperator(Clause... operands) {
-		Clause[] operandArray = operands;
-		
-		this.operands = new ArrayList<Clause>();
-		
-		for (int i = 0; i < operandArray.length; i++) {
-			this.operands.add(operandArray[i]);
-		}
+        this.operands = Arrays.asList(operands);
 	}
 	
 	/**
 	 * Constructor of the class.
 	 * 
 	 * @param operands
-	 *            the operands of the operator in an {@code ArrayList} object.
+	 *            the operands of the operator in an {@code List} object.
 	 */
-	public AbstractOperator(ArrayList<Clause> operands) {
+	public AbstractOperator(List<Clause> operands) {
 		this.operands = operands;
 	}
-	
+
 	/**
 	 * Sets all the operands to the specified operands.
 	 * 
 	 * @param operands
-	 *            the new operands in an {@code ArrayList} object.
+	 *            the new operands in an {@code List} object.
 	 */
-	public void setOperands(ArrayList<Clause> operands) {
+	public void setOperands(List<Clause> operands) {
 		this.operands = operands;
 	}
 	
@@ -92,7 +88,7 @@ public abstract class AbstractOperator implements Clause {
 	 *         only one.
 	 */
 	public Clause getOperatorTail() {
-		ArrayList<Clause> tail = new ArrayList<Clause>(this.operands);
+		List<Clause> tail = new ArrayList<Clause>(this.operands);
 		tail.remove(0);
 		Clause tailOperator;
 		if (tail.size() == 1) {
@@ -107,10 +103,10 @@ public abstract class AbstractOperator implements Clause {
 	/**
 	 * Gets all the operands of the operator.
 	 * 
-	 * @return an {@code ArrayList} object containing all the operands of the
+	 * @return an {@code List} object containing all the operands of the
 	 *         operator.
 	 */
-	public ArrayList<Clause> getOperands() {
+	public List<Clause> getOperands() {
 		return this.operands;
 	}
 	
@@ -127,10 +123,10 @@ public abstract class AbstractOperator implements Clause {
 	 * Generic constructor of sub-objects. It allows the methods of the abstract
 	 * class to create correct sub-objects very easily.
 	 * 
-	 * @see model.And#create(java.util.ArrayList)
-	 * @see model.Not#create(java.util.ArrayList)
+	 * @see model.And#create(java.util.List)
+	 * @see model.Not#create(java.util.List)
 	 */
-	protected abstract AbstractOperator create(ArrayList<Clause> operands);
+	protected abstract AbstractOperator create(List<Clause> operands);
 	
 	/**
 	 * Replaces all the variables in the clause according to the specified
@@ -147,7 +143,7 @@ public abstract class AbstractOperator implements Clause {
 	@Override
 	public AbstractOperator replaceVariables(SubstitutionSet s) {
 		// Create the operands of the new bound operator
-		ArrayList<Clause> newOperands = new ArrayList<Clause>();
+		List<Clause> newOperands = new ArrayList<Clause>();
 		
 		// Bind each operand recursively
 		for (int i = 0; i < this.operandCount(); i++) {
@@ -155,9 +151,7 @@ public abstract class AbstractOperator implements Clause {
 		}
 		
 		// Create the bound operator
-		AbstractOperator copy = this.create(newOperands);
-		
-		return copy;
+        return this.create(newOperands);
 	}
 
 	/**
@@ -175,7 +169,7 @@ public abstract class AbstractOperator implements Clause {
 	@Override
 	public AbstractOperator standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
 		// Create the operands of the new standardized operator
-		ArrayList<Clause> newOperands = new ArrayList<Clause>();
+		List<Clause> newOperands = new ArrayList<Clause>();
 		
 		// Standardize each operand recursively
 		for(int i = 0; i < this.operandCount(); i++) {
@@ -183,9 +177,7 @@ public abstract class AbstractOperator implements Clause {
 		}
 		
 		// Create the new standardized operator
-		AbstractOperator copy = this.create(newOperands);
-		
-		return copy;
+        return this.create(newOperands);
 	}
 
 }

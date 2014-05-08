@@ -1,27 +1,14 @@
 package main;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
-
-import org.antlr.runtime.ANTLRFileStream;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.TokenStream;
-import org.fusesource.jansi.AnsiConsole;
-
-import model.CycleHandler;
-import model.Database;
-import model.GoalsList;
-import model.ReactiveRuleSet;
-import model.Rule;
 import controller.syntax.JLPSSyntaxLexer;
 import controller.syntax.JLPSSyntaxParser;
 import controller.syntax.JLPSSyntaxParser.file_return;
+import model.*;
+import org.antlr.runtime.*;
+import org.fusesource.jansi.AnsiConsole;
 
+import java.io.IOException;
+import java.util.*;
 
 public class JLPS {
 
@@ -36,7 +23,7 @@ public class JLPS {
 		return new ANTLRFileStream(path);
 	}
 	
-	public static void fileReader(CharStream fileStream, HashSet<String> facts, HashSet<String> actions) throws RecognitionException {
+	public static void fileReader(CharStream fileStream, Set<String> facts, Set<String> actions) throws RecognitionException {
 		JLPSSyntaxLexer lexer = new JLPSSyntaxLexer(fileStream);
 		TokenStream tokenStream = new CommonTokenStream(lexer);
 		JLPSSyntaxParser parser = new JLPSSyntaxParser(tokenStream);
@@ -65,8 +52,8 @@ public class JLPS {
 		}
 	}
 	
-	private static void limitUserInitialization(HashSet<String> facts, HashSet<String> actions, Scanner sc) {
-		HashMap<String, Integer> limits = new HashMap<String, Integer>();
+	private static void limitUserInitialization(Set<String> facts, Set<String> actions, Scanner sc) {
+		Map<String, Integer> limits = new HashMap<String, Integer>();
 		if (facts != null) {
 			AnsiConsole.out.println("\u001B[36m\n?????????????????????????????????\nWhat default waiting limit should be used for fluents? [2]\u001B[37m");
 			String answer = sc.nextLine();
@@ -117,18 +104,16 @@ public class JLPS {
 	}
 
 	/**
-	 * @param args
+	 * @param args the arguments of the program.
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		HashSet<String> facts = new HashSet<String>();
-		HashSet<String> actions  = new HashSet<String>();
+		Set<String> facts = new HashSet<String>();
+		Set<String> actions  = new HashSet<String>();
 		try {
 			fileReader(fileOpener(args[0], true), facts, actions);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (RecognitionException e1) {
-			e1.printStackTrace();
+        } catch (RecognitionException e1) {
+            e1.printStackTrace();
 		}
 		
 		System.out.println("INITIAL STATE\n----------------");
@@ -137,8 +122,7 @@ public class JLPS {
 		System.out.println("Reactive rules: {\n" + ReactiveRuleSet.getInstance().toString() + "\n}\n");
 		System.out.println("Events: \n" + CycleHandler.getInstance().getEvents());
 		
-		Scanner sc;
-		sc = new Scanner(System.in);
+		Scanner sc = new Scanner(System.in);
 		limitUserInitialization(facts, actions, sc);
 		
 		boolean carryOn = true;

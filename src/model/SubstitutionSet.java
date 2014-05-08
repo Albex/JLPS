@@ -4,12 +4,13 @@
 package model;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represents the bindings of different variables to unify to
  * expression or in the context of a solution to a clause.
  * <p>
- * The bindings are stored as {@code Unifiable} in a {@code HashMap} sorted by
+ * The bindings are stored as {@code Unifiable} in a {@code Map} sorted by
  * {@code Variable} object.
  * 
  * @author Alexandre Camus
@@ -17,7 +18,7 @@ import java.util.HashMap;
  */
 public class SubstitutionSet {
 
-	private HashMap<Variable, Unifiable> bindings = new HashMap<Variable, Unifiable>();
+	private Map<Variable, Unifiable> bindings = new HashMap<Variable, Unifiable>();
 
 	/**
 	 * Constructor of the class.

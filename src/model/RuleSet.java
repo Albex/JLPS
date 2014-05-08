@@ -4,21 +4,23 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 
 /**
  * This class represents a table of truth. This can be the intensional clauses
  * of the database or any table of truth from which it is needed to create a
  * proof.
  * <p>
- * The rules are stored as {@code Rule} in an {@code ArrayList}.
+ * The rules are stored as {@code Rule} in an {@code List}.
  * 
  * @author Alexandre Camus
  * 
  */
 public class RuleSet {
 
-	private ArrayList<Rule> rules;
+	private List<Rule> rules;
 	private int intensional;
 	private int extensional;
 	
@@ -29,22 +31,16 @@ public class RuleSet {
 	 *            the rules of the set in an array or as independent arguments.
 	 */
 	public RuleSet(Rule... rules) {
-		Rule[] rulesArray = rules;
-		
-		this.rules = new ArrayList<Rule>();
-		
-		for (int i = 0; i < rulesArray.length; i++) {
-			this.rules.add(rulesArray[i]);
-		}
+		this.rules = new ArrayList<Rule>(Arrays.asList(rules));
 	}
 	
 	/**
 	 * Constructor of the class.
 	 * 
 	 * @param rules
-	 *            an {@code ArrayList} object containing the rules of the set.
+	 *            an {@code List} object containing the rules of the set.
 	 */
-	public RuleSet(ArrayList<Rule> rules) {
+	public RuleSet(List<Rule> rules) {
 		this.rules = new ArrayList<Rule>(rules);
 	}
 	
@@ -97,9 +93,7 @@ public class RuleSet {
 	 *         was at the specified position.
 	 */
 	public Rule getRuleStandardizedApart(int index) {
-		Rule rule = (Rule) rules.get(index).standardizeVariablesApart(new Hashtable<Variable, Variable>());
-		
-		return rule;
+        return rules.get(index).standardizeVariablesApart(new Hashtable<Variable, Variable>());
 	}
 	
 	/**
@@ -116,9 +110,9 @@ public class RuleSet {
 	/**
 	 * Gets all the rules of the set.
 	 * 
-	 * @return an {@code ArrayList} object containing the rules of the set.
+	 * @return an {@code List} object containing the rules of the set.
 	 */
-	public ArrayList<Rule> getRules() {
+	public List<Rule> getRules() {
 		return this.rules;
 	}
 	
@@ -133,12 +127,12 @@ public class RuleSet {
 	}
 	
 	/**
-	 * Adds all the rules that are in the specified {@code ArrayList}.
+	 * Adds all the rules that are in the specified {@code List}.
 	 * 
 	 * @param rules
-	 *            the {@code ArrayList} object containing the rules to add.
+	 *            the {@code List} object containing the rules to add.
 	 */
-	public void addRules(ArrayList<Rule> rules) {
+	public void addRules(List<Rule> rules) {
 		for(Rule rule : rules) {
 			this.rules.add(rule);
 		}

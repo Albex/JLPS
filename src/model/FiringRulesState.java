@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class implements the {@code CycleState} interface. It fires the
@@ -46,7 +47,7 @@ class FiringRulesState implements CycleState {
 	 * rules and gets the new goals to solve.
 	 * 
 	 * @param events
-	 * @see ReactiveRuleSet#fireRules(RuleSet, ArrayList)
+	 * @see ReactiveRuleSet#fireRules(RuleSet, List)
 	 * @see #handlerMethod(CycleHandler, String, RuleSet)
 	 */
     private void fireRules(RuleSet events) {
@@ -54,13 +55,13 @@ class FiringRulesState implements CycleState {
     	ruleSet.addRules(events.getRules());
     	
     	// Gets all the names of the events
-    	ArrayList<String> eventsName = new ArrayList<String>();
+    	List<String> eventsName = new ArrayList<String>();
     	for (Rule event : events.getRules()) {
     		eventsName.add(event.getHead().getName());
     	}
     	
     	// Fire the rules for real and get the goals
-    	ArrayList<SimpleSentence> goals = ReactiveRuleSet.getInstance().fireRules(ruleSet, eventsName);
+    	List<SimpleSentence> goals = ReactiveRuleSet.getInstance().fireRules(ruleSet, eventsName);
     	
     	// Show the goals fired in the console line.
     	System.out.println(goals);

@@ -5,6 +5,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -17,7 +18,7 @@ public class ReactiveRule implements PCExpression {
 
 	private Clause causes;
 	private SimpleSentence goal;
-	private ArrayList<String> actions;
+	private List<String> actions;
 	
 	/**
 	 * Constructor of the class.
@@ -64,7 +65,7 @@ public class ReactiveRule implements PCExpression {
 	 * @return an {@code ArrayList} containing all the actions in the condition
 	 *         clause.
 	 */
-	public ArrayList<String> getActions() {
+	public List<String> getActions() {
 		return this.actions;
 	}
 	
@@ -75,10 +76,10 @@ public class ReactiveRule implements PCExpression {
 	 * @param database
 	 *            the table of truth to which the conditions are submitted to be
 	 *            checked.
-	 * @return an {@code ArrayList} object containing all the goals created.
+	 * @return an {@code List} object containing all the goals created.
 	 */
-	public ArrayList<SimpleSentence> fireRule(RuleSet database) {
-		ArrayList<SimpleSentence> goals = new ArrayList<SimpleSentence>();
+	public List<SimpleSentence> fireRule(RuleSet database) {
+		List<SimpleSentence> goals = new ArrayList<SimpleSentence>();
 		ReactiveRule standardizedRule = this.standardizeVariablesApart(new Hashtable<Variable, Variable>());
 		AbstractSolutionNode root = standardizedRule.causes.getSolver(database, new SubstitutionSet(), null);
 		SubstitutionSet solution;
@@ -116,9 +117,7 @@ public class ReactiveRule implements PCExpression {
 		}
 		
 		// Create the bound reactive rule
-		ReactiveRule newRule = new ReactiveRule(newConditions, newGoal);
-		
-		return newRule;
+        return new ReactiveRule(newConditions, newGoal);
 	}
 
 	/**
@@ -146,9 +145,7 @@ public class ReactiveRule implements PCExpression {
 		}
 		
 		// Create the standardized reactive rule
-		ReactiveRule newRule = new ReactiveRule(newConditions, newGoal);
-		
-		return newRule;
+        return new ReactiveRule(newConditions, newGoal);
 	}
 	
 	/**

@@ -83,9 +83,8 @@ public abstract class DPostDeclaration {
 				return null;
 			}
 		}
-		SimpleSentence groundFluent = (SimpleSentence) this.fluent.replaceVariables(variablesBinding);
-		
-		return groundFluent;
+
+        return this.fluent.replaceVariables(variablesBinding);
 	}
 	
 }

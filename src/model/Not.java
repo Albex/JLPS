@@ -3,7 +3,7 @@
  */
 package model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents negative clauses. It is a unary operator. It extends
@@ -32,10 +32,10 @@ public class Not extends AbstractOperator {
 	 *            the operands of the not-operator in an {@code ArrayList}
 	 *            object.
 	 * 
-	 * @see model.AbstractOperator#create(java.util.ArrayList)
+	 * @see model.AbstractOperator#create(java.util.List)
 	 */
 	@Override
-	protected Not create(ArrayList<Clause> operands) {
+	protected Not create(List<Clause> operands) {
 		return new Not(operands.get(0));
 	}
 

@@ -4,6 +4,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class represents the set where all goals are defined.
@@ -15,7 +17,7 @@ import java.util.ArrayList;
  */
 public class GoalSet {
 
-ArrayList<Goal> goals;
+List<Goal> goals;
 	
 	/**
 	 * Constructor of the class.
@@ -25,13 +27,7 @@ ArrayList<Goal> goals;
 	 *            as a parameter.
 	 */
 	public GoalSet(Goal... goals) {
-		Goal[] goalsArray = goals;
-		
-		this.goals = new ArrayList<Goal>();
-		
-		for(Goal goal : goalsArray) {
-			this.goals.add(goal);
-		}
+		this.goals = new ArrayList<Goal>(Arrays.asList(goals));
 	}
 	
 	/**
@@ -83,7 +79,7 @@ ArrayList<Goal> goals;
 	 */
 	@Override
 	public String toString() {
-		String string = new String("Goals set: \n{\n");
+		String string = "Goals set: \n{\n";
 		String delimiter = "";
 		for (Goal goal : this.goals) {
 			string += delimiter + goal.toString();

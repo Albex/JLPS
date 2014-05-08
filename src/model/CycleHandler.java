@@ -30,7 +30,7 @@ public final class CycleHandler {
 	 * @return instance the only object of this class. If the object was not
 	 *         already created it will create it.
 	 */
-	public final static CycleHandler getInstance() {
+	public static CycleHandler getInstance() {
 		 if (CycleHandler.instance == null) {
 			 synchronized(CycleHandler.class) {
 				 if (CycleHandler.instance == null) {

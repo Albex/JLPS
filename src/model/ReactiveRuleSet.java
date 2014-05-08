@@ -4,12 +4,14 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This singleton class represents the set of all reactive rules of the LPS
  * framework.
  * <p>
- * The reactive rules are stored as {@code ReactiveRule} in an {@code ArrayList}.
+ * The reactive rules are stored as {@code ReactiveRule} in an {@code List}.
  * <p>
  * The constructor is private as you must not use it. Instead use the
  * {@code getInstance()} method to get the only object of the class (or to
@@ -20,7 +22,7 @@ import java.util.ArrayList;
  */
 public class ReactiveRuleSet {
 	
-	ArrayList<ReactiveRule> reactiveRules;
+	List<ReactiveRule> reactiveRules;
 	private static volatile ReactiveRuleSet instance = null;
 
 	/**
@@ -28,13 +30,7 @@ public class ReactiveRuleSet {
 	 * called. Use the method {@code getInstance()} instead.
 	 */
 	private ReactiveRuleSet(ReactiveRule... reactiveRules) {
-		ReactiveRule[] rulesArray = reactiveRules;
-		
-		this.reactiveRules = new ArrayList<ReactiveRule>();
-		
-		for(ReactiveRule rule : rulesArray) {
-			this.reactiveRules.add(rule);
-		}
+		this.reactiveRules = new ArrayList<ReactiveRule>(Arrays.asList(reactiveRules));
 	}
 	
 	/**
@@ -43,7 +39,7 @@ public class ReactiveRuleSet {
 	 * 
 	 * @return the only instance of the class {@code ReactiveRuleSet}.
 	 */
-	public final static ReactiveRuleSet getInstance() {
+	public static ReactiveRuleSet getInstance() {
 		if (ReactiveRuleSet.instance == null) {
 			synchronized (ReactiveRuleSet.class) {
 				if (ReactiveRuleSet.instance == null) {
@@ -77,10 +73,10 @@ public class ReactiveRuleSet {
 	 * @param events
 	 *            the events/actions that have been performed on the database
 	 *            during this cycle. 
-	 * @return an {@code ArrayList} object containing all the fired goals.
+	 * @return an {@code List} object containing all the fired goals.
 	 */
-	public ArrayList<SimpleSentence> fireRules(RuleSet ruleSet, ArrayList<String> events) {
-		ArrayList<SimpleSentence> goals = new ArrayList<SimpleSentence>();
+	public List<SimpleSentence> fireRules(RuleSet ruleSet, List<String> events) {
+		List<SimpleSentence> goals = new ArrayList<SimpleSentence>();
 		
 		for(ReactiveRule rule : this.reactiveRules) {
 			if (events.containsAll(rule.getActions())) {

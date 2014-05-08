@@ -114,7 +114,7 @@ public class Constant implements Unifiable {
 				return new SubstitutionSet(s);
 			}
 
-			if (this.printName.equals(((Constant) expr).getName())) {
+			if (this.printName.equals(expr.getName())) {
 				
 				return new SubstitutionSet(s);
 			}

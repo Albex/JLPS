@@ -4,15 +4,16 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents the updatable part of the database. This is the
  * extensional clauses of the database.
  * <p>
- * The facts are stored as {@code SimpleSentence} in a {@code HashMap} sorted by
+ * The facts are stored as {@code SimpleSentence} in a {@code Map} sorted by
  * name.
  * 
  * @author Alexandre Camus
@@ -20,7 +21,7 @@ import java.util.Iterator;
  */
 public class FactSet {
 	
-	private HashMap<String, ArrayList<SimpleSentence>> facts;
+	private Map<String, List<SimpleSentence>> facts;
 
 	/**
 	 * Constructor of the class.
@@ -30,15 +31,13 @@ public class FactSet {
 	 *            a parameter.
 	 */
 	public FactSet(SimpleSentence... facts) {
-		SimpleSentence[] factsArray = facts;
-		
-		this.facts = new HashMap<String, ArrayList<SimpleSentence>>();
-		
-		for (int i = 0; i < factsArray.length; i++) {
-			if (!this.facts.containsKey(factsArray[i].getName())) {
-				this.facts.put(factsArray[i].getName(), new ArrayList<SimpleSentence>());
+        this.facts = new HashMap<String, List<SimpleSentence>>();
+
+        for (SimpleSentence simpleSentence : facts) {
+			if (!this.facts.containsKey(simpleSentence.getName())) {
+				this.facts.put(simpleSentence.getName(), new ArrayList<SimpleSentence>());
 			}
-			this.facts.get(factsArray[i].getName()).add(factsArray[i]);
+			this.facts.get(simpleSentence.getName()).add(simpleSentence);
 		}
 	}
 	
@@ -49,16 +48,16 @@ public class FactSet {
 	 *            an array of the facts to be stored in the set or each fact as
 	 *            a parameter.
 	 */
-	public FactSet(HashMap<String, ArrayList<SimpleSentence>> facts) {
+	public FactSet(Map<String, List<SimpleSentence>> facts) {
 		this.facts = facts;
 	}
 	
 	/**
 	 * Gets the facts.
 	 * 
-	 * @return the {@code HashMap} containing all the facts.
+	 * @return the {@code Map} containing all the facts.
 	 */
-	public HashMap<String, ArrayList<SimpleSentence>> getFacts() {
+	public Map<String, List<SimpleSentence>> getFacts() {
 		return this.facts;
 	}
 	
@@ -67,10 +66,10 @@ public class FactSet {
 	 * 
 	 * @param name
 	 *            the name of the facts to get.
-	 * @return an {@code ArrayList} of the facts of the name {@code name}
+	 * @return an {@code List} of the facts of the name {@code name}
 	 *         existing in the set.
 	 */
-	public ArrayList<SimpleSentence> getFact(String name) {
+	public List<SimpleSentence> getFact(String name) {
 		return this.facts.get(name);
 	}
 	
@@ -141,11 +140,11 @@ public class FactSet {
 	 * @return the {@code RuleSet} containing the facts.
 	 */
 	public RuleSet toRuleSet() {
-		ArrayList<Rule> rulesArray = new ArrayList<Rule>();
-		ArrayList<SimpleSentence> factsArray = new ArrayList<SimpleSentence>();
+		List<Rule> rulesArray = new ArrayList<Rule>();
+		List<SimpleSentence> factsArray = new ArrayList<SimpleSentence>();
 		
-		Collection<ArrayList<SimpleSentence>> facts = this.facts.values();
-		for(ArrayList<SimpleSentence> iterator : facts) {
+		
+		for(List<SimpleSentence> iterator : this.facts.values()) {
 			factsArray.addAll(iterator);
 		}
 		

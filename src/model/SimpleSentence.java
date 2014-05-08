@@ -3,7 +3,10 @@
  */
 package model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 
 /**
  * This class represents predicates. It implements {@link Unifiable} and {@link Clause}.
@@ -13,7 +16,7 @@ import java.util.Hashtable;
  */
 public class SimpleSentence implements Unifiable, Clause {
 
-	private Unifiable[] terms;
+	private List<Unifiable> terms;
 	private boolean isMatched = false;
 
 	/**
@@ -27,9 +30,9 @@ public class SimpleSentence implements Unifiable, Clause {
 	 *            arguments.
 	 */
 	public SimpleSentence(Constant predicateName, Unifiable... args) {
-		this.terms = new Unifiable[args.length + 1];
-		this.terms[0] = predicateName;
-		System.arraycopy(args, 0, this.terms, 1, args.length);
+		this.terms = new ArrayList<Unifiable>();
+		this.terms.add(predicateName);
+		this.terms.addAll(Arrays.asList(args));
 	}
 
 	/**
@@ -39,7 +42,7 @@ public class SimpleSentence implements Unifiable, Clause {
 	 *            the name and the parameters of this predicate in an array or
 	 *            as independent arguments.
 	 */
-	private SimpleSentence(Unifiable... args) {
+	private SimpleSentence(List<Unifiable> args) {
 		this.terms = args;
 	}
 
@@ -72,7 +75,7 @@ public class SimpleSentence implements Unifiable, Clause {
 	 * @return the number of parameters plus the name of the simple sentence.
 	 */
 	public int length() {
-		return this.terms.length;
+		return this.terms.size();
 	}
 
 	/**
@@ -84,7 +87,7 @@ public class SimpleSentence implements Unifiable, Clause {
 	 * @return the parameter at the specified position.
 	 */
 	public Unifiable getTerm(int index) {
-		return this.terms[index];
+		return this.terms.get(index);
 	}
 
 	/**
@@ -95,7 +98,7 @@ public class SimpleSentence implements Unifiable, Clause {
 	 * @see model.Unifiable#getName()
 	 */
 	public String getName() {
-		return this.terms[0].toString();
+		return this.terms.get(0).toString();
 	}
 	
 	/**
@@ -124,11 +127,11 @@ public class SimpleSentence implements Unifiable, Clause {
 	@Override
 	public SimpleSentence replaceVariables(SubstitutionSet s) {
 		// Create an array for new terms.
-		Unifiable[] newTerms = new Unifiable[this.terms.length];
+		List<Unifiable> newTerms = new ArrayList<Unifiable>();
 		
 		// Replace each variable in the sentence
-		for (int i = 0; i < this.terms.length; i++) {
-			newTerms[i] = (Unifiable) this.terms[i].replaceVariables(s);
+		for (Unifiable term : this.terms) {
+			newTerms.add((Unifiable) term.replaceVariables(s));
 		}
 
 		return new SimpleSentence(newTerms);
@@ -150,11 +153,11 @@ public class SimpleSentence implements Unifiable, Clause {
 	@Override
 	public SimpleSentence standardizeVariablesApart(Hashtable<Variable, Variable> newVars) {
 		// Create an array for new terms.
-		Unifiable[] newTerms = new Unifiable[this.terms.length];
+		List<Unifiable> newTerms = new ArrayList<Unifiable>();
 
 		// Standardize apart each term. Only variables will be affected.
-		for (int i = 0; i < this.length(); i++) {
-			newTerms[i] = (Unifiable) this.terms[i].standardizeVariablesApart(newVars);
+		for (Unifiable term : this.terms) {
+			newTerms.add((Unifiable) term.standardizeVariablesApart(newVars));
 		}
 
 		return new SimpleSentence(newTerms);
@@ -225,14 +228,14 @@ public class SimpleSentence implements Unifiable, Clause {
 	 */
 	@Override
 	public String toString() {
-		String s = null;
-
-		s = this.terms[0].toString() + "(";
-		for (int i = 1; i < this.terms.length; i++) {
-			if (i == this.terms.length - 1) {
-				s += this.terms[i].toString();
+		String s = "";
+		for (Unifiable term : this.terms) {
+			if (s.length() == 0) {
+				s += term.toString() + "(";
+			} else if (s.endsWith("(")) {
+				s += term.toString();
 			} else {
-				s += this.terms[i].toString() + ", ";
+				s += ", " + term.toString();
 			}
 		}
 

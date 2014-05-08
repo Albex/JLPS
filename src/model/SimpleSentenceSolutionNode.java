@@ -108,7 +108,7 @@ public class SimpleSentenceSolutionNode extends AbstractSolutionNode {
 		Rule rule;
 		
 		// Then try to find a new solution for the current node
-		while (this.hasNextRule() == true) {
+		while (this.hasNextRule()) {
 			// Get a rule
 			rule = this.nextRule();
 			

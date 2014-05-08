@@ -3,7 +3,7 @@
  */
 package model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents and-clauses. It is a n-ary operator. It extends
@@ -29,10 +29,10 @@ public class And extends AbstractOperator {
 	 * Constructor of the class.
 	 * 
 	 * @param operands
-	 *            the operands of the and-operator in an {@code ArrayList}
+	 *            the operands of the and-operator in an {@code List}
 	 *            object.
 	 */
-	public And(ArrayList<Clause> operands) {
+	public And(List<Clause> operands) {
 		super(operands);
 	}
 	
@@ -41,13 +41,13 @@ public class And extends AbstractOperator {
 	 * class {@code AbstractOperator} to create the correct object very easily.
 	 * 
 	 * @param operands
-	 *            the operands of the and-operator in an {@code ArrayList}
+	 *            the operands of the and-operator in an {@code List}
 	 *            object.
 	 * 
-	 * @see model.AbstractOperator#create(java.util.ArrayList)
+	 * @see model.AbstractOperator#create(java.util.List)
 	 */
 	@Override
-	protected And create(ArrayList<Clause> operands) {
+	protected And create(List<Clause> operands) {
 		return new And(operands);
 	}
 
@@ -80,7 +80,7 @@ public class And extends AbstractOperator {
 	 */
 	@Override
 	public String toString() {
-		String res = new String();
+		String res = "";
 		for (int i = 0; i < this.operandCount() - 1; i++) {
 			res += this.getOperand(i).toString() + " & ";
 		}

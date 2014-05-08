@@ -4,6 +4,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents actions. Actions are either predicates to reason with
@@ -15,8 +16,8 @@ import java.util.ArrayList;
 public class Action {
 
 	private SimpleSentence action;
-	private ArrayList<Initiator> initiators;
-	private ArrayList<Terminator> terminators;
+	private List<Initiator> initiators;
+	private List<Terminator> terminators;
 	private Clause conditions;
 	private Clause conflicts;
 	
@@ -27,16 +28,16 @@ public class Action {
 	 *            the {@code SimpleSentence} object that is the generic
 	 *            predicate representing the action.
 	 * @param initiators
-	 *            the {@code ArrayList} containing all the DPost declarations
+	 *            the {@code List} containing all the DPost declarations
 	 *            that initiates fluents.
 	 * @param terminators
-	 *            the {@code ArrayList} containing all the DPost declarations
+	 *            the {@code List} containing all the DPost declarations
 	 *            that terminates fluents.
 	 * @param conditions
 	 *            the preconditions that must be satisfied before performing the
 	 *            action.
 	 */
-	public Action(SimpleSentence action, ArrayList<Initiator> initiators, ArrayList<Terminator> terminators, Clause conditions, Clause conflicts) {
+	public Action(SimpleSentence action, List<Initiator> initiators, List<Terminator> terminators, Clause conditions, Clause conflicts) {
 		this.action = action;
 		this.initiators = initiators;
 		this.terminators = terminators;
@@ -114,11 +115,11 @@ public class Action {
 	 *            the version of the action that is performed on the database.
 	 * @param rules
 	 *            the set of rules to check the body of the initators.
-	 * @return the {@code ArrayList} of the bound fluents according to the
+	 * @return the {@code List} of the bound fluents according to the
 	 *         parameter.
 	 */
-	public ArrayList<SimpleSentence> fluentsToInitiate(SimpleSentence event, RuleSet rules) {
-		ArrayList<SimpleSentence> fluents = new ArrayList<SimpleSentence>();
+	public List<SimpleSentence> fluentsToInitiate(SimpleSentence event, RuleSet rules) {
+		List<SimpleSentence> fluents = new ArrayList<SimpleSentence>();
 		
 		for(Initiator initiator : this.initiators) {
 			SimpleSentence fluent = initiator.getGroundFluent(event, rules);
@@ -139,11 +140,11 @@ public class Action {
 	 *            the version of the action that is performed on the database.
 	 * @param rules
 	 *            the set of rules to check the body of the terminators.
-	 * @return the {@code ArrayList} of the bound fluents according to the
+	 * @return the {@code List} of the bound fluents according to the
 	 *         parameter.
 	 */
-	public ArrayList<SimpleSentence> fluentsToTerminate(SimpleSentence event, RuleSet rules) {
-		ArrayList<SimpleSentence> fluents = new ArrayList<SimpleSentence>();
+	public List<SimpleSentence> fluentsToTerminate(SimpleSentence event, RuleSet rules) {
+		List<SimpleSentence> fluents = new ArrayList<SimpleSentence>();
 		
 		for(Terminator terminator : this.terminators) {
 			SimpleSentence fluent = terminator.getGroundFluent(event, rules);
